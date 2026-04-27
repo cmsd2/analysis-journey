@@ -1,0 +1,133 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 5,
+  "metadata": {
+    "kernelspec": {
+      "name": "maxima",
+      "display_name": "Maxima",
+      "language": "maxima"
+    },
+    "aximar": {}
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "source": "# Contour Integrals and Cauchy's Theorem [S+N]\n\nA **contour** in $\\mathbb{C}$ is a piecewise-$C^1$ path $\\gamma : [a, b] \\to \\mathbb{C}$. The **contour integral** of a continuous $f : \\gamma \\to \\mathbb{C}$ is\n\n$$\\int_\\gamma f(z)\\,dz = \\int_a^b f(\\gamma(t))\\,\\gamma'(t)\\,dt.$$\n\nThis is *not* the same as the line integral of a vector field over $\\gamma \\subset \\mathbb{R}^2$ — the multiplication is **complex multiplication**, which encodes a rotation as well as a scaling. The complex structure changes everything.\n\nThe headline result of this stage:\n\n**Cauchy's theorem.** If $f$ is holomorphic on a simply connected open set $\\Omega$ and $\\gamma$ is a closed contour in $\\Omega$, then\n\n$$\\oint_\\gamma f(z)\\,dz = 0.$$\n\nThis is *the* foundation of complex analysis. Almost everything that follows — Cauchy's integral formula, residues, evaluation of real integrals — is a corollary.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
+      "metadata": {},
+      "execution_count": 7,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## A simple example: $\\oint_\\gamma z\\,dz$ around the unit circle [S+N]\n\nParameterise $\\gamma(t) = e^{it}$, $t \\in [0, 2\\pi]$. Then $\\gamma'(t) = i e^{it}$ and\n\n$$\\oint_\\gamma z\\,dz = \\int_0^{2\\pi} e^{it} \\cdot i e^{it}\\,dt = i \\int_0^{2\\pi} e^{2it}\\,dt = 0.$$\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "I1 : integrate(exp(%i*t) * %i * exp(%i*t), t, 0, 2*%pi)$\nprint(\"∮_{|z|=1} z dz =\", I1)$\nprint(\"(Cauchy's theorem says any holomorphic function gives 0 — z is entire ✓)\")$",
+      "metadata": {},
+      "execution_count": 8,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "∮_{|z|=1} z dz = 0\n(Cauchy's theorem says any holomorphic function gives 0 — z is entire ✓)"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## A non-trivial example: $\\oint 1/z\\,dz$\n\nThe function $1/z$ has a singularity at $z = 0$ — it's *not* holomorphic on a disk containing the origin. Cauchy's theorem doesn't apply on a contour enclosing 0.\n\nCompute directly:\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "I2 : integrate(1/exp(%i*t) * %i*exp(%i*t), t, 0, 2*%pi)$\nprint(\"∮_{|z|=1} 1/z dz =\", I2)$\nprint(\"(2πi — the canonical non-zero contour integral)\")$",
+      "metadata": {},
+      "execution_count": 9,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "∮_{|z|=1} 1/z dz = 2*%i*%pi\n(2πi — the canonical non-zero contour integral)"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "$\\oint 1/z\\,dz = 2\\pi i$. This is the foundation of **residue calculus** — the contour integral picks up $2\\pi i$ times the \"residue\" at $z = 0$, which here is just 1.\n\n## Path-independence on simply connected domains\n\nCauchy's theorem has a corollary: on a simply connected $\\Omega$, contour integrals depend only on the endpoints, not the path. So we can define **antiderivatives** $F(z) = \\int_{z_0}^z f(\\zeta)\\,d\\zeta$ unambiguously, and $F'(z) = f(z)$.\n\nThis generalises the fundamental theorem of calculus. Concretely, $\\int_\\gamma z\\,dz = (z_1^2 - z_0^2)/2$ for any path from $z_0$ to $z_1$.\n\nDemonstrate: integrate $z^2$ along two different paths from $0$ to $1 + i$.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "/* Path 1: straight line z(t) = t(1+i), t ∈ [0, 1] */\ngamma1 : t * (1 + %i)$\ngamma1_p : 1 + %i$\nI_path1 : integrate(gamma1^2 * gamma1_p, t, 0, 1)$\nprint(\"∫_path1 z² dz =\", I_path1)$\n\n/* Path 2: along x-axis to 1, then up to 1+i.\n   On segment 1: z = t, t ∈ [0,1]; on segment 2: z = 1 + i*t, t ∈ [0, 1] */\nseg2a : integrate(t^2, t, 0, 1)$\nseg2b : integrate((1 + %i*t)^2 * %i, t, 0, 1)$\nI_path2 : seg2a + seg2b$\nprint(\"∫_path2 z² dz =\", expand(I_path2))$\nprint(\"F(z) = z³/3, F(1+i) - F(0) =\", expand((1 + %i)^3 / 3))$\nprint(\"(All three agree — z² is holomorphic everywhere)\")$",
+      "metadata": {},
+      "execution_count": 10,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "∫_path1 z² dz = (2*%i-2)/3\n∫_path2 z² dz = (2*%i)/3-2/3\nF(z) = z³/3, F(1+i) - F(0) = (2*%i)/3-2/3\n(All three agree — z² is holomorphic everywhere)"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## When path-independence fails: $1/z$ on $\\mathbb{C} \\setminus \\{0\\}$\n\nThe domain $\\mathbb{C} \\setminus \\{0\\}$ is *not* simply connected (a loop around 0 can't be contracted to a point). Path-independence fails: the integral around a closed loop enclosing 0 is $2\\pi i$, not 0.\n\nEquivalently, the \"antiderivative\" $\\int 1/z\\,dz = \\log z$ is multi-valued — $\\log z$ jumps by $2\\pi i$ each time you go around the origin.\n\nVisualise the contour:\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "theta_g : np_to_list(np_linspace(0, 2*float(%pi), 200))$\nunit_re : map(cos, theta_g)$\nunit_im : map(sin, theta_g)$\n\nax_draw2d(\n  color=\"blue\", line_width=2, name=\"contour |z| = 1\",\n  lines(unit_re, unit_im),\n  marker_size=10, color=\"red\", name=\"singularity at z = 0\",\n  points([0.0], [0.0]),\n  title=\"∮_{|z|=1} 1/z dz = 2πi — contour encloses singularity\",\n  xlabel=\"Re z\", ylabel=\"Im z\",\n  grid=true, aspect_ratio=true, showlegend=true\n)$",
+      "metadata": {},
+      "execution_count": 11,
+      "outputs": [
+        {
+          "data": {
+            "application/x-maxima-plotly": [
+              "{\"data\":[{\"x\":[1.0,0.9995015891261738,0.9980068533314934,0.995517282601106,0.9920353585932578,0.9875645521655237,0.9821093199149804,0.9756750997357736,0.9682683053985072,0.959896320156857,0.9505674893877829,0.9402911122726756,0.9290774325277306,0.9169376281927888,0.9038838004888236,0.8899289617551803,0.8750870224785937,0.859372777426912,0.8428018909013506,0.8253908811219762,0.8071571037619854,0.7881187346471924,0.7682947516379707,0.7477049157117092,0.7263697512646394,0.7043105256526723,0.6815492279916338,0.6581085472380377,0.6340118495722387,0.6092831551065168,0.5839471139413063,0.5580289815934402,0.5315545938209014,0.5045503408691775,0.4770431411648898,0.44906041448292017,0.42063005461378417,0.39178040155849314,0.3625402132786245,0.3329386370297613,0.30300518030687273,0.2727696814306032,0.24226227980378318,0.21151338586781906,0.18055365078890212,0.14941393590426094,0.11812528195890805,0.08671887816355095,0.05522603110450817,0.023678133536623878,-0.007893366909713088,-0.0394569990762527,-0.070981299648016,-0.10243484451661307,-0.13378628010447904,-0.1650043546187991,-0.196057949203978,-0.22691610896159026,-0.2575480738068965,-0.28792330913116637,-0.3180115362392381,-0.34778276253198237,-0.3772073114035761,-0.40625585182378887,-0.434899427575793,-0.4631094861203477,-0.4908579070575935,-0.5181170301580775,-0.5448596829350701,-0.5710592077306947,-0.5966894882888559,-0.6217249757884951,-0.6461407143112099,-0.669912365717855,-0.6930162339093318,-0.7154292884473712,-0.7371291875117789,-0.7580943001712453,-0.7783037279455297,-0.7977373256375193,-0.8163757214143991,-0.8342003361179174,-0.8511934017844945,-0.8673379793567145,-0.8826179755685469,-0.8970181589874635,-0.9105241751974622,-0.9231225611078606,-0.9348007583735984,-0.945547125913667,-0.9553509515151948,-0.9642024625116117,-0.972092835524257,-0.9790142052577145,-0.9849596723401104,-0.9899233102005571,-0.9939001709768878,-0.9968862904477932,-0.9988786919844436,-0.9998753895176573,-0.9998753895176573,-0.9988786919844437,-0.9968862904477932,-0.9939001709768879,-0.9899233102005571,-0.9849596723401105,-0.9790142052577147,-0.972092835524257,-0.9642024625116118,-0.9553509515151948,-0.9455471259136672,-0.9348007583735984,-0.9231225611078607,-0.9105241751974622,-0.8970181589874634,-0.882617975568547,-0.8673379793567149,-0.8511934017844947,-0.8342003361179176,-0.816375721414399,-0.7977373256375195,-0.7783037279455302,-0.7580943001712456,-0.737129187511779,-0.7154292884473712,-0.6930162339093316,-0.6699123657178554,-0.6461407143112101,-0.6217249757884953,-0.5966894882888557,-0.571059207730695,-0.544859682935071,-0.5181170301580778,-0.49085790705759375,-0.4631094861203475,-0.4348994275757932,-0.4062558518237897,-0.37720731140357633,-0.3477827625319824,-0.3180115362392379,-0.28792330913116665,-0.25754807380689737,-0.22691610896159048,-0.19605794920397804,-0.1650043546187989,-0.13378628010447927,-0.10243484451661397,-0.07098129964801624,-0.03945699907625272,-0.007893366909712889,0.023678133536623857,0.055226031104507474,0.08671887816355048,0.11812528195890803,0.14941393590426047,0.1805536507889021,0.2115133858678184,0.24226227980378293,0.27276968143060315,0.3030051803068723,0.332938637029761,0.3625402132786239,0.3917804015584929,0.42063005461378433,0.4490604144829198,0.47704314116488955,0.5045503408691769,0.5315545938209012,0.5580289815934403,0.5839471139413059,0.6092831551065166,0.6340118495722382,0.6581085472380375,0.681549227991634,0.7043105256526719,0.7263697512646394,0.7477049157117094,0.7682947516379706,0.788118734647192,0.8071571037619851,0.8253908811219762,0.8428018909013508,0.8593727774269119,0.8750870224785934,0.8899289617551801,0.9038838004888236,0.9169376281927889,0.9290774325277305,0.9402911122726754,0.9505674893877828,0.959896320156857,0.9682683053985073,0.9756750997357736,0.9821093199149803,0.9875645521655236,0.9920353585932579,0.995517282601106,0.9980068533314933,0.9995015891261737,1.0],\"y\":[0.0,0.03156854976481053,0.06310563131267365,0.09457980779484494,0.12595970506771756,0.15721404296725078,0.18831166648971787,0.21922157684769134,0.24991296237030836,0.28035522921701445,0.3105180318741688,0.34037130340411287,0.3698852854165468,0.399030557732341,0.4277780677102096,0.45609915920701594,0.48396560114283876,0.5113496156423266,0.5382239057242886,0.5645616825119181,0.5903366919365284,0.6155232409081792,0.6400962229271072,0.6640311431104312,0.6873041426091843,0.7098920223913328,0.7317722663670768,0.752923063833377,0.773323331215339,0.7929527330827785,0.8117917024210207,0.8298214601357259,0.8470240337722988,0.8633822754312233,0.8788798788614602,0.8935013957148741,0.9072322509454814,0.9200587573381745,0.9319681291524348,0.942948494867437,0.9529889090158392,0.9620793630944628,0.9702107955409863,0.9773751007667072,0.98356513723637,0.9887747345870026,0.9929986997786696,0.9962328222710067,0.9984738782203788,0.9997196336934779,0.9999688468941563,0.9992212694012756,0.9974776464163387,0.994739716020657,0.9910102074427921,0.9862928383380027,0.9805923110824041,0.9739143080855377,0.9662654861260219,0.9576534697159296,0.9480868435005095,0.9375751437008251,0.9261288486078412,0.9137593681374367,0.9004790324567516,0.8863010796932087,0.8712396427384597,0.8553097351604118,0.8385272362373776,0.8209088751292626,0.802472214201578,0.7832356315188905,0.7632183025251684,0.7424401809292833,0.7209219788147164,0.6986851459933066,0.6757518486236088,0.6521449471151868,0.6278879733408587,0.6030051071796145,0.5775211524135886,0.5514615120031076,0.5248521627644684,0.4977196294756834,0.47009095843600296,0.44199369050557913,0.4134558336521342,0.384505835032011,0.35517255263342823,0.32548522651021206,0.29547344963467004,0.2651671383986787,0.23459650279236888,0.20379201629015192,0.17278438547409986,0.14160451942495159,0.11028349891127508,0.0788525454074766,0.04734298997155776,0.015786242013637264,-0.015786242013636577,-0.04734298997155752,-0.07885254540747635,-0.11028349891127483,-0.14160451942495178,-0.1727843854740992,-0.20379201629015167,-0.23459650279236863,-0.2651671383986785,-0.29547344963467026,-0.3254852265102114,-0.355172552633428,-0.38450583503201075,-0.41345583365213395,-0.4419936905055793,-0.47009095843600274,-0.49771962947568277,-0.5248521627644683,-0.5514615120031073,-0.5775211524135888,-0.6030051071796143,-0.6278879733408581,-0.6521449471151866,-0.6757518486236087,-0.6986851459933067,-0.7209219788147164,-0.7424401809292829,-0.7632183025251682,-0.7832356315188903,-0.8024722142015781,-0.8209088751292625,-0.838527236237377,-0.8553097351604116,-0.8712396427384596,-0.8863010796932088,-0.9004790324567515,-0.9137593681374364,-0.9261288486078411,-0.9375751437008251,-0.9480868435005096,-0.9576534697159295,-0.9662654861260217,-0.9739143080855377,-0.9805923110824041,-0.9862928383380027,-0.9910102074427921,-0.9947397160206569,-0.9974776464163387,-0.9992212694012756,-0.9999688468941563,-0.9997196336934779,-0.9984738782203789,-0.9962328222710067,-0.9929986997786696,-0.9887747345870026,-0.98356513723637,-0.9773751007667073,-0.9702107955409863,-0.9620793630944628,-0.9529889090158394,-0.942948494867437,-0.9319681291524351,-0.9200587573381745,-0.9072322509454813,-0.8935013957148743,-0.8788798788614604,-0.8633822754312237,-0.847024033772299,-0.8298214601357258,-0.8117917024210209,-0.7929527330827786,-0.7733233312153395,-0.7529230638333771,-0.7317722663670767,-0.7098920223913331,-0.6873041426091843,-0.664031143110431,-0.6400962229271073,-0.6155232409081798,-0.5903366919365287,-0.5645616825119181,-0.5382239057242882,-0.5113496156423268,-0.4839656011428394,-0.45609915920701627,-0.4277780677102096,-0.3990305577323406,-0.36988528541654697,-0.3403713034041135,-0.3105180318741691,-0.28035522921701433,-0.24991296237030794,-0.21922157684769145,-0.18831166648971848,-0.15721404296725106,-0.12595970506771748,-0.0945798077948445,-0.06310563131267372,-0.03156854976481113,-2.4492935982947064e-16],\"type\":\"scatter\",\"mode\":\"lines\",\"line\":{\"color\":\"blue\",\"width\":2},\"name\":\"contour |z| = 1\"},{\"x\":[0.0],\"y\":[0.0],\"type\":\"scatter\",\"mode\":\"markers\",\"marker\":{\"color\":\"red\",\"size\":10},\"name\":\"singularity at z = 0\"}],\"layout\":{\"title\":{\"text\":\"∮_{|z|=1} 1/z dz = 2πi — contour encloses singularity\"},\"showlegend\":true,\"width\":700,\"height\":700,\"plot_bgcolor\":\"white\",\"paper_bgcolor\":\"white\",\"xaxis\":{\"title\":{\"text\":\"Re z\"},\"showgrid\":true,\"gridcolor\":\"#ddd\",\"linecolor\":\"#ddd\",\"linewidth\":1,\"zerolinecolor\":\"black\",\"zerolinewidth\":1},\"yaxis\":{\"title\":{\"text\":\"Im z\"},\"showgrid\":true,\"scaleanchor\":\"x\",\"scaleratio\":1,\"gridcolor\":\"#ddd\",\"linecolor\":\"#ddd\",\"linewidth\":1,\"zerolinecolor\":\"black\",\"zerolinewidth\":1}}}"
+            ]
+          },
+          "metadata": {},
+          "output_type": "display_data"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Estimate: the ML inequality\n\nUseful for bounding contour integrals: if $|f(z)| \\le M$ on $\\gamma$ and $\\gamma$ has length $L$, then\n\n$$\\left|\\int_\\gamma f(z)\\,dz\\right| \\le M \\cdot L.$$\n\nSharp bounds via this estimate are at the heart of arguments like Liouville's theorem (entire bounded ⇒ constant): bound the derivative integral on circles of radius $R$, let $R \\to \\infty$.\n\n## Why $\\oint = 0$ matters\n\nCauchy's theorem is the source of an enormous amount of structure:\n\n1. **Existence of antiderivatives** on simply connected domains (extending FTC).\n2. **Cauchy's integral formula** (next notebook): $f(z_0) = \\dfrac{1}{2\\pi i} \\oint \\dfrac{f(z)}{z - z_0}\\,dz$. Values at interior points are determined by boundary values.\n3. **Residue theorem**: $\\oint f = 2\\pi i \\sum \\mathrm{Res}$ — turns contour integrals into a sum over isolated singularities.\n4. **Evaluation of real integrals**: many otherwise-intractable real definite integrals can be computed via clever closed contours in the complex plane.\n\nWe're heading directly to all of this.\n\n## Numerical sanity check [S+N]\n\nApproximate $\\oint_{|z|=1} 1/z\\,dz$ by a Riemann sum on a fine partition of the unit circle.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "N_partition : 1000$\ndt : 2 * float(%pi) / N_partition$\ntotal : 0.0 + 0.0 * %i$\nfor k : 0 thru N_partition - 1 do block([t, z, dz_dt],\n  t : k * dt,\n  z : exp(%i * t),\n  dz_dt : %i * exp(%i * t),\n  total : total + 1/z * dz_dt * dt)$\nprint(\"Numerical ∮_{|z|=1} 1/z dz ≈\", expand(total))$\nprint(\"Exact: 2πi =\", float(2*%pi)*%i)$",
+      "metadata": {},
+      "execution_count": 12,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "Numerical ∮_{|z|=1} 1/z dz ≈ 6.283185307179473*%i\nExact: 2πi = 6.283185307179586*%i"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "Numerical and symbolic agree to many digits — Cauchy's theorem isn't just a slogan, it's something you can verify computationally.\n\nNext: Cauchy's integral formula and the consequence that holomorphic = analytic.\n",
+      "metadata": {}
+    }
+  ]
+}

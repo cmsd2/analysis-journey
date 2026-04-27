@@ -1,0 +1,131 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 5,
+  "metadata": {
+    "kernelspec": {
+      "name": "maxima",
+      "display_name": "Maxima",
+      "language": "maxima"
+    },
+    "aximar": {}
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "source": "# Residues and the Residue Theorem [S+N]\n\nIf $f$ has an **isolated singularity** at $z_0$, the **residue** at $z_0$ is the coefficient $a_{-1}$ in the Laurent expansion\n\n$$f(z) = \\sum_{n=-\\infty}^{\\infty} a_n (z - z_0)^n, \\quad \\text{convergent on some annulus around } z_0.$$\n\nWe write $\\mathrm{Res}_{z_0} f = a_{-1}$.\n\n**Residue theorem**: if $f$ is holomorphic on an open set $\\Omega$ except at finitely many isolated singularities $z_1, \\ldots, z_k$ inside a positively-oriented simple closed contour $\\gamma$ in $\\Omega$, then\n\n$$\\oint_\\gamma f(z)\\,dz = 2\\pi i \\sum_{j=1}^k \\mathrm{Res}_{z_j} f.$$\n\nThis converts contour integrals into a finite sum and powers a remarkable trick: **evaluate real integrals by closing the contour in the complex plane**.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
+      "metadata": {},
+      "execution_count": 7,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Computing residues\n\nThree cases worth knowing:\n\n1. **Simple pole** at $z_0$ ($f = g/(z - z_0)$ with $g$ holomorphic, $g(z_0) \\ne 0$): $\\mathrm{Res}_{z_0} f = g(z_0)$.\n2. **Pole of order $m$**: $\\mathrm{Res}_{z_0} f = \\dfrac{1}{(m-1)!} \\lim_{z \\to z_0} \\dfrac{d^{m-1}}{dz^{m-1}} \\left[ (z - z_0)^m f(z) \\right]$.\n3. **Essential singularity**: read off the Laurent series.\n\nMaxima can find residues for rational functions:\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "f1 : 1 / (z * (z - 1))$\nprint(\"f =\", f1, \"  has simple poles at 0 and 1.\")$\nprint(\"Res at 0:\", residue(f1, z, 0))$\nprint(\"Res at 1:\", residue(f1, z, 1))$",
+      "metadata": {},
+      "execution_count": 8,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "f = 1/((z-1)*z)   has simple poles at 0 and 1.\nRes at 0: -1\nRes at 1: 1"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Worked example: a real integral by residues [S+N]\n\nCompute $I = \\int_{-\\infty}^{\\infty} \\dfrac{1}{1 + x^2}\\,dx$ via residues.\n\nConsider the contour $\\gamma_R$ = $[-R, R]$ along the real axis, closed by the upper-half-plane semicircle $C_R$ of radius $R$. Inside $\\gamma_R$ (for $R > 1$) lies the simple pole of $f(z) = 1/(1 + z^2)$ at $z = i$.\n\n**Residue at $z = i$**: $f(z) = \\dfrac{1}{(z - i)(z + i)}$, so $\\mathrm{Res}_i f = \\dfrac{1}{2i}$.\n\nBy the residue theorem: $\\oint_{\\gamma_R} f = 2\\pi i \\cdot \\dfrac{1}{2i} = \\pi$.\n\nThe contour splits: $\\int_{-R}^R + \\int_{C_R}$. On $C_R$, $|f| \\le 1/(R^2 - 1)$ and the path length is $\\pi R$, so by ML the semicircle contribution $\\to 0$ as $R \\to \\infty$. The real-axis part is exactly the integral we want, so\n\n$$\\int_{-\\infty}^{\\infty} \\frac{1}{1 + x^2}\\,dx = \\pi.$$\n\nOf course we already knew $\\int 1/(1+x^2) = \\arctan x$, so this real integral is $\\pi$. But the same method works on integrals with no elementary antiderivative.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "f_test : 1 / (1 + z^2)$\nprint(\"Singularities of 1/(1 + z²):\"); solve(1 + z^2 = 0, z);\nprint(\"Res at i =\", residue(f_test, z, %i))$\nprint(\"Res at -i =\", residue(f_test, z, -%i))$\nprint(\"∫_{-∞}^∞ 1/(1+x²) dx = 2πi · Res at i =\", expand(2 * %pi * %i * residue(f_test, z, %i)))$",
+      "metadata": {},
+      "execution_count": 9,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "Singularities of 1/(1 + z²):\n\"Singularities of 1/(1 + z²):\"\n[z = -%i,z = %i]\nRes at i = -(%i/2)\nRes at -i = %i/2\n∫_{-∞}^∞ 1/(1+x²) dx = 2πi · Res at i = %pi"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## A more interesting example\n\nCompute $\\int_0^\\infty \\dfrac{1}{1 + x^4}\\,dx$ — no elementary antiderivative.\n\nConsider $f(z) = 1/(1 + z^4)$. Poles where $1 + z^4 = 0$, i.e. $z = e^{i\\pi/4}, e^{3i\\pi/4}, e^{5i\\pi/4}, e^{7i\\pi/4}$. Only the first two lie in the upper half-plane.\n\nUse the same semicircular contour. By residue theorem,\n\n$$\\int_{-\\infty}^\\infty \\frac{1}{1 + x^4}\\,dx = 2\\pi i\\,(\\mathrm{Res}_{e^{i\\pi/4}} + \\mathrm{Res}_{e^{3i\\pi/4}}).$$\n\nFor a simple pole at $z_0$ of $f = p/q$, $\\mathrm{Res}_{z_0} = p(z_0) / q'(z_0)$.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "f4 : 1 / (1 + z^4)$\npoles4 : map(lambda([s], rhs(s)), solve(1 + z^4 = 0, z))$\nprint(\"Poles of 1/(1+z⁴):\", poles4)$\n\n/* Take the two with positive imaginary part */\nupper_poles : []$\nfor p in poles4 do\n  if float(imagpart(p)) > 0 then upper_poles : endcons(p, upper_poles)$\nprint(\"Upper-half-plane poles:\", upper_poles)$\n\nresidues_at_upper : map(lambda([p], residue(f4, z, p)), upper_poles)$\nprint(\"Residues at those poles:\", residues_at_upper)$\nsum_res : apply(\"+\", residues_at_upper)$\nprint(\"Sum of residues:\", ratsimp(sum_res))$\nprint()$\nI_full : 2 * %pi * %i * sum_res$\nprint(\"∫_{-∞}^∞ 1/(1+x⁴) dx =\", ratsimp(I_full))$\nprint(\"(numerical:\", float(I_full), \")\")$\nprint(\"∫_0^∞ 1/(1+x⁴) dx (half) =\", ratsimp(I_full / 2))$\nprint(\"(numerical:\", float(I_full / 2), \")\")$",
+      "metadata": {},
+      "execution_count": 10,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "Poles of 1/(1+z⁴): [(-1)^(1/4)*%i,-(-1)^(1/4),-((-1)^(1/4)*%i),(-1)^(1/4)]\nUpper-half-plane poles: [(-1)^(1/4)*%i,(-1)^(1/4)]\nResidues at those poles: [-(((-1)^(1/4)*%i)/4),-((-1)^(1/4)/4)]\nSum of residues: -(((-1)^(1/4)*%i+(-1)^(1/4))/4)\n∫_{-∞}^∞ 1/(1+x⁴) dx = -((((-1)^(1/4)*%i-(-1)^(1/4))*%pi)/2)\n(numerical: 6.283185307179586*%i*(-(0.25*(-1)^(1/4)*%i)-0.25*(-1)^(1/4)) )\n∫_0^∞ 1/(1+x⁴) dx (half) = -((((-1)^(1/4)*%i-(-1)^(1/4))*%pi)/4)\n(numerical: 3.141592653589793*%i*(-(0.25*(-1)^(1/4)*%i)-0.25*(-1)^(1/4)) )"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "So $\\int_0^\\infty \\dfrac{dx}{1 + x^4} = \\dfrac{\\pi}{2\\sqrt{2}}$ — a clean result extracted from a contour integral with two residues.\n\n## Fourier-style integrals: $\\int e^{i a x} g(x)\\,dx$\n\nThe technique generalises beautifully to integrals like\n\n$$\\int_{-\\infty}^\\infty \\frac{e^{i a x}}{1 + x^2}\\,dx \\qquad (a > 0).$$\n\nClose the contour in the upper half-plane (where $|e^{iaz}|$ decays for $a > 0$). Pole at $z = i$, residue $e^{-a}/(2i)$. Result: $\\pi e^{-a}$. Maxima:\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "g_test : exp(%i * a * z) / (1 + z^2)$\nres_at_i : residue(g_test, z, %i)$\nprint(\"Res at i =\", res_at_i)$\nI_real : 2 * %pi * %i * res_at_i$\nprint(\"∫_{-∞}^∞ e^{iax}/(1+x²) dx =\", expand(I_real))$\nprint(\"Real part (a > 0 implicit): π e^{-a}\")$",
+      "metadata": {},
+      "execution_count": 11,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "Res at i = -((%e^-a*%i)/2)\n∫_{-∞}^∞ e^{iax}/(1+x²) dx = %e^-a*%pi\nReal part (a > 0 implicit): π e^{-a}"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "Taking real and imaginary parts: $\\int \\cos(ax)/(1+x^2) = \\pi e^{-a}$ and $\\int \\sin(ax)/(1+x^2) = 0$ (the latter by symmetry — odd integrand).\n\n## When residues fail\n\nThree caveats:\n\n1. **The contribution from the closing arc must vanish.** For semicircles in the upper half-plane and integrands of \"rational-times-exponential\" type with positive $a$, this is the **Jordan lemma**.\n2. **Branch cuts** — multi-valued functions like $\\log z$, $\\sqrt{z}$ require contours that respect the cut.\n3. **Essential singularities** — residues are still defined (read off from the Laurent expansion) but not via the simple-pole formula.\n\nFor more exotic integrals, \"indented contours\" (with small detours around poles on the real axis) come into play.\n\n## Numerical demonstration [S+N]\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "I_num_1 : 0.0$\nN : 100000$\ndx : 40.0 / N$\nfor k : 0 thru N - 1 do block([xv],\n  xv : -20 + (k + 0.5) * dx,\n  I_num_1 : I_num_1 + 1.0 / (1 + xv^4) * dx)$\nprint(\"Numerical ∫_{-20}^{20} 1/(1+x⁴) dx ≈\", I_num_1)$\nprint(\"Symbolic π/√2 =\", float(%pi / sqrt(2)))$",
+      "metadata": {},
+      "execution_count": 12,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "Numerical ∫_{-20}^{20} 1/(1+x⁴) dx ≈ 2.2213581359691257\nSymbolic π/√2 = 2.221441469079183"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "Residues are the most powerful way to evaluate definite integrals that don't have elementary antiderivatives. The technique stretches further: contour integrals of branch-cut functions, sums of trigonometric series, asymptotic expansions, special function identities — all built on this single theorem.\n\nNext, the final notebook: conformal mappings.\n",
+      "metadata": {}
+    }
+  ]
+}

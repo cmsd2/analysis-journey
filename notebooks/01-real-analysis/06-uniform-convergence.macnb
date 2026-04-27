@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 5,
+      "execution_count": 9,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "x_grid : np_to_list(np_linspace(0, 1, 200))$\nn_show : [1, 2, 5, 20, 100]$\nplot_args : [color=\"blue\", line_width=1, name=\"n=1\", lines(x_grid, map(lambda([x], float(x^1)), x_grid))]$\n\nax_draw2d(\n  color=\"cornflowerblue\", line_width=1, name=\"n=1\",\n  lines(x_grid, map(lambda([x], float(x^1)), x_grid)),\n  color=\"green\", line_width=1, name=\"n=2\",\n  lines(x_grid, map(lambda([x], float(x^2)), x_grid)),\n  color=\"orange\", line_width=1, name=\"n=5\",\n  lines(x_grid, map(lambda([x], float(x^5)), x_grid)),\n  color=\"red\", line_width=2, name=\"n=20\",\n  lines(x_grid, map(lambda([x], float(x^20)), x_grid)),\n  color=\"purple\", line_width=2, name=\"n=100\",\n  lines(x_grid, map(lambda([x], float(x^100)), x_grid)),\n  title=\"x^n on [0,1] — pointwise limit is discontinuous\",\n  xlabel=\"x\", ylabel=\"x^n\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 6,
+      "execution_count": 10,
       "outputs": [
         {
           "data": {
@@ -53,7 +53,7 @@
       "cell_type": "code",
       "source": "g_uniform(x, N) := sum(cos(n * x) / n^2, n, 1, N)$\nx_g : np_to_list(np_linspace(-2*float(%pi), 2*float(%pi), 400))$\n\nax_draw2d(\n  color=\"lightcoral\", line_width=1, name=\"N=1 partial\",\n  lines(x_g, map(lambda([x], float(g_uniform(x, 1))), x_g)),\n  color=\"orange\", line_width=1, name=\"N=5 partial\",\n  lines(x_g, map(lambda([x], float(g_uniform(x, 5))), x_g)),\n  color=\"green\", line_width=1, name=\"N=20 partial\",\n  lines(x_g, map(lambda([x], float(g_uniform(x, 20))), x_g)),\n  color=\"blue\", line_width=2, name=\"N=100 partial (≈ uniform limit)\",\n  lines(x_g, map(lambda([x], float(g_uniform(x, 100))), x_g)),\n  title=\"Σ cos(nx)/n² — uniform convergence by Weierstrass M-test\",\n  xlabel=\"x\", ylabel=\"partial sum\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 7,
+      "execution_count": 11,
       "outputs": [
         {
           "data": {
@@ -75,7 +75,7 @@
       "cell_type": "code",
       "source": "sup_err(n_val) := block([xs, fns, fs],\n  xs : np_to_list(np_linspace(0, 1, 1000)),\n  fns : map(lambda([x], float(x^n_val)), xs),\n  /* pointwise limit f: 1 if x = 1 else 0; sample doesn't include x=1 exactly,\n     so limit is essentially 0 for our test points except very near 1.\n     sup |f_n - 0| over [0, 1] = max of |x^n| = 1 (at x=1). */\n  lmax(map(abs, fns)))$\n\nn_test : [2, 5, 10, 100, 1000]$\nsups : map(sup_err, n_test)$\nprint(\"n:        \", n_test)$\nprint(\"sup_x x^n:\", sups)$\nprint(\"sup never decays — convergence is not uniform.\")$",
       "metadata": {},
-      "execution_count": 8,
+      "execution_count": 12,
       "outputs": [
         {
           "name": "stdout",

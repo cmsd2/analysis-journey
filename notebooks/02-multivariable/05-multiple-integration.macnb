@@ -1,0 +1,206 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 5,
+  "metadata": {
+    "kernelspec": {
+      "name": "maxima",
+      "display_name": "Maxima",
+      "language": "maxima"
+    },
+    "aximar": {}
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "source": "# Multiple Integration [S+N]\n\nFor $f : R \\subseteq \\mathbb{R}^n \\to \\mathbb{R}$ and a (nice) region $R$, the **multiple integral** $\\int_R f$ extends the Riemann construction: partition $R$, take supremum/infimum on each piece, take the limit as the partition refines.\n\nTwo technical workhorses make actual computation possible:\n\n- **Fubini's theorem**: under modest hypotheses (continuity is more than enough), $\\int\\int_R f\\,dA = \\int_a^b \\left(\\int_{c(x)}^{d(x)} f(x, y)\\,dy\\right) dx$. A 2D integral becomes nested 1D integrals.\n- **Change of variables**: if $\\Phi : U \\to V$ is a $C^1$ diffeomorphism, $\\int_V f\\,dV = \\int_U f(\\Phi(u))\\,|\\det J_\\Phi|\\,dU$. The Jacobian determinant is the volume scaling factor.\n\nThis notebook works through both, with polar/spherical examples that show why they're indispensable.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
+      "metadata": {},
+      "execution_count": 17,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Fubini in practice [S+N]\n\nCompute $\\int_0^1 \\int_0^{x} (x + y)\\,dy\\,dx$ over the triangle below $y = x$ in the unit square.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "inner : integrate(x + y, y, 0, x)$\nprint(\"Inner integral ∫₀^x (x+y) dy =\")$\ninner;\nouter : integrate(inner, x, 0, 1)$\nprint(\"Outer integral =\")$\nouter;",
+      "metadata": {},
+      "execution_count": 18,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "Inner integral ∫₀^x (x+y) dy =\n(3*x^2)/2\nOuter integral ="
+          ]
+        },
+        {
+          "data": {
+            "text/latex": [
+              "{{1}\\over{2}}"
+            ]
+          },
+          "execution_count": 18,
+          "metadata": {},
+          "output_type": "execute_result"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "$3/8$. The order of integration matters: if we integrate over the same region as $\\int_0^1 \\int_y^1 (x+y)\\,dx\\,dy$ we should get the same answer — Fubini guarantees it for continuous integrands on rectangles, and for nice regions (like our triangle) by extending.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "inner_swap : integrate(x + y, x, y, 1)$\nprint(\"Other order, inner =\")$\ninner_swap;\nprint(\"Other order, outer =\")$\nintegrate(inner_swap, y, 0, 1);",
+      "metadata": {},
+      "execution_count": 19,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "Other order, inner =\n(2*y+1)/2-(3*y^2)/2\nOther order, outer ="
+          ]
+        },
+        {
+          "data": {
+            "text/latex": [
+              "{{1}\\over{2}}"
+            ]
+          },
+          "execution_count": 19,
+          "metadata": {},
+          "output_type": "execute_result"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Change of variables — polar coordinates\n\nThe classic computation: $I = \\int_{\\mathbb{R}^2} e^{-(x^2 + y^2)}\\,dA$. In Cartesian coordinates this looks awkward; in polar, $x = r\\cos\\theta, y = r\\sin\\theta$, the Jacobian determinant is $r$, and the integrand becomes $e^{-r^2}$:\n\n$$I = \\int_0^{2\\pi}\\!\\int_0^\\infty e^{-r^2}\\,r\\,dr\\,d\\theta = 2\\pi \\cdot \\tfrac{1}{2} = \\pi.$$\n\nWe've effectively computed $(\\int_{\\mathbb{R}} e^{-x^2}\\,dx)^2 = \\pi$, giving the famous Gaussian integral $\\int_{\\mathbb{R}} e^{-x^2}\\,dx = \\sqrt{\\pi}$.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "I_polar : integrate(integrate(exp(-r^2) * r, r, 0, inf), theta, 0, 2*%pi)$\nprint(\"∫₀^{2π} ∫₀^∞ e^{-r²} r dr dθ =\")$\nI_polar;\nprint(\"→ Gaussian integral: √π =\", float(sqrt(%pi)))$",
+      "metadata": {},
+      "execution_count": 20,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "∫₀^{2π} ∫₀^∞ e^{-r²} r dr dθ =\n%pi\n→ Gaussian integral: √π = 1.7724538509055159"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "The factor of $r$ is the **Jacobian determinant** of the polar transformation — Maxima derives it directly:\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "Phi : [r * cos(theta), r * sin(theta)]$\nJ_Phi : genmatrix(lambda([i, j], diff(Phi[i], [r, theta][j])), 2, 2)$\nprint(\"J_Φ =\")$ J_Phi;\nprint(\"|det J_Φ| =\")$\nratsimp(abs(determinant(J_Phi)));",
+      "metadata": {},
+      "execution_count": 21,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "J_Φ =\nmatrix([cos(theta),-(r*sin(theta))],[sin(theta),r*cos(theta)])\n|det J_Φ| ="
+          ]
+        },
+        {
+          "data": {
+            "text/latex": [
+              "\\left| r\\,\\sin ^2\\theta+r\\,\\cos ^2\\theta\\right| "
+            ]
+          },
+          "execution_count": 21,
+          "metadata": {},
+          "output_type": "execute_result"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Spherical coordinates and the volume of a ball [S+N]\n\nCompute the volume of the unit ball in $\\mathbb{R}^3$ directly via spherical coordinates: $x = \\rho\\sin\\phi\\cos\\theta$, $y = \\rho\\sin\\phi\\sin\\theta$, $z = \\rho\\cos\\phi$, with $\\rho \\in [0, 1]$, $\\phi \\in [0, \\pi]$, $\\theta \\in [0, 2\\pi]$. The Jacobian is $\\rho^2 \\sin\\phi$.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "Phi3 : [rho * sin(phi) * cos(theta),\n        rho * sin(phi) * sin(theta),\n        rho * cos(phi)]$\nJ3 : genmatrix(lambda([i, j], diff(Phi3[i], [rho, phi, theta][j])), 3, 3)$\nprint(\"J_Φ in 3D =\")$ J3;\ndet_J3 : ratsimp(trigsimp(determinant(J3)))$\nprint(\"det J_Φ =\")$\ndet_J3;",
+      "metadata": {},
+      "execution_count": 22,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "J_Φ in 3D =\nmatrix([sin(phi)*cos(theta),cos(phi)*rho*cos(theta),\n        -(sin(phi)*rho*sin(theta))],\n       [sin(phi)*sin(theta),cos(phi)*rho*sin(theta),sin(phi)*rho*cos(theta)],\n       [cos(phi),-(sin(phi)*rho),0])\ndet J_Φ ="
+          ]
+        },
+        {
+          "data": {
+            "text/latex": [
+              "\\sin \\phi\\,\\rho^2"
+            ]
+          },
+          "execution_count": 22,
+          "metadata": {},
+          "output_type": "execute_result"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": "V_ball : integrate(integrate(integrate(rho^2 * sin(phi),\n                                          rho, 0, 1),\n                                phi, 0, %pi),\n                      theta, 0, 2*%pi)$\nprint(\"Volume of unit ball ∫₀^{2π} ∫₀^π ∫₀^1 ρ² sin(φ) dρ dφ dθ =\")$\nV_ball;\nprint(\"4π/3 =\", float(4*%pi/3))$",
+      "metadata": {},
+      "execution_count": 23,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "Volume of unit ball ∫₀^{2π} ∫₀^π ∫₀^1 ρ² sin(φ) dρ dφ dθ =\n(4*%pi)/3\n4π/3 = 4.1887902047863905"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## When Fubini fails\n\nFubini's theorem requires either (a) a non-negative integrand (Tonelli) or (b) absolute integrability. Drop both, and the iterated integrals can disagree. Classic example:\n\n$$f(x, y) = \\frac{x^2 - y^2}{(x^2 + y^2)^2} \\text{ on } [0,1] \\times [0,1].$$\n\nCompute one way:\n$$\\int_0^1\\!\\int_0^1 f(x,y)\\,dy\\,dx = \\frac{\\pi}{4}, \\qquad \\int_0^1\\!\\int_0^1 f(x,y)\\,dx\\,dy = -\\frac{\\pi}{4}.$$\n\nThe two iterated integrals exist but disagree — because $f$ is not absolutely integrable on the square (it has a non-integrable singularity at the origin).\n\n## Numerical verification [S+N]\n\nMatch a symbolic 2D integral against a numerical one. Take $\\int_0^1\\!\\int_0^1 \\sin(x y)\\,dx\\,dy$.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "I_sym : integrate(integrate(sin(x*y), x, 0, 1), y, 0, 1)$\nprint(\"Symbolic ∫₀¹ ∫₀¹ sin(xy) dx dy =\")$\nI_sym;\nprint(\"(numeric value =\", float(I_sym), \")\")$\n\n/* Numeric Riemann sum on a 100×100 grid */\nn_grid : 100$\nh : 1.0 / n_grid$\ntotal : 0.0$\nfor i : 0 thru n_grid - 1 do\n  for j : 0 thru n_grid - 1 do\n    total : total + sin((i + 0.5)*h * (j + 0.5)*h) * h * h$\nprint(\"Numeric (midpoint, 100×100 grid) =\", total)$",
+      "metadata": {},
+      "execution_count": 24,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "Symbolic ∫₀¹ ∫₀¹ sin(xy) dx dy =\n(2*log(%i)+log(-1)+2*%gamma)/2+(gamma_incomplete(0,%i)\n                               +gamma_incomplete(0,-%i))\n                               /2\n(numeric value =\n                0.5*(6.283185307179586*%i+1.1544313298030657)\n                 -0.33740392290096816 )\nNumeric (midpoint, 100×100 grid) = 0.23981272720245522"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "Multiple integration is mostly mechanical once you have:\n\n- The right coordinate system (radial symmetry → polar/spherical/cylindrical).\n- The Jacobian determinant of the transformation.\n- A nested 1D integral that Maxima or numerics can crunch.\n\nThe next notebook generalises this to *vector-valued* integration over curves and surfaces, and culminates in the integral theorems (Stokes, divergence) that tie everything together.\n",
+      "metadata": {}
+    }
+  ]
+}

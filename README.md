@@ -39,30 +39,30 @@ The classical foundations: sequences, continuity, differentiation, integration, 
 
 ### Stage 2 — Analysis in $\mathbb{R}^n$
 
-Multivariable: the topology, calculus, and integration that classical real analysis doesn't reach. (To be written — Stage 1 first.)
+Multivariable: the topology, calculus, and integration that classical real analysis doesn't reach.
 
 | # | Notebook | Idea |
 |---|----------|------|
-| 01 | topology-of-rn | Open/closed sets, compactness, Heine-Borel |
-| 02 | continuity-in-rn | Multivariable limits, pathological cases |
-| 03 | differentiation-in-rn | [S+N] Total derivative, Jacobian, chain rule |
-| 04 | inverse-implicit-functions | [S+N] The two foundational theorems |
-| 05 | multiple-integration | [S+N] Fubini, change of variables |
-| 06 | vector-calculus-and-stokes | [S+N] Gradient, divergence, curl; the integral theorems |
+| 01 | [topology-of-rn](notebooks/02-multivariable/01-topology-of-rn.macnb) | Open/closed sets, compactness, Heine-Borel, equivalent norms |
+| 02 | [continuity-in-rn](notebooks/02-multivariable/02-continuity-in-rn.macnb) | Direction-dependent limits, paths vs lines, Heine-Cantor |
+| 03 | [differentiation-in-rn](notebooks/02-multivariable/03-differentiation-in-rn.macnb) | [S+N] Total derivative, Jacobian, partials-vs-differentiable, chain rule |
+| 04 | [inverse-implicit-functions](notebooks/02-multivariable/04-inverse-implicit-functions.macnb) | [S+N] Inverse and implicit function theorems with concrete examples |
+| 05 | [multiple-integration](notebooks/02-multivariable/05-multiple-integration.macnb) | [S+N] Fubini, polar/spherical change of variables, Gaussian integral |
+| 06 | [vector-calculus-and-stokes](notebooks/02-multivariable/06-vector-calculus-and-stokes.macnb) | [S+N] Gradient/div/curl, Green/Stokes/divergence theorems |
 
 ### Stage 3 — Complex Analysis
 
-Where the magic happens. Holomorphic functions are wildly more rigid than $C^\infty$ real functions, and that rigidity gives extraordinary tools. (To be written.)
+Where the rigidity gets remarkable. Holomorphic functions are wildly more constrained than $C^\infty$ real functions, and that rigidity unlocks extraordinary tools.
 
 | # | Notebook | Idea |
 |---|----------|------|
-| 01 | complex-plane | Geometry, Möbius transformations, the Riemann sphere |
-| 02 | holomorphic-and-cauchy-riemann | [S+N] What "differentiable" means in $\mathbb{C}$ |
-| 03 | complex-series | Power series in $\mathbb{C}$, analyticity, identity theorem |
-| 04 | contour-integrals | Path integrals in $\mathbb{C}$; Cauchy's theorem |
-| 05 | cauchy-integral-formula | [S+N] Values from boundaries; analytic = $C^\infty$ |
-| 06 | residues | [S+N] Calculus of residues; real integrals via complex contours |
-| 07 | conformal-mappings | [S+N] Angle-preserving maps; Schwarz lemma; Riemann mapping |
+| 01 | [complex-plane](notebooks/03-complex-analysis/01-complex-plane.macnb) | Multiplication = rotation+scale, roots of unity, Möbius |
+| 02 | [holomorphic-and-cauchy-riemann](notebooks/03-complex-analysis/02-holomorphic-and-cauchy-riemann.macnb) | [S+N] CR equations; harmonic real/imaginary parts |
+| 03 | [complex-series](notebooks/03-complex-analysis/03-complex-series.macnb) | [S+N] Disk of convergence; why $1/(1+x^2)$ has $R=1$ |
+| 04 | [contour-integrals](notebooks/03-complex-analysis/04-contour-integrals.macnb) | [S+N] $\oint = 0$ on simply connected domains; $\oint 1/z = 2\pi i$ |
+| 05 | [cauchy-integral-formula](notebooks/03-complex-analysis/05-cauchy-integral-formula.macnb) | [S+N] Boundary determines interior; Liouville, FTA, max modulus |
+| 06 | [residues](notebooks/03-complex-analysis/06-residues.macnb) | [S+N] Residue theorem; real integrals via complex contours |
+| 07 | [conformal-mappings](notebooks/03-complex-analysis/07-conformal-mappings.macnb) | [S+N] Angle preservation, disc automorphisms, Riemann mapping |
 
 ## Reading Order
 
