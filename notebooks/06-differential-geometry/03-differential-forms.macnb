@@ -1,0 +1,91 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 5,
+  "metadata": {
+    "kernelspec": {
+      "name": "maxima",
+      "display_name": "Maxima",
+      "language": "maxima"
+    },
+    "aximar": {}
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "source": "# Differential Forms [S+N]\n\nVector fields generalise \"infinitesimal direction\"; **differential forms** generalise \"infinitesimal volume / flux / circulation\". They're the right objects to integrate on manifolds.\n\nA **differential $k$-form** at a point $p$ is an alternating multilinear map $\\omega_p : (T_p M)^k \\to \\mathbb{R}$. Globally, a $k$-form is a smooth assignment $p \\mapsto \\omega_p$.\n\nIn local coordinates $(x^1, \\ldots, x^n)$ on $M^n$:\n\n$$\\omega = \\sum_{i_1 < i_2 < \\cdots < i_k} f_{i_1 \\ldots i_k}(x)\\,dx^{i_1} \\wedge dx^{i_2} \\wedge \\cdots \\wedge dx^{i_k}.$$\n\nThe **wedge product** $\\wedge$ is anti-symmetric: $dx \\wedge dy = -dy \\wedge dx$. This encodes the \"alternating\" property — a 2-form on $T_pM$ (with $\\dim = n$) can be encoded with at most $\\binom{n}{2}$ components.\n\nThis notebook builds up to the **exterior derivative** $d$ — the operation that satisfies $d^2 = 0$ and gives Stokes' theorem its modern form.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
+      "metadata": {},
+      "execution_count": 5,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## 0-, 1-, 2-, ..., $n$-forms\n\nFor an $n$-manifold $M$:\n\n| Form | Notation | Object |\n|------|----------|--------|\n| 0-form | $f$ | smooth function |\n| 1-form | $\\omega = f\\,dx + g\\,dy$ | dual to vector field |\n| 2-form | $\\omega = h\\,dx \\wedge dy$ | \"flux density\" / area element |\n| $n$-form | $\\omega = f\\,dx^1 \\wedge \\cdots \\wedge dx^n$ | volume element |\n| $k$-form, $k > n$ | $0$ | (no non-trivial alternating $k$-tensor) |\n\n**Wedge product** of an $\\ell$-form and an $m$-form is an $(\\ell + m)$-form. **Pull-back** $f^* \\omega$ is a key operation on forms — it's how forms transform under smooth maps.\n\n## Exterior derivative $d$\n\nThe **exterior derivative** is the unique map $d : \\Omega^k(M) \\to \\Omega^{k+1}(M)$ satisfying:\n\n1. On 0-forms (functions), $df = \\sum_i \\frac{\\partial f}{\\partial x^i}\\,dx^i$ (the gradient as a 1-form).\n2. **Leibniz**: $d(\\omega \\wedge \\eta) = d\\omega \\wedge \\eta + (-1)^{\\deg \\omega}\\omega \\wedge d\\eta$.\n3. **Nilpotent**: $d^2 = 0$ — applying $d$ twice always gives zero.\n\n$d^2 = 0$ is the key feature. It generalises:\n- \"curl of gradient is zero\" (apply $d$ to $df$ is zero).\n- \"divergence of curl is zero\" (apply $d$ to $d\\omega$ is zero, where $\\omega$ is a 1-form).\n\nThese vector-calculus identities are special cases of $d^2 = 0$ applied to the right form.\n\n## Computing $d$ symbolically [S+N]\n\nMaxima doesn't have built-in differential-forms machinery, but we can mimic with explicit 1-form objects. Compute $d(x\\,dx + y\\,dy)$ — should be zero (it's exact).\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "/* 1-form: ω = P dx + Q dy. dω = (Q_x - P_y) dx ∧ dy */\nP : x$\nQ : y$\ndQ_dx : diff(Q, x)$\ndP_dy : diff(P, y)$\nprint(\"ω = x dx + y dy\")$\nprint(\"dω = (∂Q/∂x - ∂P/∂y) dx ∧ dy = (\", dQ_dx, \"-\", dP_dy, \") dx ∧ dy =\", dQ_dx - dP_dy, \"(exact form, dω = 0 ✓)\")$\nprint()$\n/* Now ω = x dy - y dx — area element */\nP2 : -y$\nQ2 : x$\nprint(\"ω = -y dx + x dy\")$\nprint(\"dω = (∂Q/∂x - ∂P/∂y) dx ∧ dy = (\", diff(Q2, x), \"-\", diff(P2, y), \") dx ∧ dy =\",\n      diff(Q2, x) - diff(P2, y), \"  ⇒ dω = 2 dx ∧ dy (twice the area element)\")$",
+      "metadata": {},
+      "execution_count": 6,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "ω = x dx + y dy\ndω = (∂Q/∂x - ∂P/∂y) dx ∧ dy = ( 0 - 0 ) dx ∧ dy = 0 (exact form, dω = 0 ✓)\nω = -y dx + x dy\ndω = (∂Q/∂x - ∂P/∂y) dx ∧ dy = ( 1 - -1 ) dx ∧ dy = 2\n                                  ⇒ dω = 2 dx ∧ dy (twice the area element)"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Pullback under maps\n\nFor $f : M \\to N$ smooth and $\\omega \\in \\Omega^k(N)$, the **pullback** $f^*\\omega \\in \\Omega^k(M)$ is defined by\n\n$$(f^*\\omega)_p(v_1, \\ldots, v_k) = \\omega_{f(p)}(df_p(v_1), \\ldots, df_p(v_k)).$$\n\nIn coordinates, $f^*\\omega$ is computed by *substituting* the coordinate functions of $f$ into $\\omega$. This is what makes change-of-variables for integrals work cleanly: $\\int_{\\Phi(M)} \\omega = \\int_M \\Phi^* \\omega$, with the Jacobian appearing naturally inside the wedge products.\n\nExample: pullback the area form $dx \\wedge dy$ under polar $\\Phi(r, \\theta) = (r\\cos\\theta, r\\sin\\theta)$:\n\n$$\\Phi^*(dx \\wedge dy) = d(r\\cos\\theta) \\wedge d(r\\sin\\theta) = r\\,dr \\wedge d\\theta.$$\n\nThe Jacobian $r$ falls out automatically.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "/* Verify: d(r cos θ) ∧ d(r sin θ) coefficient */\nx_polar : r * cos(theta)$\ny_polar : r * sin(theta)$\n/* dx = ∂x/∂r dr + ∂x/∂θ dθ;  dy = similarly */\nax_dr : diff(x_polar, r)$\nax_dt : diff(x_polar, theta)$\nay_dr : diff(y_polar, r)$\nay_dt : diff(y_polar, theta)$\n/* Wedge: dx ∧ dy = (ax_dr ay_dt - ax_dt ay_dr) dr ∧ dθ */\njacobian : ratsimp(ax_dr * ay_dt - ax_dt * ay_dr)$\nprint(\"Φ*(dx ∧ dy) =\", jacobian, \"dr ∧ dθ\")$\nprint(\"(Polar Jacobian = r — same answer as Stage 2/05)\")$",
+      "metadata": {},
+      "execution_count": 7,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "Φ*(dx ∧ dy) = r*sin(theta)^2+r*cos(theta)^2 dr ∧ dθ\n(Polar Jacobian = r — same answer as Stage 2/05)"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Closed and exact forms\n\nA form $\\omega$ is **closed** if $d\\omega = 0$. It's **exact** if $\\omega = d\\eta$ for some $\\eta$.\n\nBy $d^2 = 0$, **every exact form is closed**. The converse holds *locally* (Poincaré lemma), but not globally — there exist closed forms that are not exact, and they detect the **topology** of $M$.\n\nThe **de Rham cohomology** of $M$:\n\n$$H^k_{dR}(M) = \\{\\text{closed }k\\text{-forms}\\} / \\{\\text{exact }k\\text{-forms}\\}.$$\n\nThese groups are **topological invariants** — they tell you about holes, loops, voids in $M$. For example, $H^1(S^1) = \\mathbb{R}$ (one non-trivial closed-but-not-exact 1-form, the angular form $d\\theta$).\n\nThe **angular 1-form** on $\\mathbb{R}^2 \\setminus \\{0\\}$ is\n\n$$\\omega = \\frac{-y\\,dx + x\\,dy}{x^2 + y^2}.$$\n\nIt's closed everywhere it's defined, but **not exact** — there's no global function $\\theta : \\mathbb{R}^2 \\setminus \\{0\\} \\to \\mathbb{R}$ whose differential is $\\omega$. (You'd want $\\theta$ = angle, but that jumps by $2\\pi$ on a closed loop.) Integrating $\\omega$ around a closed loop encircling 0 gives $2\\pi$ — that's the topology talking.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "/* Verify closedness of the angular form */\nP_ang : -y / (x^2 + y^2)$\nQ_ang : x / (x^2 + y^2)$\ndP_dy : diff(P_ang, y)$\ndQ_dx : diff(Q_ang, x)$\nprint(\"dP/dy =\", ratsimp(dP_dy))$\nprint(\"dQ/dx =\", ratsimp(dQ_dx))$\nprint(\"dω = (dQ/dx - dP/dy) dx ∧ dy = \", ratsimp(dQ_dx - dP_dy), \"  → ω is closed ✓\")$",
+      "metadata": {},
+      "execution_count": 8,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "dP/dy = (y^2-x^2)/(y^4+2*x^2*y^2+x^4)\ndQ/dx = (y^2-x^2)/(y^4+2*x^2*y^2+x^4)\ndω = (dQ/dx - dP/dy) dx ∧ dy =  0   → ω is closed ✓"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Volume form on Riemannian manifolds\n\nA Riemannian metric $g$ (next notebook) determines a canonical **volume form** $\\omega_g \\in \\Omega^n(M)$. In local coordinates,\n\n$$\\omega_g = \\sqrt{\\det g_{ij}}\\,dx^1 \\wedge \\cdots \\wedge dx^n.$$\n\nFor Euclidean $\\mathbb{R}^n$ with the standard metric, $\\sqrt{\\det g} = 1$ and we get $dx^1 \\wedge \\cdots \\wedge dx^n$. On a curved space, $\\sqrt{\\det g}$ accounts for the local stretching.\n\nSpherical coordinates: $g = dr^2 + r^2\\,d\\theta^2 + r^2 \\sin^2 \\theta\\,d\\phi^2$, so $\\sqrt{\\det g} = r^2 \\sin\\theta$ — the volume element from Stage 2/05 falls out.\n\n## What's coming\n\nForms are the natural objects to integrate. The next notebook builds the integration theory: orientations, $\\int_M \\omega$, and the generalised Stokes theorem $\\int_M d\\omega = \\int_{\\partial M} \\omega$ that unifies every classical \"fundamental theorem of $\\nabla$\" we've seen.\n",
+      "metadata": {}
+    }
+  ]
+}

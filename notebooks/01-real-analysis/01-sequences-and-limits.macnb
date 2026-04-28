@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 13,
+      "execution_count": 19,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "seq_a(n) := 1 + 1/n$\nL_a : 1.0$\neps : 0.05$\n\nn_max : 80$\nn_vals : makelist(n, n, 1, n_max)$\na_vals : map(lambda([n], float(seq_a(n))), n_vals)$\n\n/* Find smallest N with |a_n - L| < eps for all n ≥ N */\nN_min : 1$\nfor n : 1 thru n_max do\n  if abs(a_vals[n] - L_a) >= eps then N_min : n + 1$\nprint(\"Smallest N for ε =\", eps, \"is N =\", N_min)$\nprint(\"Closed-form check: 1/N < eps  ⇒  N > 1/eps =\", 1.0 / eps)$",
       "metadata": {},
-      "execution_count": 14,
+      "execution_count": 20,
       "outputs": [
         {
           "name": "stdout",
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "ax_draw2d(\n  color=\"blue\", marker_size=4, name=\"a_n = 1 + 1/n\",\n  points(n_vals, a_vals),\n  color=\"black\", dash=\"dash\", name=\"L = 1\",\n  explicit(L_a, t, 0, n_max),\n  color=\"red\", dash=\"dot\", name=\"L ± ε\",\n  explicit(L_a + eps, t, 0, n_max),\n  color=\"red\", dash=\"dot\",\n  explicit(L_a - eps, t, 0, n_max),\n  color=\"green\", line_width=2, name=\"N (smallest)\",\n  points([N_min, N_min], [L_a - eps, L_a + eps]),\n  title=\"Convergence: every term beyond N stays in the ε-band\",\n  xlabel=\"n\", ylabel=\"a_n\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 15,
+      "execution_count": 21,
       "outputs": [
         {
           "data": {
@@ -73,7 +73,7 @@
       "cell_type": "code",
       "source": "eps_vals : [0.5, 0.1, 0.05, 0.01, 0.005, 0.001]$\nN_vals : []$\nfor e in eps_vals do block([Nv],\n  Nv : 1,\n  for n : 1 thru 5000 do\n    if abs(1.0/n) >= e then Nv : n + 1,\n  N_vals : endcons(Nv, N_vals))$\n\nprint(\"ε:    \", eps_vals)$\nprint(\"N(ε): \", N_vals)$\nprint(\"1/ε:  \", map(lambda([e], 1.0/e), eps_vals))$",
       "metadata": {},
-      "execution_count": 16,
+      "execution_count": 22,
       "outputs": [
         {
           "name": "stdout",
@@ -93,7 +93,7 @@
       "cell_type": "code",
       "source": "seq_b(n) := (-1)^n$\nb_vals : map(lambda([n], float(seq_b(n))), makelist(n, n, 1, 30))$\n\nax_draw2d(\n  color=\"red\", marker_size=6, name=\"b_n = (-1)^n\",\n  points(makelist(n, n, 1, 30), b_vals),\n  title=\"Divergent: oscillates forever, no L works\",\n  xlabel=\"n\", ylabel=\"b_n\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 17,
+      "execution_count": 23,
       "outputs": [
         {
           "data": {
@@ -115,7 +115,7 @@
       "cell_type": "code",
       "source": "basel_n : 200$\nc_vals : []$\nrunning : 0.0$\nfor k : 1 thru basel_n do (\n  running : running + 1.0/(k*k),\n  c_vals : endcons(running, c_vals))$\n\nprint(\"c_200 =\", last(c_vals))$\nprint(\"π²/6 ≈\", float(%pi^2/6))$\nprint(\"difference =\", float(%pi^2/6) - last(c_vals))$\n\nax_draw2d(\n  color=\"blue\", marker_size=3, name=\"c_n = Σ 1/k²\",\n  points(makelist(n, n, 1, basel_n), c_vals),\n  color=\"red\", dash=\"dash\", name=\"π²/6\",\n  explicit(float(%pi^2/6), t, 1, basel_n),\n  title=\"Bounded monotone increasing — converges to its sup\",\n  xlabel=\"n\", ylabel=\"c_n\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 18,
+      "execution_count": 24,
       "outputs": [
         {
           "name": "stdout",

@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 9,
+      "execution_count": 13,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "theta_grid : np_to_list(np_linspace(0, 2*float(%pi), 200))$\ndisc_x : map(lambda([t], cos(t)), theta_grid)$\ndisc_y : map(lambda([t], sin(t)), theta_grid)$\n\nax_draw2d(\n  color=\"blue\", line_width=2, name=\"∂B₁(0) — boundary not in B₁\",\n  lines(disc_x, disc_y),\n  marker_size=4, color=\"lightblue\", name=\"interior\",\n  points(np_to_list(np_scale(0.7, ndarray(disc_x))),\n         np_to_list(np_scale(0.7, ndarray(disc_y)))),\n  title=\"Open ball B_1(0) in ℝ² — disc, boundary excluded\",\n  xlabel=\"x₁\", ylabel=\"x₂\",\n  aspect_ratio=true, grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 10,
+      "execution_count": 14,
       "outputs": [
         {
           "data": {
@@ -53,7 +53,7 @@
       "cell_type": "code",
       "source": "/* The closed unit square (compact) */\nsq_x : [-1, 1, 1, -1, -1]$\nsq_y : [-1, -1, 1, 1, -1]$\n\n/* A bounded but not closed set: the open unit ball, indicated by dashed boundary */\n/* And an unbounded but closed set: the half-plane y >= 0 */\n\nax_draw2d(\n  color=\"green\", line_width=2, name=\"closed square: compact\",\n  lines(sq_x, sq_y),\n  color=\"red\", dash=\"dash\", line_width=2, name=\"open disc: bounded but not closed\",\n  lines(map(lambda([t], 0.6*cos(t)), theta_grid),\n        map(lambda([t], 0.6*sin(t)), theta_grid)),\n  color=\"orange\", line_width=2, name=\"ray (unbounded but closed)\",\n  points([2, 5], [2, 2]),\n  title=\"Compactness in ℝ² — closed AND bounded\",\n  xlabel=\"x₁\", ylabel=\"x₂\",\n  grid=true, aspect_ratio=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 11,
+      "execution_count": 15,
       "outputs": [
         {
           "data": {
@@ -75,7 +75,7 @@
       "cell_type": "code",
       "source": "theta_grid : np_to_list(np_linspace(0, 2*float(%pi), 400))$\nb2_x : map(lambda([t], cos(t)), theta_grid)$\nb2_y : map(lambda([t], sin(t)), theta_grid)$\n\n/* l^infty unit ball: square [-1, 1]^2 */\nbinf_x : [-1, 1, 1, -1, -1]$\nbinf_y : [-1, -1, 1, 1, -1]$\n\n/* l^1 unit ball: diamond |x|+|y|<=1 */\nb1_x : [1, 0, -1, 0, 1]$\nb1_y : [0, 1, 0, -1, 0]$\n\nax_draw2d(\n  color=\"blue\", line_width=2, name=\"ℓ² (Euclidean)\",\n  lines(b2_x, b2_y),\n  color=\"green\", line_width=2, name=\"ℓ¹ (Manhattan)\",\n  lines(b1_x, b1_y),\n  color=\"red\", line_width=2, name=\"ℓ^∞ (sup)\",\n  lines(binf_x, binf_y),\n  title=\"Unit balls of three equivalent norms on ℝ²\",\n  xlabel=\"x₁\", ylabel=\"x₂\",\n  grid=true, aspect_ratio=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 12,
+      "execution_count": 16,
       "outputs": [
         {
           "data": {

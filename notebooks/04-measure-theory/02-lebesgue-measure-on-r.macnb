@@ -1,0 +1,88 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 5,
+  "metadata": {
+    "kernelspec": {
+      "name": "maxima",
+      "display_name": "Maxima",
+      "language": "maxima"
+    },
+    "aximar": {}
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "source": "# Constructing Lebesgue Measure on $\\mathbb{R}$\n\nWe want a measure $\\lambda$ on $\\mathbb{R}$ with three desiderata:\n\n1. $\\lambda([a, b]) = b - a$ — intervals get their length.\n2. $\\lambda$ is countably additive.\n3. $\\lambda$ is translation-invariant: $\\lambda(E + t) = \\lambda(E)$.\n\nAsking for these properties on **all** subsets of $\\mathbb{R}$ leads to a contradiction (Vitali's example, using the axiom of choice). So we restrict to a σ-algebra of \"measurable\" sets. The construction proceeds in two steps:\n\n1. **Outer measure** $\\lambda^*$ defined for *every* subset.\n2. **Carathéodory's criterion** picks out the measurable sets, on which $\\lambda^*$ becomes countably additive (and is then called $\\lambda$).\n\nThe result is a σ-algebra (the Lebesgue σ-algebra) richer than Borel, with all three properties above.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
+      "metadata": {},
+      "execution_count": 5,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Outer measure\n\nFor $E \\subseteq \\mathbb{R}$, define\n\n$$\\lambda^*(E) = \\inf \\left\\{ \\sum_{n=1}^\\infty \\ell(I_n) : E \\subseteq \\bigcup_n I_n,\\; I_n \\text{ open intervals} \\right\\}.$$\n\nIn words: cover $E$ by countably many open intervals; $\\lambda^*(E)$ is the infimum of the total interval lengths over all such covers. Defined for *every* subset, but only **countably subadditive**, not countably additive.\n\n**Examples**:\n\n- $\\lambda^*([a, b]) = b - a$: a single interval covers itself, so $\\lambda^* \\le b - a$. The reverse inequality requires a compactness argument.\n- $\\lambda^*(\\mathbb{Q}) = 0$: cover the $n$-th rational by an interval of length $\\varepsilon/2^n$; total $\\le \\varepsilon$ for any $\\varepsilon > 0$.\n- $\\lambda^*(\\mathbb{R}) = \\infty$.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "/* Demonstrate the rationals-are-null cover */\nN : 10$\neps : 0.1$\ntotal : sum(eps / 2^n, n, 1, N)$\nprint(\"Cover q_n with interval of length\", eps, \"/2^n, n =1..\", N)$\nprint(\"Total length =\", float(total), \"<\", eps, \"→ μ*(ℚ) = 0\")$",
+      "metadata": {},
+      "execution_count": 6,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "Cover q_n with interval of length 0.1 /2^n, n =1.. 10\nTotal length = 0.09990234375000001 < 0.1 → μ*(ℚ) = 0"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Carathéodory's criterion\n\nA set $E$ is **Lebesgue measurable** if for every $A \\subseteq \\mathbb{R}$,\n\n$$\\lambda^*(A) = \\lambda^*(A \\cap E) + \\lambda^*(A \\setminus E).$$\n\nIn words: $E$ \"splits\" every other set additively. The Lebesgue measurable sets form a σ-algebra $\\mathcal{L}$, on which $\\lambda^*$ restricts to a countably additive measure $\\lambda$. $\\mathcal{L} \\supseteq \\mathcal{B}(\\mathbb{R})$ — every Borel set is Lebesgue measurable.\n\nThe key non-trivial check: open sets satisfy Carathéodory's criterion. Once that's done, σ-algebra closure properties give every Borel set automatically.\n\n## Vitali set — non-measurable\n\nWithout the axiom of choice you can't write a non-measurable set down; with AC, here's the standard one. Equivalence relation on $[0, 1]$: $x \\sim y$ iff $x - y \\in \\mathbb{Q}$. By AC pick one representative from each equivalence class; call this set $V$. Then translates $V + q$ for $q \\in \\mathbb{Q} \\cap [-1, 1]$ are pairwise disjoint and their union covers $[0, 1] \\subseteq \\bigcup (V + q) \\subseteq [-1, 2]$.\n\nIf $V$ were measurable with $\\lambda(V) = 0$, countable additivity would give $\\lambda([0,1]) \\le \\sum \\lambda(V + q) = 0$ — contradiction. If $\\lambda(V) > 0$, then $\\sum_q \\lambda(V + q) = \\infty$ but $\\lambda([-1, 2]) = 3$ — contradiction.\n\nSo $V$ is **not measurable** — there's no $\\lambda(V)$ that's consistent. Pathological, but it's the price of having translation-invariance + countable additivity + measure-of-an-interval-is-its-length all at once.\n\n## The Cantor set — null but uncountable\n\nThe **Cantor set** $C$ is constructed by repeatedly removing the open middle third:\n\n- $C_0 = [0, 1]$.\n- $C_1 = C_0 \\setminus (1/3, 2/3) = [0, 1/3] \\cup [2/3, 1]$.\n- $C_2 = C_1$ minus middle thirds of each piece.\n- $C = \\bigcap_n C_n$.\n\nAfter $n$ steps, $C_n$ is a union of $2^n$ closed intervals, each of length $1/3^n$. So $\\lambda(C_n) = (2/3)^n \\to 0$ as $n \\to \\infty$.\n\nBy continuity of measure (from above), $\\lambda(C) = 0$.\n\nBut $C$ has cardinality $|\\mathbb{R}|$ — it's uncountable. Each point in $C$ corresponds to an infinite sequence of left/right choices at each stage; that's a binary expansion of points in $[0, 1]$. So $|C| = 2^{\\aleph_0} = |\\mathbb{R}|$.\n\n**Conclusion**: $C$ is uncountable, has measure zero, and is closed (as a countable intersection of closed sets). Visually:\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "/* Plot the first few stages of the Cantor set */\nplot_cantor_stage(n, color_, line_width_) := block([intervals, k, ls],\n  intervals : [[0.0, 1.0]],\n  for k : 1 thru n do block([new],\n    new : [],\n    for I in intervals do block([a, b, len_third],\n      a : I[1], b : I[2],\n      len_third : (b - a) / 3.0,\n      new : append(new, [[a, a + len_third], [b - len_third, b]])),\n    intervals : new),\n  intervals)$\n\nints_n4 : plot_cantor_stage(4, \"blue\", 6)$\nprint(\"After 4 steps:\", length(ints_n4), \"intervals, each of length 1/3^4 =\", 1.0/3^4)$\nprint(\"Total length:\", length(ints_n4) * 1.0/3^4, \"= (2/3)^4\")$\n\n/* Plot stages stacked */\nplot_traces : []$\ny_levels : [4, 3, 2, 1, 0]$  /* stages 0..4 */\nax_args : [\n  color=\"black\", line_width=4, name=\"C_0 = [0, 1]\",\n  lines([0, 1], [4, 4])\n]$\n\n/* For each stage, list the segments at the corresponding y-level */\nints_0 : [[0.0, 1.0]]$\nints_1 : plot_cantor_stage(1, \"\", 4)$\nints_2 : plot_cantor_stage(2, \"\", 4)$\nints_3 : plot_cantor_stage(3, \"\", 4)$\nints_4 : plot_cantor_stage(4, \"\", 4)$\n\n/* Convert intervals to plot lines at each y-level */\nbuild_xy(intervals, y_lvl) := block([xs, ys, I],\n  xs : [], ys : [],\n  for I in intervals do (\n    xs : append(xs, [I[1], I[2], I[2]]),\n    ys : append(ys, [y_lvl, y_lvl, none])),\n  /* drop trailing none-style; we just split traces below */\n  [xs, ys])$\n",
+      "metadata": {},
+      "execution_count": 7,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "After 4 steps: 16 intervals, each of length 1/3^4 = 0.012345679012345678\nTotal length: 0.19753086419753085 = (2/3)^4"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": "/* Simpler: just plot each stage as a series of line segments using points pairs */\nax_draw2d(\n  color=\"black\", line_width=6, name=\"C_0\",\n  lines([0, 1], [4, 4]),\n  color=\"black\", line_width=6, name=\"C_1\",\n  lines([0, 1.0/3], [3, 3]),\n  color=\"black\", line_width=6,\n  lines([2.0/3, 1], [3, 3]),\n  color=\"black\", line_width=6, name=\"C_2\",\n  lines([0, 1.0/9], [2, 2]),\n  color=\"black\", line_width=6,\n  lines([2.0/9, 3.0/9], [2, 2]),\n  color=\"black\", line_width=6,\n  lines([6.0/9, 7.0/9], [2, 2]),\n  color=\"black\", line_width=6,\n  lines([8.0/9, 1.0], [2, 2]),\n  title=\"Cantor set construction — measure (2/3)^n → 0\",\n  xlabel=\"x\", ylabel=\"stage\",\n  grid=true, showlegend=true\n)$",
+      "metadata": {},
+      "execution_count": 8,
+      "outputs": [
+        {
+          "data": {
+            "application/x-maxima-plotly": [
+              "{\"data\":[{\"x\":[0.0,1.0],\"y\":[4.0,4.0],\"type\":\"scatter\",\"mode\":\"lines\",\"line\":{\"color\":\"black\",\"width\":6},\"name\":\"C_0\"},{\"x\":[0.0,0.3333333333333333],\"y\":[3.0,3.0],\"type\":\"scatter\",\"mode\":\"lines\",\"line\":{\"color\":\"black\",\"width\":6},\"name\":\"C_1\"},{\"x\":[0.6666666666666666,1.0],\"y\":[3.0,3.0],\"type\":\"scatter\",\"mode\":\"lines\",\"line\":{\"color\":\"black\",\"width\":6},\"name\":\"C_1\"},{\"x\":[0.0,0.1111111111111111],\"y\":[2.0,2.0],\"type\":\"scatter\",\"mode\":\"lines\",\"line\":{\"color\":\"black\",\"width\":6},\"name\":\"C_2\"},{\"x\":[0.2222222222222222,0.3333333333333333],\"y\":[2.0,2.0],\"type\":\"scatter\",\"mode\":\"lines\",\"line\":{\"color\":\"black\",\"width\":6},\"name\":\"C_2\"},{\"x\":[0.6666666666666666,0.7777777777777778],\"y\":[2.0,2.0],\"type\":\"scatter\",\"mode\":\"lines\",\"line\":{\"color\":\"black\",\"width\":6},\"name\":\"C_2\"},{\"x\":[0.8888888888888888,1.0],\"y\":[2.0,2.0],\"type\":\"scatter\",\"mode\":\"lines\",\"line\":{\"color\":\"black\",\"width\":6},\"name\":\"C_2\"}],\"layout\":{\"title\":{\"text\":\"Cantor set construction — measure (2/3)^n → 0\"},\"showlegend\":true,\"width\":700,\"height\":450,\"plot_bgcolor\":\"white\",\"paper_bgcolor\":\"white\",\"xaxis\":{\"title\":{\"text\":\"x\"},\"showgrid\":true,\"gridcolor\":\"#ddd\",\"linecolor\":\"#ddd\",\"linewidth\":1,\"zerolinecolor\":\"black\",\"zerolinewidth\":1},\"yaxis\":{\"title\":{\"text\":\"stage\"},\"showgrid\":true,\"gridcolor\":\"#ddd\",\"linecolor\":\"#ddd\",\"linewidth\":1,\"zerolinecolor\":\"black\",\"zerolinewidth\":1}}}"
+            ]
+          },
+          "metadata": {},
+          "output_type": "display_data"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Lebesgue measure on $\\mathbb{R}^n$\n\nSame construction extends to $\\mathbb{R}^n$: cover by *boxes* $\\prod_{i=1}^n (a_i, b_i)$, use the obvious volume $\\prod (b_i - a_i)$ as the basis. Carathéodory carries through, giving Lebesgue measure on $\\mathbb{R}^n$.\n\nThe Lebesgue σ-algebra is invariant under:\n- Translation: $\\lambda(E + t) = \\lambda(E)$.\n- Reflection: $\\lambda(-E) = \\lambda(E)$.\n- Linear maps: $\\lambda(T E) = |\\det T| \\lambda(E)$ — the Jacobian determinant from Stage 2/05.\n\n## What we got\n\n- An σ-algebra $\\mathcal{L}$ much larger than Borel, containing every Borel set and every subset of a Borel measure-zero set.\n- A measure $\\lambda$ extending the natural notion of length / area / volume.\n- A non-measurable example (Vitali) showing why we can't have everything.\n- A null + uncountable example (Cantor) showing measure isn't cardinality.\n\nThe next notebook builds the **integral** on top of this — a tour de force of constructing a robust, well-behaved integration theory by approximating from below with simple functions.\n",
+      "metadata": {}
+    }
+  ]
+}

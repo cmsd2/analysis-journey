@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 6,
+      "execution_count": 11,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "z_test : 0.5 + 0.3 * %i$\nabs_z : float(cabs(z_test))$\nprint(\"z =\", z_test, \"  |z| =\", abs_z)$\nN : 50$\nrunning : 0.0 + 0.0*%i$\nfor n : 0 thru N do running : running + z_test^n$\nprint(\"Σ z^n (N=\", N, \"):\", expand(running))$\nprint(\"1/(1-z):\", expand(1/(1 - z_test)))$",
       "metadata": {},
-      "execution_count": 7,
+      "execution_count": 12,
       "outputs": [
         {
           "name": "stdout",
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "/* The geometric series converges to 1/(1 - z) inside |z| < 1 — plot the\n   limit's modulus, clamped to keep the figure bounded near the boundary. */\ngeom_mod : cabs(1 / (1 - (x + y*%i)))$\nax_draw3d(\n  explicit(min(geom_mod, 5), x, -1.4, 1.4, y, -1.4, 1.4),\n  title=\"|1/(1-z)| — finite inside |z|<1, blows up at the boundary\",\n  xlabel=\"Re z\", ylabel=\"Im z\", zlabel=\"|f|\",\n  colorscale=\"Hot\"\n)$",
       "metadata": {},
-      "execution_count": 8,
+      "execution_count": 13,
       "outputs": [
         {
           "name": "stdout",
@@ -80,7 +80,7 @@
       "cell_type": "code",
       "source": "series_atan : taylor(1/(1 + z^2), z, 0, 12)$\nprint(\"Taylor series of 1/(1 + z²):\"); series_atan;\nprint()$\nprint(\"Singularities (zeros of 1 + z²):\")$\nsolve(1 + z^2 = 0, z);",
       "metadata": {},
-      "execution_count": 9,
+      "execution_count": 14,
       "outputs": [
         {
           "name": "stdout",
@@ -95,7 +95,7 @@
               "\\left[ z=-i , z=i \\right] "
             ]
           },
-          "execution_count": 9,
+          "execution_count": 14,
           "metadata": {},
           "output_type": "execute_result"
         }
@@ -110,7 +110,7 @@
       "cell_type": "code",
       "source": "z_eval : 1.0 + 1.0 * %i$\ntruth : float(exp(1.0)) * (cos(1.0) + %i * sin(1.0))$\nprint(\"e^{1+i} (truth) =\", truth)$\n\nerrs : []$\nfor N in [2, 4, 6, 8, 10, 14, 18] do block([s, n, err],\n  s : 0,\n  for n : 0 thru N do s : s + z_eval^n / float(n!),\n  err : float(cabs(s - truth)),\n  print(\"N =\", N, \"  |error| =\", err),\n  errs : endcons(err, errs))$",
       "metadata": {},
-      "execution_count": 10,
+      "execution_count": 15,
       "outputs": [
         {
           "name": "stdout",

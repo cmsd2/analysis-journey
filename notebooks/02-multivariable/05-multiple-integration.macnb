@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 17,
+      "execution_count": 25,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "inner : integrate(x + y, y, 0, x)$\nprint(\"Inner integral ∫₀^x (x+y) dy =\")$\ninner;\nouter : integrate(inner, x, 0, 1)$\nprint(\"Outer integral =\")$\nouter;",
       "metadata": {},
-      "execution_count": 18,
+      "execution_count": 26,
       "outputs": [
         {
           "name": "stdout",
@@ -46,7 +46,7 @@
               "{{1}\\over{2}}"
             ]
           },
-          "execution_count": 18,
+          "execution_count": 26,
           "metadata": {},
           "output_type": "execute_result"
         }
@@ -61,7 +61,7 @@
       "cell_type": "code",
       "source": "inner_swap : integrate(x + y, x, y, 1)$\nprint(\"Other order, inner =\")$\ninner_swap;\nprint(\"Other order, outer =\")$\nintegrate(inner_swap, y, 0, 1);",
       "metadata": {},
-      "execution_count": 19,
+      "execution_count": 27,
       "outputs": [
         {
           "name": "stdout",
@@ -76,7 +76,7 @@
               "{{1}\\over{2}}"
             ]
           },
-          "execution_count": 19,
+          "execution_count": 27,
           "metadata": {},
           "output_type": "execute_result"
         }
@@ -91,7 +91,7 @@
       "cell_type": "code",
       "source": "I_polar : integrate(integrate(exp(-r^2) * r, r, 0, inf), theta, 0, 2*%pi)$\nprint(\"∫₀^{2π} ∫₀^∞ e^{-r²} r dr dθ =\")$\nI_polar;\nprint(\"→ Gaussian integral: √π =\", float(sqrt(%pi)))$",
       "metadata": {},
-      "execution_count": 20,
+      "execution_count": 28,
       "outputs": [
         {
           "name": "stdout",
@@ -111,7 +111,7 @@
       "cell_type": "code",
       "source": "Phi : [r * cos(theta), r * sin(theta)]$\nJ_Phi : genmatrix(lambda([i, j], diff(Phi[i], [r, theta][j])), 2, 2)$\nprint(\"J_Φ =\")$ J_Phi;\nprint(\"|det J_Φ| =\")$\nratsimp(abs(determinant(J_Phi)));",
       "metadata": {},
-      "execution_count": 21,
+      "execution_count": 29,
       "outputs": [
         {
           "name": "stdout",
@@ -126,7 +126,7 @@
               "\\left| r\\,\\sin ^2\\theta+r\\,\\cos ^2\\theta\\right| "
             ]
           },
-          "execution_count": 21,
+          "execution_count": 29,
           "metadata": {},
           "output_type": "execute_result"
         }
@@ -141,7 +141,7 @@
       "cell_type": "code",
       "source": "Phi3 : [rho * sin(phi) * cos(theta),\n        rho * sin(phi) * sin(theta),\n        rho * cos(phi)]$\nJ3 : genmatrix(lambda([i, j], diff(Phi3[i], [rho, phi, theta][j])), 3, 3)$\nprint(\"J_Φ in 3D =\")$ J3;\ndet_J3 : ratsimp(trigsimp(determinant(J3)))$\nprint(\"det J_Φ =\")$\ndet_J3;",
       "metadata": {},
-      "execution_count": 22,
+      "execution_count": 30,
       "outputs": [
         {
           "name": "stdout",
@@ -156,7 +156,7 @@
               "\\sin \\phi\\,\\rho^2"
             ]
           },
-          "execution_count": 22,
+          "execution_count": 30,
           "metadata": {},
           "output_type": "execute_result"
         }
@@ -166,7 +166,7 @@
       "cell_type": "code",
       "source": "V_ball : integrate(integrate(integrate(rho^2 * sin(phi),\n                                          rho, 0, 1),\n                                phi, 0, %pi),\n                      theta, 0, 2*%pi)$\nprint(\"Volume of unit ball ∫₀^{2π} ∫₀^π ∫₀^1 ρ² sin(φ) dρ dφ dθ =\")$\nV_ball;\nprint(\"4π/3 =\", float(4*%pi/3))$",
       "metadata": {},
-      "execution_count": 23,
+      "execution_count": 31,
       "outputs": [
         {
           "name": "stdout",
@@ -186,7 +186,7 @@
       "cell_type": "code",
       "source": "I_sym : integrate(integrate(sin(x*y), x, 0, 1), y, 0, 1)$\nprint(\"Symbolic ∫₀¹ ∫₀¹ sin(xy) dx dy =\")$\nI_sym;\nprint(\"(numeric value =\", float(I_sym), \")\")$\n\n/* Numeric Riemann sum on a 100×100 grid */\nn_grid : 100$\nh : 1.0 / n_grid$\ntotal : 0.0$\nfor i : 0 thru n_grid - 1 do\n  for j : 0 thru n_grid - 1 do\n    total : total + sin((i + 0.5)*h * (j + 0.5)*h) * h * h$\nprint(\"Numeric (midpoint, 100×100 grid) =\", total)$",
       "metadata": {},
-      "execution_count": 24,
+      "execution_count": 32,
       "outputs": [
         {
           "name": "stdout",

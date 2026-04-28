@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 15,
+      "execution_count": 22,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "r_val : 0.7$\nN : 50$\ns_partial : []$\nrunning : 0.0$\nfor n : 0 thru N do (\n  running : running + r_val^n,\n  s_partial : endcons(running, s_partial))$\nlimit_val : 1.0 / (1 - r_val)$\nprint(\"closed-form sum: 1/(1-0.7) =\", limit_val)$\nprint(\"s_50 =\", last(s_partial))$\nprint(\"error:\", abs(limit_val - last(s_partial)))$\n\nax_draw2d(\n  color=\"blue\", marker_size=4, name=\"partial sum s_N\",\n  points(makelist(n, n, 0, N), s_partial),\n  color=\"red\", dash=\"dash\", name=\"1/(1-r)\",\n  explicit(limit_val, t, 0, N),\n  title=\"Geometric series r=0.7 — partial sums converge to 1/(1-r)\",\n  xlabel=\"N\", ylabel=\"s_N\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 16,
+      "execution_count": 23,
       "outputs": [
         {
           "name": "stdout",
@@ -60,7 +60,7 @@
       "cell_type": "code",
       "source": "assume(p > 1)$\nprint(\"∫₁^∞ 1/x^p dx for p > 1:\")$\nintegrate(1/x^p, x, 1, inf);\nforget(p > 1)$\nprint(\"(equals 1/(p-1) for p > 1; diverges for p ≤ 1)\")$\nprint()$\nprint(\"p = 2: harmonic-squared sum is the Basel problem, value π²/6 ≈\", float(%pi^2/6))$\nprint(\"p = 1: harmonic series diverges (logarithmic)\")$",
       "metadata": {},
-      "execution_count": 17,
+      "execution_count": 24,
       "outputs": [
         {
           "name": "stdout",
@@ -80,7 +80,7 @@
       "cell_type": "code",
       "source": "p_vals : [0.5, 1.0, 2.0]$\nN_show : 100$\nn_grid : makelist(n, n, 1, N_show)$\nsums_by_p : []$\nfor p in p_vals do block([s, run, n],\n  s : [], run : 0.0,\n  for n : 1 thru N_show do (\n    run : run + 1.0 / float(n^p),\n    s : endcons(run, s)),\n  sums_by_p : endcons(s, sums_by_p))$\n\nax_draw2d(\n  color=\"red\", line_width=2, name=\"p = 0.5 (diverges, fast)\",\n  lines(n_grid, sums_by_p[1]),\n  color=\"orange\", line_width=2, name=\"p = 1.0 (harmonic, log-divergent)\",\n  lines(n_grid, sums_by_p[2]),\n  color=\"blue\", line_width=2, name=\"p = 2.0 (Basel, converges to π²/6)\",\n  lines(n_grid, sums_by_p[3]),\n  color=\"black\", dash=\"dash\", name=\"π²/6\",\n  explicit(float(%pi^2/6), t, 1, N_show),\n  title=\"p-series partial sums\",\n  xlabel=\"N\", ylabel=\"Σ 1/n^p\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 18,
+      "execution_count": 25,
       "outputs": [
         {
           "data": {
@@ -102,7 +102,7 @@
       "cell_type": "code",
       "source": "a_n_func(n) := n^2 / 2^n$\nratios : map(lambda([n], float(a_n_func(n+1) / a_n_func(n))), [1, 5, 10, 20, 50])$\nprint(\"ratios a_{n+1}/a_n at n =\", [1, 5, 10, 20, 50], \":\", ratios)$\nprint(\"→ 1/2 in the limit, confirming convergence\")$",
       "metadata": {},
-      "execution_count": 19,
+      "execution_count": 26,
       "outputs": [
         {
           "name": "stdout",
@@ -122,7 +122,7 @@
       "cell_type": "code",
       "source": "N_alt : 100$\nalt_partial : []$\nabs_partial : []$\nrun_alt : 0.0$ run_abs : 0.0$\nfor n : 1 thru N_alt do (\n  run_alt : run_alt + (-1.0)^(n+1) / float(n),\n  run_abs : run_abs + 1.0 / float(n),\n  alt_partial : endcons(run_alt, alt_partial),\n  abs_partial : endcons(run_abs, abs_partial))$\n\nprint(\"Σ_{n=1}^100 (-1)^(n+1)/n  =\", last(alt_partial))$\nprint(\"Σ_{n=1}^100 1/n           =\", last(abs_partial))$\nprint(\"ln(2) ≈\", float(log(2)))$\n\nax_draw2d(\n  color=\"blue\", line_width=2, name=\"alternating Σ (-1)^(n+1)/n\",\n  lines(makelist(n, n, 1, N_alt), alt_partial),\n  color=\"red\", dash=\"dash\", name=\"ln(2)\",\n  explicit(float(log(2)), t, 1, N_alt),\n  title=\"Alternating harmonic — conditionally convergent to ln(2)\",\n  xlabel=\"N\", ylabel=\"partial sum\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 20,
+      "execution_count": 27,
       "outputs": [
         {
           "name": "stdout",
@@ -151,7 +151,7 @@
       "cell_type": "code",
       "source": "/* Rearranged: 1 + 1/3 - 1/2 + 1/5 + 1/7 - 1/4 + 1/9 + 1/11 - 1/6 + ... */\nM_groups : 200$\nrearr_partial : []$\nrunning : 0.0$\npos_idx : 0$ neg_idx : 0$\nfor k : 1 thru M_groups do block([],\n  /* Two positive odd-denominator terms */\n  running : running + 1.0 / (2*pos_idx + 1),  pos_idx : pos_idx + 1,\n  rearr_partial : endcons(running, rearr_partial),\n  running : running + 1.0 / (2*pos_idx + 1),  pos_idx : pos_idx + 1,\n  rearr_partial : endcons(running, rearr_partial),\n  /* One negative even-denominator term */\n  running : running - 1.0 / (2*(neg_idx + 1)),  neg_idx : neg_idx + 1,\n  rearr_partial : endcons(running, rearr_partial))$\n\nprint(\"rearranged sum after\", length(rearr_partial), \"terms ≈\", last(rearr_partial))$\nprint(\"(3/2) ln(2) ≈\", float(3*log(2)/2))$",
       "metadata": {},
-      "execution_count": 21,
+      "execution_count": 28,
       "outputs": [
         {
           "name": "stdout",

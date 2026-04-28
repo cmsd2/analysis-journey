@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 15,
+      "execution_count": 22,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "/* Compute Taylor series with Maxima */\nexpand_e : taylor(exp(x), x, 0, 8)$\nexpand_geo : taylor(1/(1-x), x, 0, 8)$\nexpand_atan : taylor(1/(1+x^2), x, 0, 8)$\n\nprint(\"e^x =\")$\nexpand_e;\nprint(\"1/(1-x) =\")$\nexpand_geo;\nprint(\"1/(1+x²) =\")$\nexpand_atan;",
       "metadata": {},
-      "execution_count": 16,
+      "execution_count": 23,
       "outputs": [
         {
           "name": "stdout",
@@ -46,7 +46,7 @@
               "1-x^2+x^4-x^6+x^8+\\cdots "
             ]
           },
-          "execution_count": 16,
+          "execution_count": 23,
           "metadata": {},
           "output_type": "execute_result"
         }
@@ -61,7 +61,7 @@
       "cell_type": "code",
       "source": "/* |c_n|^{1/n} for e^x.  c_n = 1/n!.\n   Compute as exp(-log(n!)/n) to avoid double-precision overflow at large n. */\nfact_inv_root(n) := exp(-float(log(n!)) / n)$\nns : [10, 30, 50, 100, 200]$\nprint(\"|c_n|^{1/n} for e^x at n =\", ns, \":\")$\nprint(map(fact_inv_root, ns))$\nprint(\"→ tends to 0 ⇒ R = ∞\")$",
       "metadata": {},
-      "execution_count": 17,
+      "execution_count": 24,
       "outputs": [
         {
           "name": "stdout",
@@ -81,7 +81,7 @@
       "cell_type": "code",
       "source": "x_grid : np_to_list(np_linspace(-1.5, 0.95, 300))$\ntruth : map(lambda([x], 1.0 / (1 - x)), x_grid)$\nP10 : map(lambda([x], sum(x^k, k, 0, 10)), x_grid)$\nP30 : map(lambda([x], float(sum(x^k, k, 0, 30))), x_grid)$\nP60 : map(lambda([x], float(sum(x^k, k, 0, 60))), x_grid)$\n\nax_draw2d(\n  color=\"black\", line_width=2, name=\"1/(1-x) (truth)\",\n  lines(x_grid, truth),\n  color=\"cornflowerblue\", line_width=1, name=\"P_10\",\n  lines(x_grid, P10),\n  color=\"green\", line_width=1, name=\"P_30\",\n  lines(x_grid, P30),\n  color=\"red\", line_width=1, name=\"P_60\",\n  lines(x_grid, P60),\n  color=\"purple\", dash=\"dash\", name=\"x = -1 (boundary)\",\n  points([-1, -1], [-2, 5]),\n  title=\"Geometric series — converges on (-1, 1), diverges beyond\",\n  xlabel=\"x\", ylabel=\"partial sum\",\n  grid=true, showlegend=true, yrange=[-2, 12]\n)$",
       "metadata": {},
-      "execution_count": 18,
+      "execution_count": 25,
       "outputs": [
         {
           "data": {
@@ -103,7 +103,7 @@
       "cell_type": "code",
       "source": "log_series : taylor(-log(1 - x), x, 0, 10)$\nprint(\"Taylor series of -log(1-x):\"); log_series;\nprint()$\nprint(\"from term-by-term integration:\")$\nprint(\"  ∫ Σ x^n dx = Σ x^{n+1}/(n+1) = x + x²/2 + x³/3 + ... ✓\")$",
       "metadata": {},
-      "execution_count": 19,
+      "execution_count": 26,
       "outputs": [
         {
           "name": "stdout",
@@ -123,7 +123,7 @@
       "cell_type": "code",
       "source": "x_atan : np_to_list(np_linspace(-1.5, 1.5, 400))$\ntruth_atan : map(lambda([x], 1.0 / (1 + x*x)), x_atan)$\nP_atan : []$\nfor x in x_atan do block([s, k],\n  s : 0.0,\n  for k : 0 thru 30 do s : s + (-1)^k * x^(2*k),\n  P_atan : endcons(s, P_atan))$\n\nax_draw2d(\n  color=\"black\", line_width=2, name=\"1/(1+x²) (truth)\",\n  lines(x_atan, truth_atan),\n  color=\"red\", line_width=1, name=\"Σ_{k=0}^{30} (-1)^k x^{2k}\",\n  lines(x_atan, P_atan),\n  color=\"green\", dash=\"dash\", name=\"|x|=1 boundary\",\n  points([1, 1], [-1, 2]),\n  color=\"green\", dash=\"dash\",\n  points([-1, -1], [-1, 2]),\n  title=\"Taylor series of 1/(1+x²) — radius 1 because of complex singularities at ±i\",\n  xlabel=\"x\", ylabel=\"value\",\n  grid=true, showlegend=true, yrange=[-1, 2]\n)$",
       "metadata": {},
-      "execution_count": 20,
+      "execution_count": 27,
       "outputs": [
         {
           "data": {
@@ -145,7 +145,7 @@
       "cell_type": "code",
       "source": "f_pathological(x) := if x = 0 then 0.0 else exp(-1/(x*x))$\nx_p : np_to_list(np_linspace(-1, 1, 1000))$\ny_p : map(f_pathological, x_p)$\n\nax_draw2d(\n  color=\"purple\", line_width=2, name=\"f(x) = e^{-1/x²}\",\n  lines(x_p, y_p),\n  color=\"black\", dash=\"dash\", name=\"Taylor series at 0 (≡ 0)\",\n  explicit(0, t, -1, 1),\n  title=\"C^∞ but not analytic — Taylor series misses the function entirely\",\n  xlabel=\"x\", ylabel=\"f(x)\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 21,
+      "execution_count": 28,
       "outputs": [
         {
           "data": {

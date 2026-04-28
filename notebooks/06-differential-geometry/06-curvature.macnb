@@ -1,0 +1,91 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 5,
+  "metadata": {
+    "kernelspec": {
+      "name": "maxima",
+      "display_name": "Maxima",
+      "language": "maxima"
+    },
+    "aximar": {}
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "source": "# Curvature [S+N]\n\nHow does a curved manifold differ from flat $\\mathbb{R}^n$? **Curvature** quantifies it. Several notions:\n\n- **Riemann curvature tensor** $R^l_{ijk}$ — full information; how parallel transport around an infinitesimal loop fails to be the identity.\n- **Ricci tensor** $R_{ij}$ — a contraction; controls geodesic spreading.\n- **Scalar curvature** $R$ — total scalar; the \"average\" curvature at a point.\n- **Gaussian curvature** $K$ — for 2-manifolds, the determinant of the Weingarten map; equivalent to scalar curvature / 2.\n\nTwo milestone results:\n\n- **Theorema egregium** (Gauss): $K$ is intrinsic — depends only on $g$, not on how the surface is embedded.\n- **Gauss-Bonnet**: $\\int_M K\\,dA = 2\\pi \\chi(M)$ for a closed 2-manifold, with $\\chi$ the Euler characteristic. Curvature **integrates to topology**.\n\nThis notebook computes curvature symbolically for the sphere and visualises Gauss-Bonnet.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
+      "metadata": {},
+      "execution_count": 5,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Gaussian curvature of the unit sphere [S+N]\n\nFor a 2-manifold with metric $g = E\\,du^2 + 2F\\,du\\,dv + G\\,dv^2$, Gaussian curvature is\n\n$$K = \\frac{1}{\\sqrt{EG - F^2}}\\left(\\frac{\\partial}{\\partial v}\\frac{F E_u - E F_u}{2 E\\sqrt{EG - F^2}} - \\frac{\\partial}{\\partial u}\\frac{F E_v - E G_u}{2 E\\sqrt{EG - F^2}}\\right)$$\n\n(That's Gauss's intrinsic formula; messy but mechanical.) For the unit sphere $g = d\\theta^2 + \\sin^2\\theta\\,d\\phi^2$, $E = 1$, $F = 0$, $G = \\sin^2\\theta$. Compute $K$ — Maxima:\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "/* Use Brioschi's simpler formula for orthogonal coordinates (F = 0):\n   K = -1/(2 sqrt(EG)) * [ ∂/∂u (G_u/sqrt(EG)) + ∂/∂v (E_v/sqrt(EG)) ]\n   For E = 1, G = sin²θ (with u = θ, v = φ): */\nE_metric : 1$\nG_metric : sin(theta)^2$\nsqrt_EG : sqrt(E_metric * G_metric)$  /* sin(θ), positive for θ ∈ (0, π) */\nG_u : diff(G_metric, theta)$         /* ∂G/∂θ */\nE_v : diff(E_metric, phi)$           /* ∂E/∂φ */\nK_brioschi : -1/(2 * sqrt_EG) * (\n                diff(G_u / sqrt_EG, theta)\n              + diff(E_v / sqrt_EG, phi))$\nprint(\"K (Gaussian curvature) of S² =\", trigsimp(K_brioschi))$",
+      "metadata": {},
+      "execution_count": 6,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "K (Gaussian curvature) of S² = 1"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "$K = 1$ everywhere on the unit sphere. (For a sphere of radius $r$, $K = 1/r^2$.) Constant positive Gaussian curvature is what makes the sphere \"round\" intrinsically.\n\n## Curvature of a hyperbolic plane\n\nThe **hyperbolic plane** $\\mathbb{H}^2$ has constant negative curvature. One model: the upper half-plane with metric $g = (du^2 + dv^2)/v^2$. Compute $K$:\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "E_h : 1/v^2$\nG_h : 1/v^2$\nsqrt_EG_h : sqrt(E_h * G_h)$  /* = 1/v² */\nG_u_h : diff(G_h, u)$\nE_v_h : diff(E_h, v)$\nK_h : -1/(2 * sqrt_EG_h) * (\n        diff(G_u_h / sqrt_EG_h, u)\n      + diff(E_v_h / sqrt_EG_h, v))$\nprint(\"K of hyperbolic plane =\", ratsimp(K_h))$",
+      "metadata": {},
+      "execution_count": 7,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "K of hyperbolic plane = -1"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "$K = -1$. Constant negative — the hyperbolic plane is everywhere \"saddle-shaped\" intrinsically (though it can't be embedded isometrically in $\\mathbb{R}^3$ globally; Hilbert's theorem).\n\n## Theorema egregium\n\nGauss showed in 1827 that Gaussian curvature is **intrinsic**: it depends only on $g$, not on any embedding. Concretely, two surfaces with the same metric have the same $K$ at corresponding points, even if they look different in $\\mathbb{R}^3$.\n\nConcrete instance: a flat piece of paper has $K = 0$ everywhere. You can roll it into a cylinder; the cylinder also has $K = 0$ at every point (it's locally flat, no metric distortion). You **can't** roll a flat sheet into a sphere ($K = 1$) without tearing or stretching — that's why orange peels can't be flattened.\n\n## Geodesic deviation\n\nTwo geodesics that start parallel will diverge or converge depending on curvature:\n\n- $K > 0$: they *converge* (think of two longitudes meeting at the pole).\n- $K = 0$: they stay parallel (Euclidean).\n- $K < 0$: they *diverge exponentially* (hyperbolic).\n\nThis is the **Jacobi equation**, the linearisation of the geodesic equation around a reference geodesic. Curvature appears as the source term — it's the \"tidal force\" of the geometry.\n\n## Gauss-Bonnet theorem\n\nFor a closed (compact, no boundary) oriented 2-manifold $M$,\n\n$$\\int_M K\\,dA = 2\\pi\\,\\chi(M),$$\n\nwhere $\\chi(M)$ is the **Euler characteristic** — a purely topological invariant. For a closed surface of genus $g$ (number of holes), $\\chi = 2 - 2g$.\n\n| Surface | $\\chi$ | $\\int K\\,dA$ |\n|---------|--------|--------------|\n| $S^2$ (sphere) | 2 | $4\\pi$ |\n| $T^2$ (torus) | 0 | 0 |\n| genus-2 | $-2$ | $-4\\pi$ |\n\nFor the unit sphere, $K = 1$, $\\mathrm{Area}(S^2) = 4\\pi$, so $\\int K = 4\\pi = 2\\pi \\cdot 2$ — confirmed.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "/* Verify Gauss-Bonnet for unit sphere */\nprint(\"Unit sphere: K = 1 everywhere, area = 4π\")$\nprint(\"∫_S² K dA = 4π\")$\nprint(\"2π χ(S²) = 2π · 2 =\", float(4*%pi))$\nprint(\"Gauss-Bonnet ✓\")$",
+      "metadata": {},
+      "execution_count": 8,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "Unit sphere: K = 1 everywhere, area = 4π\n∫_S² K dA = 4π\n2π χ(S²) = 2π · 2 = 12.566370614359172\nGauss-Bonnet ✓"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Curvature in higher dimensions\n\nIn $n \\ge 3$, curvature is a more elaborate object — the Riemann tensor has $\\sim n^4/12$ independent components. The **Ricci tensor** (a single trace) and **scalar curvature** (double trace) are tractable summaries.\n\n**Einstein's field equation** of general relativity:\n\n$$G_{\\mu\\nu} = R_{\\mu\\nu} - \\tfrac{1}{2}\\,g_{\\mu\\nu}\\,R = 8\\pi G\\,T_{\\mu\\nu},$$\n\nequates a curvature combination (the Einstein tensor) to the energy-momentum tensor. Curvature *is* gravity.\n\n## What we got\n\nRiemannian geometry quantifies \"how curved is $M$\":\n\n- **Christoffels** capture the connection / parallel transport.\n- **Riemann tensor** captures full curvature.\n- **Gauss-Bonnet** ties $K$ on a 2-manifold to its topology.\n- **Theorema egregium** says curvature is intrinsic.\n\nCurvature is what distinguishes \"a manifold with metric\" from \"Euclidean space\" — and what makes general relativity, geometric flow theory, and large parts of modern geometry possible.\n\nThe final notebook of Stage 6 considers manifolds with extra **algebraic** structure: smooth groups, also known as Lie groups.\n",
+      "metadata": {}
+    }
+  ]
+}

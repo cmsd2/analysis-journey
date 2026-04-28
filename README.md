@@ -64,13 +64,54 @@ Where the rigidity gets remarkable. Holomorphic functions are wildly more constr
 | 06 | [residues](notebooks/03-complex-analysis/06-residues.macnb) | [S+N] Residue theorem; real integrals via complex contours |
 | 07 | [conformal-mappings](notebooks/03-complex-analysis/07-conformal-mappings.macnb) | [S+N] Angle preservation, disc automorphisms, Riemann mapping |
 
+### Stage 4 — Measure Theory and Lebesgue Integration
+
+The fix Riemann needed: a robust integration theory with proper convergence theorems and complete function spaces.
+
+| # | Notebook | Idea |
+|---|----------|------|
+| 01 | [sigma-algebras-and-measures](notebooks/04-measure-theory/01-sigma-algebras-and-measures.macnb) | The language: σ-algebras, measures, null sets |
+| 02 | [lebesgue-measure-on-r](notebooks/04-measure-theory/02-lebesgue-measure-on-r.macnb) | Outer measure, Carathéodory, Vitali, Cantor set |
+| 03 | [lebesgue-integral](notebooks/04-measure-theory/03-lebesgue-integral.macnb) | [S+N] Partition the range, not the domain |
+| 04 | [convergence-theorems](notebooks/04-measure-theory/04-convergence-theorems.macnb) | [S+N] MCT, Fatou, DCT — when can we swap lim and ∫ |
+| 05 | [lp-spaces](notebooks/04-measure-theory/05-lp-spaces.macnb) | [S+N] Hölder, Minkowski, Riesz-Fischer completeness |
+| 06 | [fubini-and-product-measures](notebooks/04-measure-theory/06-fubini-and-product-measures.macnb) | [S+N] Tonelli/Fubini, when iterated integrals can disagree |
+
+### Stage 5 — Functional Analysis
+
+The infinite-dimensional generalisation of linear algebra. Banach and Hilbert spaces, bounded operators, the spectral theorem.
+
+| # | Notebook | Idea |
+|---|----------|------|
+| 01 | [banach-spaces](notebooks/05-functional-analysis/01-banach-spaces.macnb) | Normed completeness; $C([a,b])$, $\ell^p$, $L^p$; norms aren't equivalent in ∞-dim |
+| 02 | [hilbert-spaces](notebooks/05-functional-analysis/02-hilbert-spaces.macnb) | [S+N] Inner products, projections, Fourier basis of $L^2$ |
+| 03 | [bounded-operators](notebooks/05-functional-analysis/03-bounded-operators.macnb) | [S+N] Operator norm, multiplication and integral operators, spectrum |
+| 04 | [dual-spaces-and-hahn-banach](notebooks/05-functional-analysis/04-dual-spaces-and-hahn-banach.macnb) | $X^*$, separation of points, reflexivity, separating hyperplanes |
+| 05 | [three-big-theorems](notebooks/05-functional-analysis/05-three-big-theorems.macnb) | [S+N] Open mapping, closed graph, uniform boundedness |
+| 06 | [compact-operators](notebooks/05-functional-analysis/06-compact-operators.macnb) | [S+N] Riesz-Schauder, Fredholm alternative |
+| 07 | [spectral-theory](notebooks/05-functional-analysis/07-spectral-theory.macnb) | [S+N] Self-adjoint operators, functional calculus, Stone's theorem |
+
+### Stage 6 — Differential Geometry and Manifolds
+
+Calculus on curved spaces. Smooth manifolds, tangent vectors, differential forms, the generalised Stokes theorem, curvature, Lie groups.
+
+| # | Notebook | Idea |
+|---|----------|------|
+| 01 | [smooth-manifolds](notebooks/06-differential-geometry/01-smooth-manifolds.macnb) | Charts, atlases, smoothness compatibility; $S^1, S^2, T^2$ |
+| 02 | [tangent-spaces-and-vector-fields](notebooks/06-differential-geometry/02-tangent-spaces-and-vector-fields.macnb) | [S+N] Tangent vectors as derivations; pushforward; Lie bracket |
+| 03 | [differential-forms](notebooks/06-differential-geometry/03-differential-forms.macnb) | [S+N] Wedge product, exterior derivative, $d^2 = 0$, closed vs exact |
+| 04 | [integration-and-stokes](notebooks/06-differential-geometry/04-integration-and-stokes.macnb) | The generalised Stokes theorem $\int_M d\omega = \int_{\partial M} \omega$ |
+| 05 | [riemannian-metrics-and-geodesics](notebooks/06-differential-geometry/05-riemannian-metrics-and-geodesics.macnb) | [S+N] Christoffel symbols, geodesic equation on $S^2$ |
+| 06 | [curvature](notebooks/06-differential-geometry/06-curvature.macnb) | [S+N] Gaussian curvature, Theorema egregium, Gauss-Bonnet |
+| 07 | [lie-groups](notebooks/06-differential-geometry/07-lie-groups.macnb) | [S+N] $\mathrm{SO}(3)$, exponential map, Lie algebras, structure constants |
+
 ## Reading Order
 
 Read straight through — each stage builds on the last, and within each stage the notebooks are numbered for sequential reading.
 
 A short "must-read" path through the whole journey:
 
-> 1.01 → 1.03 → 1.04 → 1.07 → 2.03 → 2.06 → 3.02 → 3.04 → 3.06
+> 1.01 → 1.03 → 1.04 → 1.07 → 2.03 → 2.06 → 3.02 → 3.04 → 3.06 → 4.03 → 4.04 → 5.02 → 5.07 → 6.04 → 6.06
 
 ## License
 

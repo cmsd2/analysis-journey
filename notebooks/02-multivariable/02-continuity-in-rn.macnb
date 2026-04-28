@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 9,
+      "execution_count": 13,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "f_pathological(x, y) := if x = 0 and y = 0 then 0\n                         else (x * y) / (x*x + y*y)$\n\n/* Directional limits */\nm_vals : [0.0, 0.5, 1.0, 2.0, -1.0]$\nprint(\"Limit of f(x, m·x) as x → 0, for various m:\")$\nfor m in m_vals do\n  print(\"  m =\", m, \":  m/(1+m²) =\", float(m / (1 + m^2)))$",
       "metadata": {},
-      "execution_count": 10,
+      "execution_count": 14,
       "outputs": [
         {
           "name": "stdout",
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "ax_draw3d(\n  explicit((x*y) / (x^2 + y^2 + 0.0001), x, -1, 1, y, -1, 1),\n  title=\"f(x, y) = xy/(x² + y²) — limit at origin depends on direction\",\n  xlabel=\"x\", ylabel=\"y\", zlabel=\"f\",\n  colorscale=\"RdBu\"\n)$",
       "metadata": {},
-      "execution_count": 11,
+      "execution_count": 15,
       "outputs": [
         {
           "data": {
@@ -73,7 +73,7 @@
       "cell_type": "code",
       "source": "g_path(x, y) := if x = 0 and y = 0 then 0 else (x^2 * y) / (x^4 + y^2)$\n\nprint(\"Along y = mx (any m):\")$\nfor m in [0.0, 1.0, 5.0] do block([xs, gs],\n  xs : [0.5, 0.1, 0.01, 0.001],\n  gs : map(lambda([xv], float(g_path(xv, m*xv))), xs),\n  print(\"  m =\", m, \":  g(x, mx) for x =\", xs, \":\", gs))$\n\nprint()$\nprint(\"Along y = x²:\")$\nxs : [0.5, 0.1, 0.01, 0.001]$\ngs : map(lambda([xv], float(g_path(xv, xv*xv))), xs)$\nprint(\"  g(x, x²) for x =\", xs, \":\", gs)$",
       "metadata": {},
-      "execution_count": 12,
+      "execution_count": 16,
       "outputs": [
         {
           "name": "stdout",

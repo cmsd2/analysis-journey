@@ -1,0 +1,91 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 5,
+  "metadata": {
+    "kernelspec": {
+      "name": "maxima",
+      "display_name": "Maxima",
+      "language": "maxima"
+    },
+    "aximar": {}
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "source": "# σ-Algebras and Measures\n\nRiemann integration, for all its strengths, has structural limits we hit at the end of Stage 1: the indicator $\\mathbf{1}_\\mathbb{Q}$ isn't Riemann integrable, certain \"obvious\" exchanges of limits with integrals fail, and important function spaces aren't complete. **Lebesgue integration** fixes all of this — at the cost of a more abstract setup.\n\nThe setup has three layers:\n\n1. **σ-algebra**: the collection of \"measurable\" subsets — those we'll allow ourselves to assign sizes to. Closed under complement and countable unions.\n2. **Measure**: a function $\\mu$ assigning each measurable set a non-negative size, with $\\mu(\\emptyset) = 0$ and **countable additivity** $\\mu(\\bigsqcup_n E_n) = \\sum_n \\mu(E_n)$.\n3. **Integration**: a way to compute $\\int f\\,d\\mu$ that handles much wilder $f$ than Riemann does.\n\nThis notebook builds the language; subsequent ones build the integral.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
+      "metadata": {},
+      "execution_count": 5,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## What's a σ-algebra?\n\nA **σ-algebra** $\\mathcal{F}$ on a set $X$ is a collection of subsets satisfying:\n\n1. $X \\in \\mathcal{F}$.\n2. If $E \\in \\mathcal{F}$, then $X \\setminus E \\in \\mathcal{F}$ (closed under complement).\n3. If $E_1, E_2, \\ldots \\in \\mathcal{F}$, then $\\bigcup_n E_n \\in \\mathcal{F}$ (closed under **countable** unions).\n\nFrom (1) and (2), $\\emptyset \\in \\mathcal{F}$. From (2) and (3), $\\bigcap_n E_n \\in \\mathcal{F}$ too. So σ-algebras are closed under all the natural set operations applied countably many times.\n\n**Three canonical examples on $X = \\mathbb{R}$:**\n\n- **Trivial**: $\\{\\emptyset, \\mathbb{R}\\}$.\n- **Power set**: $2^\\mathbb{R}$ — every subset is measurable. Too big to support nice measures (axiom of choice constructs non-measurable sets).\n- **Borel σ-algebra** $\\mathcal{B}(\\mathbb{R})$: smallest σ-algebra containing all open intervals. Includes every \"describable\" set (open, closed, $F_\\sigma$, $G_\\delta$, etc.).\n\nThe **Lebesgue σ-algebra** is slightly larger than Borel — it includes Borel sets and all subsets of measure-zero Borel sets. Most of analysis works on either; we'll use Lebesgue.\n\n## What's a measure?\n\nA **measure** $\\mu$ on $(X, \\mathcal{F})$ is a function $\\mathcal{F} \\to [0, \\infty]$ with:\n\n- $\\mu(\\emptyset) = 0$.\n- **Countable additivity**: for pairwise disjoint $E_1, E_2, \\ldots \\in \\mathcal{F}$, $\\mu(\\bigsqcup E_n) = \\sum \\mu(E_n)$.\n\n**Three examples**:\n\n- **Counting measure**: $\\mu(E) = |E|$ if $E$ is finite, else $\\infty$.\n- **Dirac mass at $x_0$**: $\\delta_{x_0}(E) = 1$ if $x_0 \\in E$ else $0$.\n- **Lebesgue measure** on $\\mathbb{R}$: assigns intervals their length, $\\lambda([a, b]) = b - a$. Constructed in the next notebook.\n\nThese three already span a wide range — counting measure is \"discrete,\" Dirac is \"concentrated,\" Lebesgue is \"continuous.\" Most measures of interest are weighted combinations of these flavours.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "/* Symbolic check: countable additivity on a simple disjoint union */\nmu_interval(a, b) := b - a$\n/* μ([0, 1]) = 1 */\nprint(\"μ([0, 1]) =\", mu_interval(0, 1))$\n/* μ([0, 0.5] ∪ [0.5, 1]) — disjoint up to a measure-0 point — should be 1 */\nprint(\"μ([0, 0.5]) + μ([0.5, 1]) =\", mu_interval(0, 0.5) + mu_interval(0.5, 1))$\nprint(\"μ([0, 1]) =\", mu_interval(0, 1))$\nprint(\"Match — additive ✓\")$",
+      "metadata": {},
+      "execution_count": 6,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "μ([0, 1]) = 1\nμ([0, 0.5]) + μ([0.5, 1]) = 1.0\nμ([0, 1]) = 1\nMatch — additive ✓"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Properties that fall out\n\nFrom countable additivity and $\\mu(\\emptyset) = 0$, several useful facts follow:\n\n- **Monotonicity**: $E \\subseteq F \\Rightarrow \\mu(E) \\le \\mu(F)$.\n- **Continuity from below**: if $E_1 \\subseteq E_2 \\subseteq \\ldots$, $\\mu(\\bigcup E_n) = \\lim \\mu(E_n)$.\n- **Continuity from above**: if $E_1 \\supseteq E_2 \\supseteq \\ldots$ and $\\mu(E_1) < \\infty$, $\\mu(\\bigcap E_n) = \\lim \\mu(E_n)$.\n- **Subadditivity**: $\\mu(\\bigcup E_n) \\le \\sum \\mu(E_n)$ even without disjointness.\n\n**Continuity from above** demonstration: shrinking intervals around 0:\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "/* μ([-1/n, 1/n]) → 0 as n → ∞ */\nprint(\"Lebesgue measure of shrinking nested intervals:\")$\nfor n in [1, 10, 100, 1000, 10000] do\n  print(\"  μ([-1/\", n, \", 1/\", n, \"]) =\", float(2.0 / n))$\nprint(\"→ μ({0}) = 0  (single points have Lebesgue measure zero)\")$",
+      "metadata": {},
+      "execution_count": 7,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "Lebesgue measure of shrinking nested intervals:\n  μ([-1/ 1 , 1/ 1 ]) = 2.0\n  μ([-1/ 10 , 1/ 10 ]) = 0.2\n  μ([-1/ 100 , 1/ 100 ]) = 0.02\n  μ([-1/ 1000 , 1/ 1000 ]) = 0.002\n  μ([-1/ 10000 , 1/ 10000 ]) = 2.0e-4\n→ μ({0}) = 0  (single points have Lebesgue measure zero)"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Sets of measure zero\n\nA **null set** has measure 0. They're the \"ignorable\" sets in Lebesgue theory:\n\n- Any countable subset of $\\mathbb{R}$ is null (a single point has measure 0; countable unions of null sets are null).\n- $\\mathbb{Q}$ is null — even though it's *dense* in $\\mathbb{R}$.\n- The Cantor set is null with cardinality continuum (next notebook).\n\n**A property holds \"almost everywhere\" (a.e.)** if it fails only on a null set. Functions equal a.e. produce the same Lebesgue integral; you can change a function on a null set without affecting its integral. This permissiveness is one of the key features of the theory.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "/* Exercise the countable additivity: μ(ℚ ∩ [0, 1]) = 0\n   even though ℚ ∩ [0, 1] is dense.\n\n   ℚ is countable, so μ(ℚ ∩ [0, 1]) ≤ Σ μ({q_n}) = Σ 0 = 0.\n*/\nprint(\"ℚ is countable.  μ({q_n}) = 0 for each q_n.\")$\nprint(\"Countable additivity ⇒ μ(ℚ ∩ [0, 1]) = Σ 0 = 0.\")$\nprint()$\nprint(\"Yet ℚ ∩ [0, 1] is dense in [0, 1] — every interval contains rationals.\")$\nprint(\"Density and measure are independent notions.\")$",
+      "metadata": {},
+      "execution_count": 8,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "ℚ is countable.  μ({q_n}) = 0 for each q_n.\nCountable additivity ⇒ μ(ℚ ∩ [0, 1]) = Σ 0 = 0.\nYet ℚ ∩ [0, 1] is dense in [0, 1] — every interval contains rationals.\nDensity and measure are independent notions."
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Borel sets — what's measurable?\n\nThe **Borel σ-algebra** $\\mathcal{B}(\\mathbb{R})$ is the smallest σ-algebra containing all open sets. By complement and countable union, it includes:\n\n- All open sets and closed sets.\n- $F_\\sigma$ sets (countable unions of closed sets).\n- $G_\\delta$ sets (countable intersections of open sets).\n- Iterated unions/intersections of those.\n\nEvery \"describable\" subset of $\\mathbb{R}$ is Borel. Constructing non-Borel sets requires (clever) transfinite induction or the axiom of choice. In practice, *every set you can write down explicitly is measurable*.\n\n## Measure spaces\n\nA **measure space** is a triple $(X, \\mathcal{F}, \\mu)$ — set, σ-algebra, measure. Examples we'll use:\n\n| Space | $X$ | $\\mathcal{F}$ | $\\mu$ |\n|-------|-----|---------------|-------|\n| Lebesgue | $\\mathbb{R}^n$ | Lebesgue σ-algebra | Lebesgue measure $\\lambda$ |\n| Counting | any set | $2^X$ | $\\mu(E) = |E|$ |\n| Dirac | any set | $2^X$ | $\\delta_{x_0}$ |\n| Probability | any set with $\\mu(X) = 1$ | σ-alg | probability measure |\n\nThe same integration theory works on all of them — that's the abstraction's payoff. Probability theory is just integration on a measure space with $\\mu(X) = 1$.\n\n## The big picture\n\nWe've built the language. The next notebook constructs Lebesgue measure explicitly via outer measures, dealing with the technicalities (Vitali's non-measurable set, the Cantor set as a measure-zero example). Once $\\lambda$ is in hand, the integral follows.\n",
+      "metadata": {}
+    }
+  ]
+}

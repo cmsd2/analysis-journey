@@ -1,0 +1,71 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 5,
+  "metadata": {
+    "kernelspec": {
+      "name": "maxima",
+      "display_name": "Maxima",
+      "language": "maxima"
+    },
+    "aximar": {}
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "source": "# The Three Big Theorems\n\nThree structural theorems about bounded linear operators on Banach spaces, all consequences of the **Baire category theorem** (a complete metric space is not a countable union of nowhere-dense sets).\n\n1. **Open Mapping Theorem.** A surjective bounded linear $T : X \\to Y$ between Banach spaces is **open** (sends open sets to open sets).\n2. **Closed Graph Theorem.** A linear $T : X \\to Y$ between Banach spaces is bounded iff its graph $\\{(x, T x)\\}$ is closed in $X \\times Y$.\n3. **Uniform Boundedness Principle (Banach-Steinhaus).** A pointwise-bounded family of bounded linear operators is uniformly bounded.\n\nEach delivers a structural rigidity that has no analogue in finite dimensions (where every linear map is automatically bounded).\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
+      "metadata": {},
+      "execution_count": 4,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Open Mapping Theorem — corollaries\n\n**Corollary 1 (bounded inverse theorem).** If $T : X \\to Y$ is bounded, linear, and bijective between Banach spaces, then $T^{-1}$ is bounded.\n\nThis is shocking: pointwise inverse exists ⇒ uniform inverse exists. Without OMT, you'd need to verify boundedness of $T^{-1}$ separately.\n\n**Corollary 2.** If two complete norms $\\|\\cdot\\|_a, \\|\\cdot\\|_b$ on the same vector space $X$ make the identity continuous from $a$ to $b$, then they're **equivalent** norms. (Otherwise the identity would be an unbounded inverse of a bounded bijection — contradiction.)\n\nSo you can't have two different complete norm topologies stacked on each other in a comparable way. Either they're equivalent, or they're incomparable.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "/* Demonstrate the bounded inverse theorem with a simple finite-dim example.\n   In ℝ², take the linear map T(x, y) = (x + y, x - y). It's bijective. */\nT_mat : ndarray(matrix([1.0, 1.0], [1.0, -1.0]))$\nT_inv : np_inv(T_mat)$\nprint(\"T =\")$\nnp_to_matrix(T_mat);\nprint(\"T^{-1} =\")$\nnp_to_matrix(T_inv);\n[U, sing, Vt] : np_svd(T_inv)$\nprint(\"‖T^{-1}‖ = largest singular value of T^{-1} =\", np_ref(sing, 0))$\nprint(\"(both T and T^{-1} bounded — bounded inverse theorem trivially holds in finite dim)\")$",
+      "metadata": {},
+      "execution_count": 5,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "T =\nmatrix([1.0,1.0],[1.0,-1.0])\nT^{-1} =\nmatrix([0.5,0.5],[0.5,-0.5])\n‖T^{-1}‖ = largest singular value of T^{-1} = 0.7071067811865476\n(both T and T^{-1} bounded — bounded inverse theorem trivially holds in finite dim)"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Closed Graph Theorem\n\nA linear map $T : X \\to Y$ has **closed graph** if whenever $x_n \\to x$ in $X$ and $T x_n \\to y$ in $Y$, then $y = T x$.\n\n**Theorem.** For Banach $X, Y$: $T$ is bounded ⇔ $T$ has closed graph.\n\nThis is wildly useful: to prove $T$ is bounded, you don't need to bound $\\|Tx\\|$ in terms of $\\|x\\|$ uniformly — just verify that \"limit of inputs converges + limit of outputs converges ⇒ output is the limit\". The latter is a much weaker condition.\n\n**Application**: showing differentiation is *not* bounded $C^1([0,1]) \\to C([0,1])$ via the closed-graph theorem. If it were bounded, sup-norm Cauchy sequences in $C^1$ would have sup-norm Cauchy derivatives — but $f_n(x) = (\\sin(nx))/n \\to 0$ uniformly while $f_n'(x) = \\cos(nx)$ doesn't even converge. So differentiation has *non-closed* graph, hence is unbounded.\n\n## Uniform Boundedness Principle\n\n**Statement**. Let $\\{T_\\alpha\\}_{\\alpha \\in A}$ be a family of bounded linear operators $X \\to Y$ between Banach spaces. If for every $x \\in X$ the orbit $\\{T_\\alpha x\\}$ is bounded in $Y$, then $\\sup_\\alpha \\|T_\\alpha\\| < \\infty$.\n\n**Pointwise bounded ⇒ uniformly bounded.** Same flavour as compactness: a local condition forces a global one.\n\n### Application: Fourier series partial sums\n\nThe partial sum operators $S_N : C([0, 1]) \\to C([0, 1])$ for Fourier series have uniformly unbounded norms: $\\|S_N\\|_\\infty \\sim \\log N \\to \\infty$. By UBP (in contrapositive), there must be some $f \\in C([0, 1])$ for which $\\{S_N f(x_0)\\}$ is unbounded — i.e., the Fourier series **diverges at $x_0$**.\n\ndu Bois-Reymond (1873) had explicit examples; UBP gives existence without construction.\n\n**This is why uniform convergence of Fourier series for arbitrary continuous $f$ fails.** Lebesgue showed pointwise a.e. convergence holds for $L^2$ (Carleson); uniform convergence for $C^\\alpha$ functions; pointwise everywhere for $C^1$. Fine print is hairy.\n\n## Numerical illustration: $\\|S_N\\|$ growth [S+N]\n\nThe Lebesgue constant $L_N = \\|S_N\\|$ on $C([-\\pi, \\pi])$ grows like $(4/\\pi^2) \\log N + O(1)$.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "/* Numerically estimate L_N = ∫_{-π}^π |D_N(x)| dx where D_N is the Dirichlet kernel\n   D_N(x) = sin((N + 1/2)x) / sin(x/2). */\nestimate_LN(N) := block([dx, total, pts, k, x],\n  pts : 5000,\n  dx : 2 * float(%pi) / pts,\n  total : 0.0,\n  for k : 1 thru pts do block([xv, denom],\n    xv : -float(%pi) + (k - 0.5) * dx,\n    denom : 2.0 * sin(xv / 2),\n    if abs(denom) < 1e-9 then 0  /* skip near-zero denom */\n    else total : total + abs(sin((N + 0.5) * xv) / denom) * dx),\n  total / float(%pi))$  /* normalising constant */\n\nfor N in [5, 20, 100, 500] do\n  print(\"N =\", N, \"   L_N ≈\", estimate_LN(N), \"    (4/π² log N) ≈\",\n        float((4/(float(%pi))^2) * log(N)))$",
+      "metadata": {},
+      "execution_count": 6,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "N = 5    L_N ≈ 1.961359766611393     (4/π² log N) ≈ 0.6522806171467048\nN = 20    L_N ≈ 2.4945069986430135     (4/π² log N) ≈ 1.214124559328168\nN = 100    L_N ≈ 3.138861830933143     (4/π² log N) ≈ 1.866405176474873\nN = 500    L_N ≈ 3.813529330520008     (4/π² log N) ≈ 2.518685793621578"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "$L_N$ grows logarithmically — slow but unbounded. So the partial-sum operators are pointwise-bounded for each fixed $x$ (each gives a number) but unbounded as a family. UBP says: there must be a continuous $f$ whose Fourier series diverges somewhere.\n\n## Why these three theorems are \"big\"\n\nEach turns a *local* property into a *global* one — surjectivity ⇒ openness, pointwise bound ⇒ uniform bound, closed graph ⇒ continuity. Each is a structural rigidity that has no finite-dimensional analogue (in finite dim, every linear map is automatically bounded, every bijection is automatically open, etc.).\n\nThey power:\n\n- **PDE existence**: Banach fixed-point + open mapping show solutions to elliptic equations depend continuously on data.\n- **Numerical stability**: discretisations of differential operators inherit boundedness uniformly via UBP.\n- **Operator splitting**: closed-graph theorem is what lets us write unbounded operators (like Laplacian) without sacrificing too much.\n\n## What's coming\n\nCompact operators (next notebook) are the infinite-dimensional answer to \"matrices with discrete spectrum\". They behave almost as nicely as matrices, and they're where most concrete spectral theory happens.\n",
+      "metadata": {}
+    }
+  ]
+}

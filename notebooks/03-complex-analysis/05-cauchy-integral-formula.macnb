@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 5,
+      "execution_count": 9,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "f_eval(z) := z^2 + 1$\nz_check : 0.3 + 0.4 * %i$\ntruth_val : expand(f_eval(z_check))$\nprint(\"f(0.3 + 0.4i) =\", truth_val, \"  (=\", float(realpart(truth_val)),\n      \"+\", float(imagpart(truth_val)), \"i)\")$\n\n/* Approximate the contour integral on |ζ| = 1 numerically */\nN_pts : 2000$\ndt : 2 * float(%pi) / N_pts$\ntotal : 0 + 0*%i$\nfor k : 0 thru N_pts - 1 do block([t, zeta, num, den],\n  t : k * dt,\n  zeta : exp(%i * t),\n  num : f_eval(zeta) * %i * exp(%i * t),\n  den : zeta - z_check,\n  total : total + num / den * dt)$\nformula_val : total / (2 * float(%pi) * %i)$\nprint(\"Cauchy formula prediction:\", formula_val)$",
       "metadata": {},
-      "execution_count": 6,
+      "execution_count": 10,
       "outputs": [
         {
           "name": "stdout",
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "/* Numerical: f''(0) = 2! / (2πi) ∮ f(ζ)/ζ³ dζ */\ntotal2 : 0 + 0*%i$\nfor k : 0 thru N_pts - 1 do block([t, zeta, num, den],\n  t : k * dt,\n  zeta : exp(%i * t),\n  num : f_eval(zeta) * %i * exp(%i * t),\n  den : zeta^3,\n  total2 : total2 + num / den * dt)$\nfpp_val : 2.0 * total2 / (2 * float(%pi) * %i)$\nprint(\"f''(0) via Cauchy formula:\", fpp_val)$\nprint(\"(true f''(0) = 2)\")$",
       "metadata": {},
-      "execution_count": 7,
+      "execution_count": 11,
       "outputs": [
         {
           "name": "stdout",
@@ -71,7 +71,7 @@
       "cell_type": "code",
       "source": "ax_draw3d(\n  explicit(cabs((x + y*%i)^2 + 1), x, -1, 1, y, -1, 1),\n  title=\"|z² + 1| on the unit disc — maxes on the boundary\",\n  xlabel=\"Re z\", ylabel=\"Im z\", zlabel=\"|f(z)|\",\n  colorscale=\"Viridis\"\n)$",
       "metadata": {},
-      "execution_count": 8,
+      "execution_count": 12,
       "outputs": [
         {
           "data": {

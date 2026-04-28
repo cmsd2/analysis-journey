@@ -1,0 +1,111 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 5,
+  "metadata": {
+    "kernelspec": {
+      "name": "maxima",
+      "display_name": "Maxima",
+      "language": "maxima"
+    },
+    "aximar": {}
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "source": "# $L^p$ Spaces [S+N]\n\nMeasurable functions modulo a.e. equivalence form a vector space. Equipping it with various norms gives different **$L^p$ spaces** — the most useful family of normed spaces in analysis.\n\n**Definition** (for $p \\in [1, \\infty)$):\n\n$$\\|f\\|_p = \\left( \\int |f|^p\\,d\\mu \\right)^{1/p}, \\qquad L^p(X, \\mu) = \\{f : \\|f\\|_p < \\infty\\}/\\sim$$\n\nwhere $f \\sim g$ if $f = g$ a.e. For $p = \\infty$:\n\n$$\\|f\\|_\\infty = \\mathrm{esssup}\\, |f| = \\inf\\{ M : |f| \\le M \\text{ a.e.} \\}.$$\n\nThe $L^p$ spaces are **Banach spaces** for every $p \\ge 1$ (Riesz-Fischer, proved via DCT). $L^2$ is special: it's a **Hilbert space**, with inner product $\\langle f, g \\rangle = \\int f \\bar g$.\n\nThis notebook surveys the inequalities and properties.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
+      "metadata": {},
+      "execution_count": 6,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Hölder's inequality\n\nFor $1 \\le p, q \\le \\infty$ with $1/p + 1/q = 1$ (conjugate exponents),\n\n$$\\int |f g|\\,d\\mu \\;\\le\\; \\|f\\|_p\\,\\|g\\|_q.$$\n\nSpecial case $p = q = 2$: **Cauchy-Schwarz**, $|\\int fg| \\le \\|f\\|_2 \\|g\\|_2$.\nSpecial case $p = 1, q = \\infty$: $\\int |fg| \\le \\|f\\|_1 \\|g\\|_\\infty$.\n\nDemonstrate on $[0, 1]$: $f(x) = x$, $g(x) = e^{x}$, $p = q = 2$.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "f_ex : x$\ng_ex : exp(x)$\nint_fg : integrate(abs(f_ex * g_ex), x, 0, 1)$\nnorm_f : sqrt(integrate(f_ex^2, x, 0, 1))$\nnorm_g : sqrt(integrate(g_ex^2, x, 0, 1))$\nprint(\"∫₀¹ x·e^x dx =\", float(int_fg))$\nprint(\"‖f‖_2 · ‖g‖_2 =\", float(norm_f * norm_g))$\nprint(\"Hölder/CS bound holds:\", float(int_fg) <= float(norm_f * norm_g))$",
+      "metadata": {},
+      "execution_count": 7,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "∫₀¹ x·e^x dx = 1.0\n‖f‖_2 · ‖g‖_2 = 1.0319121489521812\nHölder/CS bound holds: 1.0 <= 1.0319121489521812"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Minkowski's inequality (triangle inequality for $L^p$)\n\nFor $f, g \\in L^p$ with $1 \\le p \\le \\infty$,\n\n$$\\|f + g\\|_p \\le \\|f\\|_p + \\|g\\|_p.$$\n\nThis is the triangle inequality that makes $L^p$ a normed space.\n\n## $L^p$ inclusions on finite measure spaces\n\nIf $\\mu(X) < \\infty$ and $1 \\le p < q \\le \\infty$, then $L^q(X, \\mu) \\subseteq L^p(X, \\mu)$. Bigger $p$ ⇒ stricter requirement (you must control larger powers of $|f|$). The inclusion reverses for counting measure on $\\mathbb{N}$ (the $\\ell^p$ spaces): $\\ell^p \\subseteq \\ell^q$ when $p \\le q$.\n\nDemonstrate on $[0, 1]$ with $f(x) = x^{-1/2}$:\n- $\\int_0^1 x^{-1/2}\\,dx = 2$ — finite, so $f \\in L^1$.\n- $\\int_0^1 x^{-1}\\,dx = \\infty$ — so $f \\notin L^2$.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "print(\"‖x^{-1/2}‖_1 = ∫₀¹ x^{-1/2} dx =\")$\nintegrate(x^(-1/2), x, 0, 1);\nprint()$\n/* ∫_ε¹ 1/x dx = -log(ε) which → +∞ as ε → 0⁺ */\nprint(\"‖x^{-1/2}‖_2² = ∫_ε¹ 1/x dx = -log(ε), which diverges as ε → 0⁺.\")$\nprint(\"→ x^{-1/2} ∈ L¹ but not L²\")$",
+      "metadata": {},
+      "execution_count": 8,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "‖x^{-1/2}‖_1 = ∫₀¹ x^{-1/2} dx =\n2\n‖x^{-1/2}‖_2² = ∫_ε¹ 1/x dx = -log(ε), which diverges as ε → 0⁺.\n→ x^{-1/2} ∈ L¹ but not L²"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Completeness — Riesz-Fischer\n\nEvery $L^p$ space is **complete**: a Cauchy sequence in $\\|\\cdot\\|_p$ has a limit in $L^p$. The proof:\n\n1. Pick a subsequence $f_{n_k}$ such that $\\|f_{n_{k+1}} - f_{n_k}\\|_p < 2^{-k}$.\n2. Show $f_{n_k} \\to f$ a.e. by showing $\\sum |f_{n_{k+1}} - f_{n_k}|$ is in $L^p$.\n3. Apply DCT (with dominator $\\sum |f_{n_{k+1}} - f_{n_k}| + |f_{n_1}|$) to conclude $f_{n_k} \\to f$ in $L^p$.\n4. Cauchy + subsequence converging ⇒ original sequence converges.\n\nThe dominated convergence theorem from the previous notebook does the heavy lifting in step 3. **Without Lebesgue, $L^p$ wouldn't be complete** — that's the deep reason analysts adopted Lebesgue's theory.\n\n## $L^2$ is a Hilbert space\n\nThe case $p = 2$ has the inner product\n\n$$\\langle f, g \\rangle = \\int f\\,\\bar g\\,d\\mu, \\qquad \\|f\\|_2 = \\sqrt{\\langle f, f \\rangle}.$$\n\nThis unlocks orthogonality: $f \\perp g$ if $\\langle f, g \\rangle = 0$. Fourier series fall out immediately:\n\n$$\\{e^{2\\pi i n x}\\}_{n \\in \\mathbb{Z}} \\text{ is an orthonormal basis of } L^2([0, 1]).$$\n\nAny $f \\in L^2$ has a unique expansion $f = \\sum_n \\hat f(n)\\,e^{2\\pi i n x}$ in the **$L^2$ sense** — i.e., partial sums converge in $L^2$ norm, even when they don't converge pointwise (Carleson, much harder, says they converge a.e. for $L^2$). We'll use Hilbert structure heavily in Stage 5 (functional analysis).\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "/* Verify orthogonality: ∫₀¹ e^{2πi m x} · e^{-2πi n x} dx = δ_{m,n} */\nm_test : 1$ n_test : 2$\nresult : integrate(exp(2*%pi*%i*m_test*x) * exp(-2*%pi*%i*n_test*x), x, 0, 1)$\nprint(\"⟨e^{2πi·1·x}, e^{2πi·2·x}⟩ =\", result, \"(=0, orthogonal ✓)\")$\nprint()$\nresult_self : integrate(exp(2*%pi*%i*1*x) * exp(-2*%pi*%i*1*x), x, 0, 1)$\nprint(\"⟨e^{2πi·x}, e^{2πi·x}⟩ =\", result_self, \"(=1, unit norm ✓)\")$",
+      "metadata": {},
+      "execution_count": 9,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "⟨e^{2πi·1·x}, e^{2πi·2·x}⟩ = 0 (=0, orthogonal ✓)\n⟨e^{2πi·x}, e^{2πi·x}⟩ = 1 (=1, unit norm ✓)"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Convexity and clipping\n\nA useful identity in $L^p$: $\\|f\\|_p$ is **monotone in $p$** under finite measure (and reverses for counting measure). Concretely, $L^p$ inclusions can be quantified via Jensen's inequality applied to $|f|^p$.\n\n## Examples of $L^p$ functions\n\nTwo ways a function can fail to be in $L^1([0, \\infty))$:\n- **Decay too slow at infinity**: $1/x$ on $[1, \\infty)$ has $\\int 1/x = \\infty$.\n- **Singular**: $1/\\sqrt{x}$ on $(0, 1]$ has $\\int 1/\\sqrt x = 2$ but $1/x$ has $\\int 1/x = \\infty$.\n\nA function being in *every* $L^p$ is a strong regularity condition: $e^{-x^2}$ on $\\mathbb{R}$ is in every $L^p$ (decays faster than any polynomial). Compactly-supported continuous functions are in every $L^p$.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "/* Compute ‖e^{-x²}‖_p for various p */\nfor p in [1, 2, 3, 5] do\n  print(\"‖e^{-x²}‖_\", p, \" = (\",\n        float(integrate(exp(-p * x^2), x, -inf, inf)), \")^{1/\", p, \"} =\",\n        float(integrate(exp(-p * x^2), x, -inf, inf))^(1.0/p))$",
+      "metadata": {},
+      "execution_count": 10,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "‖e^{-x²}‖_ 1  = ( 1.7724538509055159 )^{1/ 1 } = 1.7724538509055159\n‖e^{-x²}‖_ 2  = ( 1.2533141373155001 )^{1/ 2 } = 1.1195151349202477\n‖e^{-x²}‖_ 3  = ( 1.0233267079464885 )^{1/ 3 } = 1.0077158813689795\n‖e^{-x²}‖_ 5  = ( 0.7926654595212022 )^{1/ 5 } = 0.9545924317243375"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## What $L^p$ buys us\n\nThe big picture:\n\n- $L^p$ for $p \\ge 1$ is a Banach space (complete normed space).\n- $L^2$ is a Hilbert space, with all the geometric tools that come with that.\n- Bounded linear operators between $L^p$ spaces have a rich theory (next stage).\n- DCT, Fubini, and the Lebesgue integral all live naturally in $L^1$.\n\nThe $L^p$ scale interpolates between $L^1$ (integrable) and $L^\\infty$ (essentially bounded), letting us match the right space to the problem at hand. A function that's just barely in $L^1$ might be safely in $L^2$; a function bounded but not integrable lives in $L^\\infty$ but not $L^1$.\n\nThe next notebook ties up the last loose end of multivariable Lebesgue: when can we exchange the order of integration in $\\int\\int f\\,d\\mu\\,d\\nu$?\n",
+      "metadata": {}
+    }
+  ]
+}

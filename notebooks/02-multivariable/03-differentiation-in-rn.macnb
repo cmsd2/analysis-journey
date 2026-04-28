@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 17,
+      "execution_count": 25,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "f_scalar : x^2 * y + sin(x*y) + y^3$\nprint(\"f(x, y) =\")$\nf_scalar;\nprint(\"∂f/∂x =\")$\ndiff(f_scalar, x);\nprint(\"∂f/∂y =\")$\ndiff(f_scalar, y);",
       "metadata": {},
-      "execution_count": 18,
+      "execution_count": 26,
       "outputs": [
         {
           "name": "stdout",
@@ -46,7 +46,7 @@
               "x\\,\\cos \\left(x\\,y\\right)+3\\,y^2+x^2"
             ]
           },
-          "execution_count": 18,
+          "execution_count": 26,
           "metadata": {},
           "output_type": "execute_result"
         }
@@ -61,7 +61,7 @@
       "cell_type": "code",
       "source": "f_components : [x^2 - y^2, 2*x*y]$\nstate_vars : [x, y]$\nJ : genmatrix(lambda([i, j], diff(f_components[i], state_vars[j])), 2, 2)$\nprint(\"Jacobian J =\")$\nJ;\nprint(\"det(J) at (1, 1) =\", determinant(subst([x=1, y=1], J)))$\nprint(\"(equals 4(x² + y²) = 8 here — so f is locally invertible)\")$",
       "metadata": {},
-      "execution_count": 19,
+      "execution_count": 27,
       "outputs": [
         {
           "name": "stdout",
@@ -81,7 +81,7 @@
       "cell_type": "code",
       "source": "f_tan : x^2 + y^2$  /* paraboloid */\nfx : diff(f_tan, x)$\nfy : diff(f_tan, y)$\nx0 : 1.0$ y0 : 0.5$\nf_at : float(subst([x=x0, y=y0], f_tan))$\nfx_at : float(subst([x=x0, y=y0], fx))$\nfy_at : float(subst([x=x0, y=y0], fy))$\n\nprint(\"Tangent plane at (\", x0, \",\", y0, \"):\")$\nprint(\"  z =\", f_at, \"+\", fx_at, \"(x -\", x0, \") +\", fy_at, \"(y -\", y0, \")\")$",
       "metadata": {},
-      "execution_count": 20,
+      "execution_count": 28,
       "outputs": [
         {
           "name": "stdout",
@@ -101,7 +101,7 @@
       "cell_type": "code",
       "source": "tangent_plane : f_at + fx_at * (x - x0) + fy_at * (y - y0)$\nax_draw3d(\n  explicit(x^2 + y^2, x, -2, 2, y, -2, 2),\n  title=\"z = x² + y² (paraboloid)\",\n  xlabel=\"x\", ylabel=\"y\", zlabel=\"z\",\n  colorscale=\"Viridis\"\n)$",
       "metadata": {},
-      "execution_count": 21,
+      "execution_count": 29,
       "outputs": [
         {
           "data": {
@@ -118,7 +118,7 @@
       "cell_type": "code",
       "source": "ax_draw3d(\n  explicit(tangent_plane, x, -1, 3, y, -1.5, 2.5),\n  title=\"Tangent plane at (1, 0.5)\",\n  xlabel=\"x\", ylabel=\"y\", zlabel=\"z\",\n  colorscale=\"Greys\"\n)$",
       "metadata": {},
-      "execution_count": 22,
+      "execution_count": 30,
       "outputs": [
         {
           "data": {
@@ -140,7 +140,7 @@
       "cell_type": "code",
       "source": "/* f(x, 0) = 0 for all x, so ∂f/∂x at origin = lim (f(h, 0) - f(0,0))/h = 0\n   Similarly for ∂f/∂y. But f isn't even continuous at origin (previous notebook),\n   let alone differentiable. */\nprint(\"∂f/∂x at origin = lim_{h→0} (f(h, 0) - 0)/h = 0   (f vanishes on the x-axis)\")$\nprint(\"∂f/∂y at origin = 0   (similarly on y-axis)\")$\nprint(\"But f isn't continuous at origin, so it can't be differentiable.\")$",
       "metadata": {},
-      "execution_count": 23,
+      "execution_count": 31,
       "outputs": [
         {
           "name": "stdout",
@@ -160,7 +160,7 @@
       "cell_type": "code",
       "source": "/* f: ℝ² → ℝ²,  g: ℝ² → ℝ */\nf_inner : [x^2 + y, x*y]$\ng_outer : (u + v)^2$\nJ_f : genmatrix(lambda([i, j], diff(f_inner[i], state_vars[j])), 2, 2)$\nJ_g : matrix([diff(g_outer, u), diff(g_outer, v)])$\nprint(\"J_f =\")$ J_f;\nprint(\"J_g (in u, v) =\")$ J_g;\n\n/* Compose:  h(x, y) = g(f(x, y)) = (x²+y + xy)²  */\nh_composed : subst([u = f_inner[1], v = f_inner[2]], g_outer)$\nJ_h_direct : matrix([diff(h_composed, x), diff(h_composed, y)])$\nprint(\"∂(g∘f)/∂(x,y) directly =\")$\nexpand(J_h_direct);\n\n/* Chain rule: J_h = J_g(at f) · J_f */\nJ_g_at_f : subst([u = f_inner[1], v = f_inner[2]], J_g)$\nJ_h_via_chain : J_g_at_f . J_f$\nprint(\"∂(g∘f)/∂(x,y) via chain rule =\")$\nexpand(J_h_via_chain);\n\nprint(\"Matches:\", is(equal(expand(J_h_direct), expand(J_h_via_chain))))$",
       "metadata": {},
-      "execution_count": 24,
+      "execution_count": 32,
       "outputs": [
         {
           "name": "stdout",

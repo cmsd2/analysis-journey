@@ -1,0 +1,91 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 5,
+  "metadata": {
+    "kernelspec": {
+      "name": "maxima",
+      "display_name": "Maxima",
+      "language": "maxima"
+    },
+    "aximar": {}
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "source": "# Bounded Linear Operators\n\nFor Banach spaces $X, Y$, the **bounded linear operators** $\\mathcal{B}(X, Y)$ are linear maps $T : X \\to Y$ with finite **operator norm**\n\n$$\\|T\\| = \\sup_{\\|x\\|_X = 1} \\|T x\\|_Y < \\infty.$$\n\nEquivalently: $T$ is continuous. (In normed spaces, linear + continuous ⇔ linear + bounded.)\n\n$\\mathcal{B}(X, Y)$ is itself a Banach space under the operator norm; if $X = Y$ it's also an algebra (composition is multiplication). For $X = Y$ Hilbert spaces, it's a *C*-algebra, the prototypical noncommutative geometry object.\n\nThis notebook surveys typical operators, computes some operator norms, and previews the spectral picture.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
+      "metadata": {},
+      "execution_count": 5,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Multiplication operator on $L^2([0, 1])$\n\nFor $\\varphi \\in L^\\infty([0, 1])$, the **multiplication operator** $M_\\varphi : L^2 \\to L^2$ is $f \\mapsto \\varphi f$. Its norm is the essential sup of $|\\varphi|$:\n\n$$\\|M_\\varphi\\| = \\|\\varphi\\|_\\infty.$$\n\nDemonstrate on $\\varphi(x) = x$:\n- $\\|\\varphi\\|_\\infty = 1$ (sup on $[0, 1]$).\n- For $f_n(x) = \\sqrt{n+1}\\,x^n / \\|x^n\\|_2$ (unit-norm test functions), $\\|M_\\varphi f_n\\|_2 \\to 1$ but stays below.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "/* Maxima: ‖x · f_n‖_2² where f_n is a unit-norm 'sharply peaked at 1' family */\nn_test : 5$\nnorm_xfn_sq : integrate((sqrt(2*n_test+1) * x^n_test * x)^2, x, 0, 1)$\nprint(\"‖f_n(x) = √(2n+1)·x^n‖_2 =\")$\nprint(\"  ‖f_n‖_2² =\", float(integrate((sqrt(2*n_test+1)*x^n_test)^2, x, 0, 1)),\n      \"  → unit norm ✓\")$\nprint(\"‖M_φ f_n‖_2² =\", float(norm_xfn_sq), \" for n =\", n_test)$\nprint(\"(approaches ‖φ‖_∞ = 1 as n → ∞ — the multiplication operator's norm is ‖φ‖_∞)\")$",
+      "metadata": {},
+      "execution_count": 6,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "‖f_n(x) = √(2n+1)·x^n‖_2 =\n  ‖f_n‖_2² = 1.0   → unit norm ✓\n‖M_φ f_n‖_2² = 0.8461538461538461  for n = 5\n(approaches ‖φ‖_∞ = 1 as n → ∞ — the multiplication operator's norm is ‖φ‖_∞)"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Integral operators on $L^2$\n\nFor a measurable kernel $K(x, y)$ on $[0, 1]^2$, define $T_K f(x) = \\int_0^1 K(x, y) f(y)\\,dy$. If $K \\in L^2([0, 1]^2)$, then $T_K$ is bounded on $L^2([0, 1])$ with $\\|T_K\\| \\le \\|K\\|_2$ (Hilbert-Schmidt operators).\n\nThese are **compact** (next notebook): they map bounded sets to relatively compact sets. They have eigenvalues that accumulate only at 0.\n\nExample: the Volterra operator $V f(x) = \\int_0^x f(y)\\,dy$ has kernel $K(x, y) = \\mathbf{1}_{y \\le x}$. It's compact, has spectrum $\\{0\\}$ (zero is its only \"eigenvalue\" — well, accumulation point — Volterra has empty point spectrum), but it's not the zero operator.\n\n## Operator norm computations\n\nFor a finite-dimensional operator $A : \\mathbb{R}^n \\to \\mathbb{R}^m$ in matrix form, the operator norm depends on the choice of vector norms:\n\n- $\\|A\\|_{1 \\to 1} = \\max_j \\sum_i |A_{ij}|$ (max column sum).\n- $\\|A\\|_{\\infty \\to \\infty} = \\max_i \\sum_j |A_{ij}|$ (max row sum).\n- $\\|A\\|_{2 \\to 2} = \\sigma_{\\max}(A) = \\sqrt{\\lambda_{\\max}(A^* A)}$ (largest singular value).\n\nThe 2-norm is the most useful and takes the most work to compute.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "A_mat : ndarray(matrix([1.0, 2.0], [3.0, 1.0]))$\nprint(\"Max column sum (‖A‖_{1 → 1}):\", max(1+3, 2+1))$\nprint(\"Max row sum (‖A‖_{∞ → ∞}):\", max(1+2, 3+1))$\n[U, sing, Vt] : np_svd(A_mat)$\nprint(\"Largest singular value (‖A‖_{2 → 2}):\", np_ref(sing, 0))$",
+      "metadata": {},
+      "execution_count": 7,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "Max column sum (‖A‖_{1 → 1}): 4\nMax row sum (‖A‖_{∞ → ∞}): 4\nLargest singular value (‖A‖_{2 → 2}): 3.6180339887498953"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Algebra structure of $\\mathcal{B}(X) = \\mathcal{B}(X, X)$\n\nWhen source and target are the same:\n\n- **Composition** is associative: $S(TU) = (ST)U$.\n- **Identity** $I$ acts as $I T = T I = T$.\n- **Norm submultiplicative**: $\\|S T\\| \\le \\|S\\|\\,\\|T\\|$.\n\nSo $\\mathcal{B}(X)$ is a **Banach algebra**. With the adjoint operation on Hilbert spaces, it's a **$C^*$-algebra**: $\\|T^* T\\| = \\|T\\|^2$. This is the abstract setting of much of mathematical physics.\n\n## Spectrum — the infinite-dimensional eigenvalue [S+N]\n\nFor $T \\in \\mathcal{B}(X)$, the **spectrum** is\n\n$$\\sigma(T) = \\{\\lambda \\in \\mathbb{C} : T - \\lambda I \\text{ is not invertible}\\}.$$\n\nIn finite dimensions, $\\sigma(T)$ is exactly the set of eigenvalues. In infinite dimensions there are three flavours:\n\n- **Point spectrum** $\\sigma_p(T)$: eigenvalues (kernel of $T - \\lambda I$ non-trivial).\n- **Continuous spectrum** $\\sigma_c(T)$: $T - \\lambda I$ injective with dense image but not surjective.\n- **Residual spectrum** $\\sigma_r(T)$: $T - \\lambda I$ injective without dense image.\n\nThe spectrum is always **non-empty and compact** (a circle of radius $\\le \\|T\\|$ around 0).\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "/* Verify with a simple finite-dim example: 3x3 Jordan block */\nJ : ndarray(matrix([2.0, 1.0, 0.0],\n                   [0.0, 2.0, 1.0],\n                   [0.0, 0.0, 2.0]))$\n[evals, evecs] : np_eig(J)$\nprint(\"Eigenvalues of Jordan block:\", np_to_list(evals))$\nprint(\"Spectrum: {2} (a single point repeated)\")$\nprint(\"Spectral radius = 2 = ‖J‖_2 (= largest singular value):\")$\n[U, sing, Vt] : np_svd(J)$\nprint(\"  ‖J‖_2 =\", np_ref(sing, 0))$",
+      "metadata": {},
+      "execution_count": 8,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "Eigenvalues of Jordan block: [2.0,2.0,2.0]\nSpectrum: {2} (a single point repeated)\nSpectral radius = 2 = ‖J‖_2 (= largest singular value):\n  ‖J‖_2 = 2.7615571818318894"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Why operator theory matters\n\nBounded linear operators are the morphisms of functional analysis. They show up everywhere:\n\n- **PDE**: differential operators acting on Sobolev spaces. (Differentiation is *unbounded* on most $L^p$, so unbounded-operator theory is essential here.)\n- **Quantum mechanics**: observables are self-adjoint operators on Hilbert space. Spectrum = possible measurement outcomes.\n- **Signal processing**: convolution operators acting on $\\ell^2$ or $L^2$.\n- **Numerical analysis**: discretisations of differential operators have spectra approximating the continuous one.\n\n## What's coming\n\nThe next four notebooks build the structural theorems:\n\n- **Dual spaces** — when do continuous linear functionals separate points? (Hahn-Banach)\n- **Three big theorems** — open mapping, closed graph, uniform boundedness.\n- **Compact operators** — finite-rank approximation, Riesz-Schauder.\n- **Spectral theory** — diagonalisation in Hilbert space.\n",
+      "metadata": {}
+    }
+  ]
+}

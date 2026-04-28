@@ -1,0 +1,71 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 5,
+  "metadata": {
+    "kernelspec": {
+      "name": "maxima",
+      "display_name": "Maxima",
+      "language": "maxima"
+    },
+    "aximar": {}
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "source": "# Lie Groups [S+N]\n\nA **Lie group** is a smooth manifold $G$ with a smooth group structure: smooth multiplication $G \\times G \\to G$ and smooth inversion $G \\to G$. The two structures (manifold + group) interact richly.\n\nExamples:\n\n| Group | As manifold | Group operation |\n|-------|-------------|-----------------|\n| $(\\mathbb{R}^n, +)$ | flat $\\mathbb{R}^n$ | addition |\n| $S^1 \\cong U(1)$ | unit circle | complex multiplication |\n| $\\mathrm{GL}(n, \\mathbb{R})$ | open subset of $\\mathbb{R}^{n^2}$ | matrix multiplication |\n| $\\mathrm{O}(n)$ | $n^2 - n(n-1)/2$ -dim manifold | matrix mult |\n| $\\mathrm{SO}(3)$ | 3D rotations, $\\mathbb{RP}^3$ | matrix mult |\n| $\\mathrm{SU}(2)$ | $S^3$ | matrix mult |\n\nThe infinitesimal version of a Lie group is a **Lie algebra** — the tangent space at the identity, equipped with a bracket structure derived from the group commutator.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
+      "metadata": {},
+      "execution_count": 4,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Matrix Lie groups: $\\mathrm{SO}(3)$\n\nThe rotation group $\\mathrm{SO}(3) = \\{A \\in \\mathbb{R}^{3 \\times 3} : A^T A = I, \\det A = 1\\}$ is a 3-dimensional manifold (after enforcing the constraints). It's the configuration space of a rigid body fixing a point — robotics, classical mechanics, computer graphics.\n\nThe Lie algebra $\\mathfrak{so}(3)$ is the tangent space at $I$:\n\n$$\\mathfrak{so}(3) = \\{X \\in \\mathbb{R}^{3 \\times 3} : X^T = -X\\}$$\n\n— the **antisymmetric** $3 \\times 3$ matrices, parametrised by 3 numbers (the components of the rotation axis × angle).\n\n## Exponential map [S+N]\n\nThe **exponential map** $\\exp : \\mathfrak{g} \\to G$ generalises the matrix exponential. For $X$ a (3 × 3) antisymmetric matrix corresponding to axis $\\hat n$ and angle $\\theta$, $e^X$ is the rotation matrix.\n\nFor axis $(0, 0, 1)$ and angle $\\theta$:\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "/* Antisymmetric matrix [hat n] for axis (0, 0, 1) */\nn_hat_z : ndarray(matrix([0.0, -1.0, 0.0],\n                         [1.0,  0.0, 0.0],\n                         [0.0,  0.0, 0.0]))$\ntheta_test : 0.5$  /* radians */\nX_lie : np_scale(theta_test, n_hat_z)$\nR_rot : np_expm(X_lie)$\nprint(\"R = exp(θ [n_hat_z]) for θ = 0.5:\")$\nnp_to_matrix(R_rot);\nprint(\"Should match rotation by 0.5 rad about z: [[cos, -sin, 0], [sin, cos, 0], [0, 0, 1]]\")$\nprint(\"cos(0.5) =\", float(cos(0.5)), \"  sin(0.5) =\", float(sin(0.5)))$",
+      "metadata": {},
+      "execution_count": 5,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "R = exp(θ [n_hat_z]) for θ = 0.5:\nmatrix([0.8775825618903728,-0.47942553860420306,0.0],\n       [0.47942553860420306,0.8775825618903728,0.0],[0.0,0.0,1.0])\nShould match rotation by 0.5 rad about z: [[cos, -sin, 0], [sin, cos, 0], [0, 0, 1]]\ncos(0.5) = 0.8775825618903728   sin(0.5) = 0.479425538604203"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "The matrix exponential delivers exactly $\\begin{pmatrix} \\cos\\theta & -\\sin\\theta & 0 \\\\ \\sin\\theta & \\cos\\theta & 0 \\\\ 0 & 0 & 1\\end{pmatrix}$. The Lie algebra parametrises rotations linearly; the exponential nonlinearly maps to the group.\n\n## Lie bracket and the BCH formula\n\nFor matrices, the Lie bracket is the commutator $[X, Y] = XY - YX$. It captures the failure of $e^{X+Y}$ to equal $e^X e^Y$ when $X, Y$ don't commute.\n\n**Baker-Campbell-Hausdorff** formula:\n\n$$e^X e^Y = \\exp\\left(X + Y + \\tfrac{1}{2}[X, Y] + \\tfrac{1}{12}[X, [X, Y]] - \\tfrac{1}{12}[Y, [X, Y]] + \\cdots\\right).$$\n\nSuccessive corrections involve nested brackets. This is why non-commuting groups give subtle dynamics — the order of operations matters.\n\n## $\\mathrm{SU}(2)$ and $S^3$\n\nThe special unitary group $\\mathrm{SU}(2) = \\{U \\in \\mathbb{C}^{2 \\times 2} : U^* U = I, \\det U = 1\\}$ is — **as a manifold** — the unit 3-sphere $S^3$ in $\\mathbb{C}^2 \\cong \\mathbb{R}^4$. It double-covers $\\mathrm{SO}(3)$: every rotation has two preimages in $\\mathrm{SU}(2)$, related by sign.\n\nThis double cover is what underpins the **spin-1/2** behaviour of fermions: rotating a fermion by $2\\pi$ flips its sign; $4\\pi$ returns to the original. The group structure of $\\mathrm{SU}(2)$ encodes this directly.\n\n## Lie group actions on manifolds\n\nMany manifolds carry natural Lie group actions:\n\n- $\\mathrm{SO}(3)$ acts on $S^2$ by rotation.\n- $\\mathrm{SU}(2)$ acts on $\\mathbb{C}^2$ linearly.\n- $\\mathrm{SL}(2, \\mathbb{R})$ acts on the upper half-plane by Möbius transformations (Stage 3/01).\n\nWhen the action is transitive (any point can be moved to any other), $M$ is a **homogeneous space** $G/H$ where $H$ is the stabiliser of a chosen point. $S^n = \\mathrm{O}(n+1)/\\mathrm{O}(n)$, $\\mathbb{H}^2 = \\mathrm{SL}(2, \\mathbb{R})/\\mathrm{SO}(2)$.\n\nThis unifies a huge swath of geometry: manifolds with transitive group action have all the structure of group representations + invariants.\n\n## Structure constants\n\nPick a basis $\\{e_1, \\ldots, e_n\\}$ of the Lie algebra $\\mathfrak{g}$. The brackets express in this basis:\n\n$$[e_i, e_j] = c^k_{ij}\\,e_k$$\n\nfor **structure constants** $c^k_{ij}$. These determine the algebra (and locally the group). For $\\mathfrak{so}(3)$ with the standard basis $\\{L_x, L_y, L_z\\}$:\n\n$$[L_x, L_y] = L_z, \\quad [L_y, L_z] = L_x, \\quad [L_z, L_x] = L_y.$$\n\nThese are *the* commutation relations of angular momentum in classical and quantum mechanics.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "/* Verify [L_x, L_y] = L_z numerically */\nLx : ndarray(matrix([0.0, 0.0,  0.0],\n                    [0.0, 0.0, -1.0],\n                    [0.0, 1.0,  0.0]))$\nLy : ndarray(matrix([ 0.0, 0.0, 1.0],\n                    [ 0.0, 0.0, 0.0],\n                    [-1.0, 0.0, 0.0]))$\nLz : ndarray(matrix([0.0, -1.0, 0.0],\n                    [1.0,  0.0, 0.0],\n                    [0.0,  0.0, 0.0]))$\n\nbracket_xy : np_sub(np_matmul(Lx, Ly), np_matmul(Ly, Lx))$\nprint(\"[L_x, L_y] =\")$\nnp_to_matrix(bracket_xy);\nprint(\"L_z =\")$\nnp_to_matrix(Lz);\nprint(\"Match — confirms so(3) commutation relation\")$",
+      "metadata": {},
+      "execution_count": 6,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "[L_x, L_y] =\nmatrix([0.0,-1.0,0.0],[1.0,0.0,0.0],[0.0,0.0,0.0])\nL_z =\nmatrix([0.0,-1.0,0.0],[1.0,0.0,0.0],[0.0,0.0,0.0])\nMatch — confirms so(3) commutation relation"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Why Lie groups everywhere\n\nLie groups encode continuous symmetries. They appear in:\n\n- **Classical mechanics**: rotation, translation, Galilean transformations.\n- **Special relativity**: Lorentz group $\\mathrm{SO}(3, 1)$.\n- **General relativity**: diffeomorphism group of spacetime.\n- **Quantum mechanics**: $\\mathrm{SU}(2)$ (spin), $\\mathrm{SU}(3)$ (colour charge).\n- **Robotics**: $\\mathrm{SE}(3) = \\mathrm{SO}(3) \\ltimes \\mathbb{R}^3$ (rigid motions in 3D).\n- **Computer graphics**: $\\mathrm{SL}(3)$ for projective transformations.\n- **Fluid dynamics**: volume-preserving diffeomorphisms.\n\nWherever there's smooth symmetry, there's a Lie group — and the structure of the group dictates much of the dynamics.\n\n## What we have at the end of the analysis journey\n\nSix stages, 38 notebooks, covering the trunk of mathematical analysis:\n\n| Stage | Topic | Notebooks |\n|-------|-------|-----------|\n| 1 | Real analysis | 7 |\n| 2 | Analysis in $\\mathbb{R}^n$ | 6 |\n| 3 | Complex analysis | 7 |\n| 4 | Measure theory and Lebesgue integration | 6 |\n| 5 | Functional analysis | 7 |\n| 6 | Differential geometry and manifolds | 7 |\n\nThe arc:\n\n- Real analysis built the foundation (sequences, continuity, differentiation, integration, series).\n- $\\mathbb{R}^n$ extended it to multivariable.\n- Complex analysis revealed the rigidity of holomorphy.\n- Measure theory rebuilt integration on a more robust foundation.\n- Functional analysis abstracted finite-dimensional linear algebra to infinite dimensions.\n- Differential geometry generalised calculus to curved spaces.\n\nYou're now equipped to read the foundational chapters of probability theory, PDE theory, ergodic theory, mathematical physics, geometric topology — most of \"modern\" analysis. The journey ends here, but the subject is, as always, infinite.\n",
+      "metadata": {}
+    }
+  ]
+}

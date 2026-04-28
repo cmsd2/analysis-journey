@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 13,
+      "execution_count": 19,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "f_scalar : x^2 + y^2$\ngrad_f : [diff(f_scalar, x), diff(f_scalar, y)]$\nprint(\"∇f =\")$\ngrad_f;\n\nax_draw2d(\n  ax_vector_field(grad_f[1], grad_f[2], x, -2, 2, y, -2, 2),\n  title=\"∇(x² + y²) — radial outward field\",\n  xlabel=\"x\", ylabel=\"y\",\n  aspect_ratio=true\n)$",
       "metadata": {},
-      "execution_count": 14,
+      "execution_count": 20,
       "outputs": [
         {
           "name": "stdout",
@@ -60,7 +60,7 @@
       "cell_type": "code",
       "source": "F_radial : [x, y]$\nF_rotation : [-y, x]$\ndiv_radial : diff(F_radial[1], x) + diff(F_radial[2], y)$\ndiv_rot : diff(F_rotation[1], x) + diff(F_rotation[2], y)$\nprint(\"∇·(x, y) =\", div_radial)$\nprint(\"∇·(-y, x) =\", div_rot)$",
       "metadata": {},
-      "execution_count": 15,
+      "execution_count": 21,
       "outputs": [
         {
           "name": "stdout",
@@ -80,7 +80,7 @@
       "cell_type": "code",
       "source": "F3 : [-y, x, 0]$\ncurl_F : [\n  diff(F3[3], y) - diff(F3[2], z),\n  diff(F3[1], z) - diff(F3[3], x),\n  diff(F3[2], x) - diff(F3[1], y)\n]$\nprint(\"∇ × (-y, x, 0) =\")$\ncurl_F;",
       "metadata": {},
-      "execution_count": 16,
+      "execution_count": 22,
       "outputs": [
         {
           "name": "stdout",
@@ -95,7 +95,7 @@
               "\\left[ 0 , 0 , 2 \\right] "
             ]
           },
-          "execution_count": 16,
+          "execution_count": 22,
           "metadata": {},
           "output_type": "execute_result"
         }
@@ -110,7 +110,7 @@
       "cell_type": "code",
       "source": "P_g : -y/2$\nQ_g : x/2$\n\n/* RHS: area integral of dQ/dx - dP/dy over unit disc, in polar */\nintegrand_xy : diff(Q_g, x) - diff(P_g, y)$\nintegrand_polar : subst([x = r*cos(theta), y = r*sin(theta)], integrand_xy)$\nprint(\"∂Q/∂x - ∂P/∂y =\", integrand_xy)$\nRHS : integrate(integrate(integrand_polar * r, r, 0, 1), theta, 0, 2*%pi)$\nprint(\"RHS area integral =\", RHS)$\n\n/* LHS: line integral around unit circle */\nP_t : subst([x = cos(t), y = sin(t)], P_g)$\nQ_t : subst([x = cos(t), y = sin(t)], Q_g)$\nLHS : integrate(P_t * (-sin(t)) + Q_t * cos(t), t, 0, 2*%pi)$\nprint(\"LHS line integral =\", LHS)$\nprint(\"Match:\", is(equal(ratsimp(LHS - RHS), 0)))$",
       "metadata": {},
-      "execution_count": 17,
+      "execution_count": 23,
       "outputs": [
         {
           "name": "stdout",
@@ -130,7 +130,7 @@
       "cell_type": "code",
       "source": "F_vec : [x, y, z]$\ndiv_F : diff(F_vec[1], x) + diff(F_vec[2], y) + diff(F_vec[3], z)$\nprint(\"∇·F =\", div_F)$\n\n/* Volume integral over unit ball, in spherical */\nV_int : integrate(integrate(integrate(3 * rho^2 * sin(phi),\n                                       rho, 0, 1),\n                              phi, 0, %pi),\n                    theta, 0, 2*%pi)$\nprint(\"∫∫∫ ∇·F dV =\", V_int)$\nprint(\"4π =\", float(4*%pi))$",
       "metadata": {},
-      "execution_count": 18,
+      "execution_count": 24,
       "outputs": [
         {
           "name": "stdout",

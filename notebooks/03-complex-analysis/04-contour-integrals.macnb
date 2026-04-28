@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 7,
+      "execution_count": 13,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "I1 : integrate(exp(%i*t) * %i * exp(%i*t), t, 0, 2*%pi)$\nprint(\"∮_{|z|=1} z dz =\", I1)$\nprint(\"(Cauchy's theorem says any holomorphic function gives 0 — z is entire ✓)\")$",
       "metadata": {},
-      "execution_count": 8,
+      "execution_count": 14,
       "outputs": [
         {
           "name": "stdout",
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "I2 : integrate(1/exp(%i*t) * %i*exp(%i*t), t, 0, 2*%pi)$\nprint(\"∮_{|z|=1} 1/z dz =\", I2)$\nprint(\"(2πi — the canonical non-zero contour integral)\")$",
       "metadata": {},
-      "execution_count": 9,
+      "execution_count": 15,
       "outputs": [
         {
           "name": "stdout",
@@ -71,7 +71,7 @@
       "cell_type": "code",
       "source": "/* Path 1: straight line z(t) = t(1+i), t ∈ [0, 1] */\ngamma1 : t * (1 + %i)$\ngamma1_p : 1 + %i$\nI_path1 : integrate(gamma1^2 * gamma1_p, t, 0, 1)$\nprint(\"∫_path1 z² dz =\", I_path1)$\n\n/* Path 2: along x-axis to 1, then up to 1+i.\n   On segment 1: z = t, t ∈ [0,1]; on segment 2: z = 1 + i*t, t ∈ [0, 1] */\nseg2a : integrate(t^2, t, 0, 1)$\nseg2b : integrate((1 + %i*t)^2 * %i, t, 0, 1)$\nI_path2 : seg2a + seg2b$\nprint(\"∫_path2 z² dz =\", expand(I_path2))$\nprint(\"F(z) = z³/3, F(1+i) - F(0) =\", expand((1 + %i)^3 / 3))$\nprint(\"(All three agree — z² is holomorphic everywhere)\")$",
       "metadata": {},
-      "execution_count": 10,
+      "execution_count": 16,
       "outputs": [
         {
           "name": "stdout",
@@ -91,7 +91,7 @@
       "cell_type": "code",
       "source": "theta_g : np_to_list(np_linspace(0, 2*float(%pi), 200))$\nunit_re : map(cos, theta_g)$\nunit_im : map(sin, theta_g)$\n\nax_draw2d(\n  color=\"blue\", line_width=2, name=\"contour |z| = 1\",\n  lines(unit_re, unit_im),\n  marker_size=10, color=\"red\", name=\"singularity at z = 0\",\n  points([0.0], [0.0]),\n  title=\"∮_{|z|=1} 1/z dz = 2πi — contour encloses singularity\",\n  xlabel=\"Re z\", ylabel=\"Im z\",\n  grid=true, aspect_ratio=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 11,
+      "execution_count": 17,
       "outputs": [
         {
           "data": {
@@ -113,7 +113,7 @@
       "cell_type": "code",
       "source": "N_partition : 1000$\ndt : 2 * float(%pi) / N_partition$\ntotal : 0.0 + 0.0 * %i$\nfor k : 0 thru N_partition - 1 do block([t, z, dz_dt],\n  t : k * dt,\n  z : exp(%i * t),\n  dz_dt : %i * exp(%i * t),\n  total : total + 1/z * dz_dt * dt)$\nprint(\"Numerical ∮_{|z|=1} 1/z dz ≈\", expand(total))$\nprint(\"Exact: 2πi =\", float(2*%pi)*%i)$",
       "metadata": {},
-      "execution_count": 12,
+      "execution_count": 18,
       "outputs": [
         {
           "name": "stdout",

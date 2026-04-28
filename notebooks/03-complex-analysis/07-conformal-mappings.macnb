@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 6,
+      "execution_count": 11,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "/* Plot horizontal lines y = const and vertical lines x = const, then their images under z² */\nn_show : 5$\nn_pts : 100$\nys_const : [0.4, 0.7, 1.0, 1.3]$\nxs_const : [0.4, 0.7, 1.0, 1.3]$\n\n/* Image of horizontal line y = c: z = x + ic, z² = (x²-c²) + i(2xc) */\nbuild_h_image(c) := block([xs, re_im, im_im],\n  xs : np_to_list(np_linspace(-1.5, 1.5, n_pts)),\n  re_im : map(lambda([xx], xx*xx - c*c), xs),\n  im_im : map(lambda([xx], 2*xx*c), xs),\n  [re_im, im_im])$\nbuild_v_image(c) := block([ys, re_im, im_im],\n  ys : np_to_list(np_linspace(-1.5, 1.5, n_pts)),\n  re_im : map(lambda([yy], c*c - yy*yy), ys),\n  im_im : map(lambda([yy], 2*c*yy), ys),\n  [re_im, im_im])$\n\nh1 : build_h_image(0.4)$  h2 : build_h_image(0.8)$  h3 : build_h_image(1.2)$\nv1 : build_v_image(0.4)$  v2 : build_v_image(0.8)$  v3 : build_v_image(1.2)$\n\nax_draw2d(\n  color=\"blue\", line_width=2, name=\"image of horizontals\",\n  lines(h1[1], h1[2]),\n  color=\"blue\",\n  lines(h2[1], h2[2]),\n  color=\"blue\",\n  lines(h3[1], h3[2]),\n  color=\"red\", line_width=2, name=\"image of verticals\",\n  lines(v1[1], v1[2]),\n  color=\"red\",\n  lines(v2[1], v2[2]),\n  color=\"red\",\n  lines(v3[1], v3[2]),\n  title=\"Image of orthogonal grid under z² — angles preserved (parabolas meet at right angles)\",\n  xlabel=\"Re\", ylabel=\"Im\",\n  grid=true, aspect_ratio=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 7,
+      "execution_count": 12,
       "outputs": [
         {
           "data": {
@@ -53,7 +53,7 @@
       "cell_type": "code",
       "source": "/* Check that φ_a maps the unit disc to itself: |φ_a(z)| < 1 when |z| < 1 */\nphi_a(z, a) := (z - a) / (1 - conjugate(a) * z)$\na_test : 0.3 + 0.4*%i$\ntest_pts : [0.5*exp(%i*0.3), 0.8*exp(%i*1.2), 0.95*exp(%i*5.1)]$\nfor z in test_pts do\n  print(\"|φ_a(\", float(cabs(z)), \"·e^iθ) | =\", float(cabs(phi_a(z, a_test))))$",
       "metadata": {},
-      "execution_count": 8,
+      "execution_count": 13,
       "outputs": [
         {
           "name": "stdout",
@@ -73,7 +73,7 @@
       "cell_type": "code",
       "source": "for r in [0.2, 0.5, 0.8, 0.95] do\n  print(\"|z| = \", r, \"  |z²| = \", r^2,\n        \"  Schwarz |z²| ≤ |z|:\", r^2 <= r)$",
       "metadata": {},
-      "execution_count": 9,
+      "execution_count": 14,
       "outputs": [
         {
           "name": "stdout",
@@ -93,7 +93,7 @@
       "cell_type": "code",
       "source": "f_uh(z) := (z - %i) / (z + %i)$\nhp_pts : [1.0 + 0.5*%i, 0.0 + 1.0*%i, -2.0 + 0.3*%i, 5.0 + 2.0*%i]$\nprint(\"Upper-half-plane points → disc images (|·| < 1):\")$\nfor p in hp_pts do block([img],\n  img : float(cabs(f_uh(p))),\n  print(\"  z =\", p, \"  → |f(z)| =\", img))$",
       "metadata": {},
-      "execution_count": 10,
+      "execution_count": 15,
       "outputs": [
         {
           "name": "stdout",

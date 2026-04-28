@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 13,
+      "execution_count": 19,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "f_polar : [r * cos(theta), r * sin(theta)]$\nJ_polar : genmatrix(lambda([i, j], diff(f_polar[i], [r, theta][j])), 2, 2)$\nprint(\"J_f =\")$ J_polar;\nprint(\"det(J_f) = r·cos²θ + r·sin²θ =\")$\nratsimp(determinant(J_polar));",
       "metadata": {},
-      "execution_count": 14,
+      "execution_count": 20,
       "outputs": [
         {
           "name": "stdout",
@@ -46,7 +46,7 @@
               "r\\,\\sin ^2\\theta+r\\,\\cos ^2\\theta"
             ]
           },
-          "execution_count": 14,
+          "execution_count": 20,
           "metadata": {},
           "output_type": "execute_result"
         }
@@ -61,7 +61,7 @@
       "cell_type": "code",
       "source": "J_inv_polar : invert(J_polar)$\nprint(\"J_{f^{-1}} = J_f^{-1} =\")$\nratsimp(J_inv_polar);\nprint(\"(In Cartesian coordinates these are ∂r/∂x, ∂r/∂y, ∂θ/∂x, ∂θ/∂y)\")$",
       "metadata": {},
-      "execution_count": 15,
+      "execution_count": 21,
       "outputs": [
         {
           "name": "stdout",
@@ -81,7 +81,7 @@
       "cell_type": "code",
       "source": "F_circle : x^2 + y^2 - 1$\ndF_dx : diff(F_circle, x)$\ndF_dy : diff(F_circle, y)$\ny_prime : -dF_dx / dF_dy$\nprint(\"y'(x) =\")$\nratsimp(y_prime);\nprint(\"At (0.6, 0.8): y'(x) =\", float(subst([x=0.6, y=0.8], y_prime)))$\nprint(\"Slope from explicit formula  d/dx √(1-x²) at x=0.6 =\")$\nprint(\"  \", float(subst(x=0.6, diff(sqrt(1 - x^2), x))))$",
       "metadata": {},
-      "execution_count": 16,
+      "execution_count": 22,
       "outputs": [
         {
           "name": "stdout",
@@ -101,7 +101,7 @@
       "cell_type": "code",
       "source": "theta_g : np_to_list(np_linspace(0, 2*float(%pi), 200))$\ncx : map(cos, theta_g)$  cy : map(sin, theta_g)$\nxs : np_to_list(np_linspace(-0.95, 0.95, 200))$\nys_upper : map(lambda([xx], float(sqrt(1 - xx*xx))), xs)$\n\nax_draw2d(\n  color=\"blue\", line_width=2, name=\"F(x,y) = x²+y² - 1 = 0\",\n  lines(cx, cy),\n  color=\"red\", line_width=2, name=\"y = +√(1-x²) — local branch\",\n  lines(xs, ys_upper),\n  marker_size=10, color=\"orange\", name=\"critical points (∂F/∂y = 0)\",\n  points([1.0, -1.0], [0.0, 0.0]),\n  title=\"Implicit function theorem — level set is locally a graph\",\n  xlabel=\"x\", ylabel=\"y\",\n  grid=true, aspect_ratio=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 17,
+      "execution_count": 23,
       "outputs": [
         {
           "data": {
@@ -123,7 +123,7 @@
       "cell_type": "code",
       "source": "F_sys : [x^2 + y^2 + z^2 - 3, x + y + z - 3]$\nJ_full : genmatrix(lambda([i, j], diff(F_sys[i], [x, y, z][j])), 2, 3)$\nprint(\"Full Jacobian J_F (2x3) =\")$ J_full;\n\n/* Take ∂F/∂(y, z) — columns 2 and 3 */\nJ_yz : genmatrix(lambda([i, j], diff(F_sys[i], [y, z][j])), 2, 2)$\nprint(\"∂F/∂(y, z) =\")$ J_yz;\nprint(\"det(∂F/∂(y, z)) =\", ratsimp(determinant(J_yz)))$",
       "metadata": {},
-      "execution_count": 18,
+      "execution_count": 24,
       "outputs": [
         {
           "name": "stdout",
