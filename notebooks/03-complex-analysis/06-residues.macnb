@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 13,
+      "execution_count": 37,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "f1 : 1 / (z * (z - 1))$\nprint(\"f =\", f1, \"  has simple poles at 0 and 1.\")$\nprint(\"Res at 0:\", residue(f1, z, 0))$\nprint(\"Res at 1:\", residue(f1, z, 1))$",
       "metadata": {},
-      "execution_count": 14,
+      "execution_count": 38,
       "outputs": [
         {
           "name": "stdout",
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "f_test : 1 / (1 + z^2)$\nprint(\"Singularities of 1/(1 + z²):\"); solve(1 + z^2 = 0, z);\nprint(\"Res at i =\", residue(f_test, z, %i))$\nprint(\"Res at -i =\", residue(f_test, z, -%i))$\nprint(\"∫_{-∞}^∞ 1/(1+x²) dx = 2πi · Res at i =\", expand(2 * %pi * %i * residue(f_test, z, %i)))$",
       "metadata": {},
-      "execution_count": 15,
+      "execution_count": 39,
       "outputs": [
         {
           "name": "stdout",
@@ -71,7 +71,7 @@
       "cell_type": "code",
       "source": "f4 : 1 / (1 + z^4)$\npoles4 : map(lambda([s], rhs(s)), solve(1 + z^4 = 0, z))$\nprint(\"Poles of 1/(1+z⁴):\", poles4)$\n\n/* Take the two with positive imaginary part */\nupper_poles : []$\nfor p in poles4 do\n  if float(imagpart(p)) > 0 then upper_poles : endcons(p, upper_poles)$\nprint(\"Upper-half-plane poles:\", upper_poles)$\n\nresidues_at_upper : map(lambda([p], residue(f4, z, p)), upper_poles)$\nprint(\"Residues at those poles:\", residues_at_upper)$\nsum_res : apply(\"+\", residues_at_upper)$\nprint(\"Sum of residues:\", ratsimp(sum_res))$\nprint()$\nI_full : 2 * %pi * %i * sum_res$\nprint(\"∫_{-∞}^∞ 1/(1+x⁴) dx =\", ratsimp(I_full))$\nprint(\"(numerical:\", float(I_full), \")\")$\nprint(\"∫_0^∞ 1/(1+x⁴) dx (half) =\", ratsimp(I_full / 2))$\nprint(\"(numerical:\", float(I_full / 2), \")\")$",
       "metadata": {},
-      "execution_count": 16,
+      "execution_count": 40,
       "outputs": [
         {
           "name": "stdout",
@@ -91,7 +91,7 @@
       "cell_type": "code",
       "source": "g_test : exp(%i * a * z) / (1 + z^2)$\nres_at_i : residue(g_test, z, %i)$\nprint(\"Res at i =\", res_at_i)$\nI_real : 2 * %pi * %i * res_at_i$\nprint(\"∫_{-∞}^∞ e^{iax}/(1+x²) dx =\", expand(I_real))$\nprint(\"Real part (a > 0 implicit): π e^{-a}\")$",
       "metadata": {},
-      "execution_count": 17,
+      "execution_count": 41,
       "outputs": [
         {
           "name": "stdout",
@@ -111,7 +111,7 @@
       "cell_type": "code",
       "source": "I_num_1 : 0.0$\nN : 100000$\ndx : 40.0 / N$\nfor k : 0 thru N - 1 do block([xv],\n  xv : -20 + (k + 0.5) * dx,\n  I_num_1 : I_num_1 + 1.0 / (1 + xv^4) * dx)$\nprint(\"Numerical ∫_{-20}^{20} 1/(1+x⁴) dx ≈\", I_num_1)$\nprint(\"Symbolic π/√2 =\", float(%pi / sqrt(2)))$",
       "metadata": {},
-      "execution_count": 18,
+      "execution_count": 42,
       "outputs": [
         {
           "name": "stdout",
@@ -125,6 +125,11 @@
     {
       "cell_type": "markdown",
       "source": "Residues are the most powerful way to evaluate definite integrals that don't have elementary antiderivatives. The technique stretches further: contour integrals of branch-cut functions, sums of trigonometric series, asymptotic expansions, special function identities — all built on this single theorem.\n\nNext, the final notebook: conformal mappings.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nAhlfors, L.V. (1979) *Complex Analysis: An Introduction to the Theory of Analytic Functions of One Complex Variable*. 3rd edn. New York: McGraw-Hill — ch. 4, *Complex Integration* (the calculus of residues).\n",
       "metadata": {}
     }
   ]

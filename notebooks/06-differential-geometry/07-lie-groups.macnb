@@ -12,14 +12,14 @@
   "cells": [
     {
       "cell_type": "markdown",
-      "source": "# Lie Groups [S+N]\n\nA **Lie group** is a smooth manifold $G$ with a smooth group structure: smooth multiplication $G \\times G \\to G$ and smooth inversion $G \\to G$. The two structures (manifold + group) interact richly.\n\nExamples:\n\n| Group | As manifold | Group operation |\n|-------|-------------|-----------------|\n| $(\\mathbb{R}^n, +)$ | flat $\\mathbb{R}^n$ | addition |\n| $S^1 \\cong U(1)$ | unit circle | complex multiplication |\n| $\\mathrm{GL}(n, \\mathbb{R})$ | open subset of $\\mathbb{R}^{n^2}$ | matrix multiplication |\n| $\\mathrm{O}(n)$ | $n^2 - n(n-1)/2$ -dim manifold | matrix mult |\n| $\\mathrm{SO}(3)$ | 3D rotations, $\\mathbb{RP}^3$ | matrix mult |\n| $\\mathrm{SU}(2)$ | $S^3$ | matrix mult |\n\nThe infinitesimal version of a Lie group is a **Lie algebra** — the tangent space at the identity, equipped with a bracket structure derived from the group commutator.\n",
+      "source": "# Lie Groups [S+N]\n\nA **Lie group** is a smooth manifold $G$ with a smooth group structure: smooth multiplication $G \\times G \\to G$ and smooth inversion $G \\to G$. The two structures (manifold + group) interact richly.\n\nExamples:\n\n| Group | As manifold | Group operation |\n|-------|-------------|-----------------|\n| $(\\mathbb{R}^n, +)$ | flat $\\mathbb{R}^n$ | addition |\n| $S^1 \\cong U(1)$ | unit circle | complex multiplication |\n| $\\mathrm{GL}(n, \\mathbb{R})$ | open subset of $\\mathbb{R}^{n^2}$ | matrix multiplication |\n| $\\mathrm{O}(n)$ | $n(n-1)/2$ -dim manifold | matrix mult |\n| $\\mathrm{SO}(3)$ | 3D rotations, $\\mathbb{RP}^3$ | matrix mult |\n| $\\mathrm{SU}(2)$ | $S^3$ | matrix mult |\n\nThe infinitesimal version of a Lie group is a **Lie algebra** — the tangent space at the identity, equipped with a bracket structure derived from the group commutator.\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 4,
+      "execution_count": 16,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "/* Antisymmetric matrix [hat n] for axis (0, 0, 1) */\nn_hat_z : ndarray(matrix([0.0, -1.0, 0.0],\n                         [1.0,  0.0, 0.0],\n                         [0.0,  0.0, 0.0]))$\ntheta_test : 0.5$  /* radians */\nX_lie : np_scale(theta_test, n_hat_z)$\nR_rot : np_expm(X_lie)$\nprint(\"R = exp(θ [n_hat_z]) for θ = 0.5:\")$\nnp_to_matrix(R_rot);\nprint(\"Should match rotation by 0.5 rad about z: [[cos, -sin, 0], [sin, cos, 0], [0, 0, 1]]\")$\nprint(\"cos(0.5) =\", float(cos(0.5)), \"  sin(0.5) =\", float(sin(0.5)))$",
       "metadata": {},
-      "execution_count": 5,
+      "execution_count": 17,
       "outputs": [
         {
           "name": "stdout",
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "/* Verify [L_x, L_y] = L_z numerically */\nLx : ndarray(matrix([0.0, 0.0,  0.0],\n                    [0.0, 0.0, -1.0],\n                    [0.0, 1.0,  0.0]))$\nLy : ndarray(matrix([ 0.0, 0.0, 1.0],\n                    [ 0.0, 0.0, 0.0],\n                    [-1.0, 0.0, 0.0]))$\nLz : ndarray(matrix([0.0, -1.0, 0.0],\n                    [1.0,  0.0, 0.0],\n                    [0.0,  0.0, 0.0]))$\n\nbracket_xy : np_sub(np_matmul(Lx, Ly), np_matmul(Ly, Lx))$\nprint(\"[L_x, L_y] =\")$\nnp_to_matrix(bracket_xy);\nprint(\"L_z =\")$\nnp_to_matrix(Lz);\nprint(\"Match — confirms so(3) commutation relation\")$",
       "metadata": {},
-      "execution_count": 6,
+      "execution_count": 18,
       "outputs": [
         {
           "name": "stdout",
@@ -64,7 +64,12 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## Why Lie groups everywhere\n\nLie groups encode continuous symmetries. They appear in:\n\n- **Classical mechanics**: rotation, translation, Galilean transformations.\n- **Special relativity**: Lorentz group $\\mathrm{SO}(3, 1)$.\n- **General relativity**: diffeomorphism group of spacetime.\n- **Quantum mechanics**: $\\mathrm{SU}(2)$ (spin), $\\mathrm{SU}(3)$ (colour charge).\n- **Robotics**: $\\mathrm{SE}(3) = \\mathrm{SO}(3) \\ltimes \\mathbb{R}^3$ (rigid motions in 3D).\n- **Computer graphics**: $\\mathrm{SL}(3)$ for projective transformations.\n- **Fluid dynamics**: volume-preserving diffeomorphisms.\n\nWherever there's smooth symmetry, there's a Lie group — and the structure of the group dictates much of the dynamics.\n\n## What we have at the end of the analysis journey\n\nSix stages, 38 notebooks, covering the trunk of mathematical analysis:\n\n| Stage | Topic | Notebooks |\n|-------|-------|-----------|\n| 1 | Real analysis | 7 |\n| 2 | Analysis in $\\mathbb{R}^n$ | 6 |\n| 3 | Complex analysis | 7 |\n| 4 | Measure theory and Lebesgue integration | 6 |\n| 5 | Functional analysis | 7 |\n| 6 | Differential geometry and manifolds | 7 |\n\nThe arc:\n\n- Real analysis built the foundation (sequences, continuity, differentiation, integration, series).\n- $\\mathbb{R}^n$ extended it to multivariable.\n- Complex analysis revealed the rigidity of holomorphy.\n- Measure theory rebuilt integration on a more robust foundation.\n- Functional analysis abstracted finite-dimensional linear algebra to infinite dimensions.\n- Differential geometry generalised calculus to curved spaces.\n\nYou're now equipped to read the foundational chapters of probability theory, PDE theory, ergodic theory, mathematical physics, geometric topology — most of \"modern\" analysis. The journey ends here, but the subject is, as always, infinite.\n",
+      "source": "## Why Lie groups everywhere\n\nLie groups encode continuous symmetries. They appear in:\n\n- **Classical mechanics**: rotation, translation, Galilean transformations.\n- **Special relativity**: Lorentz group $\\mathrm{SO}(3, 1)$.\n- **General relativity**: diffeomorphism group of spacetime.\n- **Quantum mechanics**: $\\mathrm{SU}(2)$ (spin), $\\mathrm{SU}(3)$ (colour charge).\n- **Robotics**: $\\mathrm{SE}(3) = \\mathrm{SO}(3) \\ltimes \\mathbb{R}^3$ (rigid motions in 3D).\n- **Computer graphics**: $\\mathrm{SL}(3)$ for projective transformations.\n- **Fluid dynamics**: volume-preserving diffeomorphisms.\n\nWherever there's smooth symmetry, there's a Lie group — and the structure of the group dictates much of the dynamics.\n\n## What we have at the end of the analysis journey\n\nSix stages, 41 notebooks, covering the trunk of mathematical analysis:\n\n| Stage | Topic | Notebooks |\n|-------|-------|-----------|\n| 1 | Real analysis | 7 |\n| 2 | Analysis in $\\mathbb{R}^n$ | 7 |\n| 3 | Complex analysis | 7 |\n| 4 | Measure theory and Lebesgue integration | 6 |\n| 5 | Functional analysis | 7 |\n| 6 | Differential geometry and manifolds | 7 |\n\nThe arc:\n\n- Real analysis built the foundation (sequences, continuity, differentiation, integration, series).\n- $\\mathbb{R}^n$ extended it to multivariable.\n- Complex analysis revealed the rigidity of holomorphy.\n- Measure theory rebuilt integration on a more robust foundation.\n- Functional analysis abstracted finite-dimensional linear algebra to infinite dimensions.\n- Differential geometry generalised calculus to curved spaces.\n\nYou're now equipped to read the foundational chapters of probability theory, PDE theory, ergodic theory, mathematical physics, geometric topology — most of \"modern\" analysis. The journey ends here, but the subject is, as always, infinite.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nLee, J.M. (2012) *Introduction to Smooth Manifolds*. 2nd edn. New York, NY: Springer New York. doi:[10.1007/978-1-4419-9982-5](https://doi.org/10.1007/978-1-4419-9982-5) — chs. 7 (*Lie Groups*) and 20 (*The Exponential Map*).\n",
       "metadata": {}
     }
   ]

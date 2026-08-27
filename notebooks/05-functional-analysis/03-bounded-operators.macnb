@@ -19,19 +19,19 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 5,
+      "execution_count": 21,
       "outputs": []
     },
     {
       "cell_type": "markdown",
-      "source": "## Multiplication operator on $L^2([0, 1])$\n\nFor $\\varphi \\in L^\\infty([0, 1])$, the **multiplication operator** $M_\\varphi : L^2 \\to L^2$ is $f \\mapsto \\varphi f$. Its norm is the essential sup of $|\\varphi|$:\n\n$$\\|M_\\varphi\\| = \\|\\varphi\\|_\\infty.$$\n\nDemonstrate on $\\varphi(x) = x$:\n- $\\|\\varphi\\|_\\infty = 1$ (sup on $[0, 1]$).\n- For $f_n(x) = \\sqrt{n+1}\\,x^n / \\|x^n\\|_2$ (unit-norm test functions), $\\|M_\\varphi f_n\\|_2 \\to 1$ but stays below.\n",
+      "source": "## Multiplication operator on $L^2([0, 1])$\n\nFor $\\varphi \\in L^\\infty([0, 1])$, the **multiplication operator** $M_\\varphi : L^2 \\to L^2$ is $f \\mapsto \\varphi f$. Its norm is the essential sup of $|\\varphi|$:\n\n$$\\|M_\\varphi\\| = \\|\\varphi\\|_\\infty.$$\n\nDemonstrate on $\\varphi(x) = x$:\n- $\\|\\varphi\\|_\\infty = 1$ (sup on $[0, 1]$).\n- Since $\\|x^n\\|_2^2 = \\int_0^1 x^{2n}\\,dx = 1/(2n+1)$, the functions $f_n(x) = \\sqrt{2n+1}\\,x^n$ have unit norm. They concentrate near $x = 1$, where $|\\varphi| = 1$, so $\\|M_\\varphi f_n\\|_2 \\to 1$ from below — the norm $\\|\\varphi\\|_\\infty$ is approached but never attained.\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
       "source": "/* Maxima: ‖x · f_n‖_2² where f_n is a unit-norm 'sharply peaked at 1' family */\nn_test : 5$\nnorm_xfn_sq : integrate((sqrt(2*n_test+1) * x^n_test * x)^2, x, 0, 1)$\nprint(\"‖f_n(x) = √(2n+1)·x^n‖_2 =\")$\nprint(\"  ‖f_n‖_2² =\", float(integrate((sqrt(2*n_test+1)*x^n_test)^2, x, 0, 1)),\n      \"  → unit norm ✓\")$\nprint(\"‖M_φ f_n‖_2² =\", float(norm_xfn_sq), \" for n =\", n_test)$\nprint(\"(approaches ‖φ‖_∞ = 1 as n → ∞ — the multiplication operator's norm is ‖φ‖_∞)\")$",
       "metadata": {},
-      "execution_count": 6,
+      "execution_count": 22,
       "outputs": [
         {
           "name": "stdout",
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "A_mat : ndarray(matrix([1.0, 2.0], [3.0, 1.0]))$\nprint(\"Max column sum (‖A‖_{1 → 1}):\", max(1+3, 2+1))$\nprint(\"Max row sum (‖A‖_{∞ → ∞}):\", max(1+2, 3+1))$\n[U, sing, Vt] : np_svd(A_mat)$\nprint(\"Largest singular value (‖A‖_{2 → 2}):\", np_ref(sing, 0))$",
       "metadata": {},
-      "execution_count": 7,
+      "execution_count": 23,
       "outputs": [
         {
           "name": "stdout",
@@ -64,20 +64,20 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## Algebra structure of $\\mathcal{B}(X) = \\mathcal{B}(X, X)$\n\nWhen source and target are the same:\n\n- **Composition** is associative: $S(TU) = (ST)U$.\n- **Identity** $I$ acts as $I T = T I = T$.\n- **Norm submultiplicative**: $\\|S T\\| \\le \\|S\\|\\,\\|T\\|$.\n\nSo $\\mathcal{B}(X)$ is a **Banach algebra**. With the adjoint operation on Hilbert spaces, it's a **$C^*$-algebra**: $\\|T^* T\\| = \\|T\\|^2$. This is the abstract setting of much of mathematical physics.\n\n## Spectrum — the infinite-dimensional eigenvalue [S+N]\n\nFor $T \\in \\mathcal{B}(X)$, the **spectrum** is\n\n$$\\sigma(T) = \\{\\lambda \\in \\mathbb{C} : T - \\lambda I \\text{ is not invertible}\\}.$$\n\nIn finite dimensions, $\\sigma(T)$ is exactly the set of eigenvalues. In infinite dimensions there are three flavours:\n\n- **Point spectrum** $\\sigma_p(T)$: eigenvalues (kernel of $T - \\lambda I$ non-trivial).\n- **Continuous spectrum** $\\sigma_c(T)$: $T - \\lambda I$ injective with dense image but not surjective.\n- **Residual spectrum** $\\sigma_r(T)$: $T - \\lambda I$ injective without dense image.\n\nThe spectrum is always **non-empty and compact** (a circle of radius $\\le \\|T\\|$ around 0).\n",
+      "source": "## Algebra structure of $\\mathcal{B}(X) = \\mathcal{B}(X, X)$\n\nWhen source and target are the same:\n\n- **Composition** is associative: $S(TU) = (ST)U$.\n- **Identity** $I$ acts as $I T = T I = T$.\n- **Norm submultiplicative**: $\\|S T\\| \\le \\|S\\|\\,\\|T\\|$.\n\nSo $\\mathcal{B}(X)$ is a **Banach algebra**. With the adjoint operation on Hilbert spaces, it's a **$C^*$-algebra**: $\\|T^* T\\| = \\|T\\|^2$. This is the abstract setting of much of mathematical physics.\n\n## Spectrum — the infinite-dimensional eigenvalue [S+N]\n\nFor $T \\in \\mathcal{B}(X)$, the **spectrum** is\n\n$$\\sigma(T) = \\{\\lambda \\in \\mathbb{C} : T - \\lambda I \\text{ is not invertible}\\}.$$\n\nIn finite dimensions, $\\sigma(T)$ is exactly the set of eigenvalues. In infinite dimensions there are three flavours:\n\n- **Point spectrum** $\\sigma_p(T)$: eigenvalues (kernel of $T - \\lambda I$ non-trivial).\n- **Continuous spectrum** $\\sigma_c(T)$: $T - \\lambda I$ injective with dense image but not surjective.\n- **Residual spectrum** $\\sigma_r(T)$: $T - \\lambda I$ injective without dense image.\n\nThe spectrum is always **non-empty and compact**, and contained in the closed disc $\\{\\lambda : |\\lambda| \\le \\|T\\|\\}$. (Non-emptiness needs a complex Banach space.) The **spectral radius** $r(T) = \\max\\{|\\lambda| : \\lambda \\in \\sigma(T)\\}$ satisfies $r(T) \\le \\|T\\|$ — with equality for normal operators, but strict inequality in general, as the next cell shows.\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
-      "source": "/* Verify with a simple finite-dim example: 3x3 Jordan block */\nJ : ndarray(matrix([2.0, 1.0, 0.0],\n                   [0.0, 2.0, 1.0],\n                   [0.0, 0.0, 2.0]))$\n[evals, evecs] : np_eig(J)$\nprint(\"Eigenvalues of Jordan block:\", np_to_list(evals))$\nprint(\"Spectrum: {2} (a single point repeated)\")$\nprint(\"Spectral radius = 2 = ‖J‖_2 (= largest singular value):\")$\n[U, sing, Vt] : np_svd(J)$\nprint(\"  ‖J‖_2 =\", np_ref(sing, 0))$",
+      "source": "/* Verify with a simple finite-dim example: 3x3 Jordan block */\nJ : ndarray(matrix([2.0, 1.0, 0.0],\n                   [0.0, 2.0, 1.0],\n                   [0.0, 0.0, 2.0]))$\n[evals, evecs] : np_eig(J)$\nprint(\"Eigenvalues of Jordan block:\", np_to_list(evals))$\nprint(\"Spectrum: {2} (a single point repeated)\")$\nprint(\"Spectral radius r(J) = 2.  The operator norm is strictly larger,\")$\nprint(\"because a Jordan block is not normal:\")$\n[U, sing, Vt] : np_svd(J)$\nprint(\"  ‖J‖_2 =\", np_ref(sing, 0), \" > r(J) = 2\")$",
       "metadata": {},
-      "execution_count": 8,
+      "execution_count": 24,
       "outputs": [
         {
           "name": "stdout",
           "output_type": "stream",
           "text": [
-            "Eigenvalues of Jordan block: [2.0,2.0,2.0]\nSpectrum: {2} (a single point repeated)\nSpectral radius = 2 = ‖J‖_2 (= largest singular value):\n  ‖J‖_2 = 2.7615571818318894"
+            "Eigenvalues of Jordan block: [2.0,2.0,2.0]\nSpectrum: {2} (a single point repeated)\nSpectral radius r(J) = 2.  The operator norm is strictly larger,\nbecause a Jordan block is not normal:\n  ‖J‖_2 = 2.7615571818318894  > r(J) = 2"
           ]
         }
       ]
@@ -85,6 +85,11 @@
     {
       "cell_type": "markdown",
       "source": "## Why operator theory matters\n\nBounded linear operators are the morphisms of functional analysis. They show up everywhere:\n\n- **PDE**: differential operators acting on Sobolev spaces. (Differentiation is *unbounded* on most $L^p$, so unbounded-operator theory is essential here.)\n- **Quantum mechanics**: observables are self-adjoint operators on Hilbert space. Spectrum = possible measurement outcomes.\n- **Signal processing**: convolution operators acting on $\\ell^2$ or $L^2$.\n- **Numerical analysis**: discretisations of differential operators have spectra approximating the continuous one.\n\n## What's coming\n\nThe next four notebooks build the structural theorems:\n\n- **Dual spaces** — when do continuous linear functionals separate points? (Hahn-Banach)\n- **Three big theorems** — open mapping, closed graph, uniform boundedness.\n- **Compact operators** — finite-rank approximation, Riesz-Schauder.\n- **Spectral theory** — diagonalisation in Hilbert space.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nConway, J.B. (2007) *A Course in Functional Analysis*. 2nd edn. New York, NY: Springer New York. doi:[10.1007/978-1-4757-4383-8](https://doi.org/10.1007/978-1-4757-4383-8) — ch. II, *Operators on Hilbert Space*.\n",
       "metadata": {}
     }
   ]

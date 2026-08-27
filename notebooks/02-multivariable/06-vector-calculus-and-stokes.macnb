@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 19,
+      "execution_count": 43,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "f_scalar : x^2 + y^2$\ngrad_f : [diff(f_scalar, x), diff(f_scalar, y)]$\nprint(\"∇f =\")$\ngrad_f;\n\nax_draw2d(\n  ax_vector_field(grad_f[1], grad_f[2], x, -2, 2, y, -2, 2),\n  title=\"∇(x² + y²) — radial outward field\",\n  xlabel=\"x\", ylabel=\"y\",\n  aspect_ratio=true\n)$",
       "metadata": {},
-      "execution_count": 20,
+      "execution_count": 44,
       "outputs": [
         {
           "name": "stdout",
@@ -60,7 +60,7 @@
       "cell_type": "code",
       "source": "F_radial : [x, y]$\nF_rotation : [-y, x]$\ndiv_radial : diff(F_radial[1], x) + diff(F_radial[2], y)$\ndiv_rot : diff(F_rotation[1], x) + diff(F_rotation[2], y)$\nprint(\"∇·(x, y) =\", div_radial)$\nprint(\"∇·(-y, x) =\", div_rot)$",
       "metadata": {},
-      "execution_count": 21,
+      "execution_count": 45,
       "outputs": [
         {
           "name": "stdout",
@@ -80,7 +80,7 @@
       "cell_type": "code",
       "source": "F3 : [-y, x, 0]$\ncurl_F : [\n  diff(F3[3], y) - diff(F3[2], z),\n  diff(F3[1], z) - diff(F3[3], x),\n  diff(F3[2], x) - diff(F3[1], y)\n]$\nprint(\"∇ × (-y, x, 0) =\")$\ncurl_F;",
       "metadata": {},
-      "execution_count": 22,
+      "execution_count": 46,
       "outputs": [
         {
           "name": "stdout",
@@ -95,7 +95,7 @@
               "\\left[ 0 , 0 , 2 \\right] "
             ]
           },
-          "execution_count": 22,
+          "execution_count": 46,
           "metadata": {},
           "output_type": "execute_result"
         }
@@ -110,7 +110,7 @@
       "cell_type": "code",
       "source": "P_g : -y/2$\nQ_g : x/2$\n\n/* RHS: area integral of dQ/dx - dP/dy over unit disc, in polar */\nintegrand_xy : diff(Q_g, x) - diff(P_g, y)$\nintegrand_polar : subst([x = r*cos(theta), y = r*sin(theta)], integrand_xy)$\nprint(\"∂Q/∂x - ∂P/∂y =\", integrand_xy)$\nRHS : integrate(integrate(integrand_polar * r, r, 0, 1), theta, 0, 2*%pi)$\nprint(\"RHS area integral =\", RHS)$\n\n/* LHS: line integral around unit circle */\nP_t : subst([x = cos(t), y = sin(t)], P_g)$\nQ_t : subst([x = cos(t), y = sin(t)], Q_g)$\nLHS : integrate(P_t * (-sin(t)) + Q_t * cos(t), t, 0, 2*%pi)$\nprint(\"LHS line integral =\", LHS)$\nprint(\"Match:\", is(equal(ratsimp(LHS - RHS), 0)))$",
       "metadata": {},
-      "execution_count": 23,
+      "execution_count": 47,
       "outputs": [
         {
           "name": "stdout",
@@ -130,7 +130,7 @@
       "cell_type": "code",
       "source": "F_vec : [x, y, z]$\ndiv_F : diff(F_vec[1], x) + diff(F_vec[2], y) + diff(F_vec[3], z)$\nprint(\"∇·F =\", div_F)$\n\n/* Volume integral over unit ball, in spherical */\nV_int : integrate(integrate(integrate(3 * rho^2 * sin(phi),\n                                       rho, 0, 1),\n                              phi, 0, %pi),\n                    theta, 0, 2*%pi)$\nprint(\"∫∫∫ ∇·F dV =\", V_int)$\nprint(\"4π =\", float(4*%pi))$",
       "metadata": {},
-      "execution_count": 24,
+      "execution_count": 48,
       "outputs": [
         {
           "name": "stdout",
@@ -143,7 +143,12 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## Why the integral theorems unify the subject\n\nA single line:\n\n$$\\int_M d\\omega = \\int_{\\partial M} \\omega.$$\n\nThis is the **generalised Stokes theorem** (in differential-geometric form). It encompasses:\n\n- The fundamental theorem of calculus ($\\int_a^b f' = f(b) - f(a)$),\n- Green's theorem,\n- Stokes' theorem in $\\mathbb{R}^3$,\n- The divergence theorem,\n- Gauss-Bonnet (for 2-manifolds),\n- ...\n\nEvery one of these has the same shape: integrate a derivative over a region = integrate the original over the boundary. The differential form $\\omega$ and exterior derivative $d$ make this rigorous; what we computed above are the classical incarnations.\n\n## What we have at the end of Stage 2\n\nVector calculus closes the multivariable picture:\n\n- **Topology** (notebook 1) gave us the right notion of \"near\" and \"compact\".\n- **Continuity** (notebook 2) revealed why limits along all paths matter.\n- **Differentiation** (notebook 3) replaced the slope with a Jacobian.\n- **Inverse/implicit function theorems** (notebook 4) said the Jacobian's invertibility controls local behaviour.\n- **Multiple integration** (notebook 5) generalised the Riemann construction.\n- **Vector calculus** (this notebook) tied derivatives and integrals back together.\n\nStage 3 leaves $\\mathbb{R}^n$ for $\\mathbb{C}$. The two-dimensional structure of $\\mathbb{C}$ + a multiplication law is enormously more rigid than $\\mathbb{R}^2$ alone — and unlocks tools (residues, conformal maps) without any analogue in real analysis.\n",
+      "source": "## Why the integral theorems unify the subject\n\nA single line:\n\n$$\\int_M d\\omega = \\int_{\\partial M} \\omega.$$\n\nThis is the **generalised Stokes theorem** (in differential-geometric form). It encompasses:\n\n- The fundamental theorem of calculus ($\\int_a^b f' = f(b) - f(a)$),\n- Green's theorem,\n- Stokes' theorem in $\\mathbb{R}^3$,\n- The divergence theorem,\n- ...\n\nGauss-Bonnet is a tempting addition to that list, but it does **not** belong: it is *proved* using Stokes together with the structure equations, yet it isn't an instance of $\\int_M d\\omega = \\int_{\\partial M} \\omega$. A closed surface has no boundary, so if $K\\,dA$ were $d\\omega$ for some global 1-form $\\omega$ the integral would have to vanish — and for $S^2$ it is $4\\pi$.\n\nEvery one of the theorems above has the same shape: integrate a derivative over a region = integrate the original over the boundary. The differential form $\\omega$ and exterior derivative $d$ make this rigorous; what we computed above are the classical incarnations.\n\n## What we have at the end of Stage 2\n\nVector calculus closes the multivariable picture:\n\n- **Topology** (notebook 1) gave us the right notion of \"near\" and \"compact\".\n- **Continuity** (notebook 2) revealed why limits along all paths matter.\n- **Differentiation** (notebook 3) replaced the slope with a Jacobian.\n- **Inverse/implicit function theorems** (notebook 4) said the Jacobian's invertibility controls local behaviour.\n- **Multiple integration** (notebook 5) generalised the Riemann construction.\n- **Vector calculus** (this notebook) tied derivatives and integrals back together.\n\nStage 3 leaves $\\mathbb{R}^n$ for $\\mathbb{C}$. The two-dimensional structure of $\\mathbb{C}$ + a multiplication law is enormously more rigid than $\\mathbb{R}^2$ alone — and unlocks tools (residues, conformal maps) without any analogue in real analysis.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nZorich, V.A. (2016) *Mathematical Analysis II*. 2nd edn. Berlin, Heidelberg: Springer Berlin Heidelberg. doi:[10.1007/978-3-662-48993-2](https://doi.org/10.1007/978-3-662-48993-2) — ch. 12, *Surfaces and Differential Forms in $\\mathbb{R}^n$*, and chs. 13–14 on line and surface integrals and field theory.\n\nSjamaar, R. (2017) *Manifolds and Differential Forms*. Lecture notes, Cornell University. Available at: https://pi.math.cornell.edu/~sjamaar/manifolds/manifold.pdf — chs. 2–5 (forms, integration, the classical vector-calculus theorems).\n",
       "metadata": {}
     }
   ]

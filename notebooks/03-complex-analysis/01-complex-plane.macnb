@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 13,
+      "execution_count": 37,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "z : 3 + 4*%i$\nprint(\"z =\", z)$\nprint(\"|z| =\", float(cabs(z)))$\nprint(\"arg z =\", float(carg(z)), \"rad =\", float(carg(z)) * 180 / float(%pi), \"deg\")$\nprint(\"Re z =\", realpart(z), \"  Im z =\", imagpart(z))$",
       "metadata": {},
-      "execution_count": 14,
+      "execution_count": 38,
       "outputs": [
         {
           "name": "stdout",
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "z0 : 2 + %i$\nmul_factors : [%i, 1 + %i, 1 + 2*%i]$\nproducts : map(lambda([w], expand(z0 * w)), mul_factors)$\nprint(\"z₀ =\", z0)$\nfor k : 1 thru length(mul_factors) do\n  print(\"z₀ ·\", mul_factors[k], \"=\", products[k],\n        \"  (|·| =\", float(cabs(products[k])),\n        \", arg =\", float(carg(products[k])) * 180 / float(%pi), \"°)\")$",
       "metadata": {},
-      "execution_count": 15,
+      "execution_count": 39,
       "outputs": [
         {
           "name": "stdout",
@@ -71,7 +71,7 @@
       "cell_type": "code",
       "source": "points_re : [float(realpart(z0))]$\npoints_im : [float(imagpart(z0))]$\nfor p in products do (\n  points_re : endcons(float(realpart(p)), points_re),\n  points_im : endcons(float(imagpart(p)), points_im))$\n\nax_draw2d(\n  marker_size=12, color=\"red\", name=\"z₀ = 2 + i\",\n  points([float(realpart(z0))], [float(imagpart(z0))]),\n  marker_size=10, color=\"blue\", name=\"z₀ · (i, 1+i, 1+2i)\",\n  points(rest(points_re), rest(points_im)),\n  color=\"black\", dash=\"dot\", explicit(0, t, -10, 10),\n  title=\"Complex multiplication = rotate + scale\",\n  xlabel=\"Re\", ylabel=\"Im\",\n  grid=true, aspect_ratio=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 16,
+      "execution_count": 40,
       "outputs": [
         {
           "data": {
@@ -93,7 +93,7 @@
       "cell_type": "code",
       "source": "n_roots : 7$\nangles : makelist(2 * float(%pi) * k / n_roots, k, 0, n_roots - 1)$\nroots_re : map(cos, angles)$\nroots_im : map(sin, angles)$\n\ntheta_grid : np_to_list(np_linspace(0, 2*float(%pi), 100))$\n\nax_draw2d(\n  color=\"lightgrey\", line_width=1, name=\"unit circle\",\n  lines(map(cos, theta_grid), map(sin, theta_grid)),\n  marker_size=10, color=\"red\", name=\"7th roots of unity\",\n  points(roots_re, roots_im),\n  title=\"z⁷ = 1 has seven solutions on the unit circle\",\n  xlabel=\"Re\", ylabel=\"Im\",\n  grid=true, aspect_ratio=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 17,
+      "execution_count": 41,
       "outputs": [
         {
           "data": {
@@ -115,7 +115,7 @@
       "cell_type": "code",
       "source": "/* Plot a grid in the upper half plane and its image under z → 1/z */\nn_lines : 6$\nn_pts : 80$\nreal_lines_in : []$  imag_lines_in : []$\nreal_lines_out : [] $ imag_lines_out : []$\n\nfor k : 1 thru n_lines do block([y_const, x_grid, line_in_re, line_in_im, line_out_re, line_out_im],\n  y_const : 0.3 + 0.4 * (k - 1),\n  x_grid : np_to_list(np_linspace(-2, 2, n_pts)),\n  line_in_re : x_grid,\n  line_in_im : map(lambda([xx], y_const), x_grid),\n  /* image: 1/z = (x - iy)/(x² + y²) */\n  line_out_re : map(lambda([xx], xx / (xx^2 + y_const^2)), x_grid),\n  line_out_im : map(lambda([xx], -y_const / (xx^2 + y_const^2)), x_grid),\n  real_lines_in : append(real_lines_in, [[line_in_re, line_in_im]]),\n  real_lines_out : append(real_lines_out, [[line_out_re, line_out_im]]))$\n\nax_draw2d(\n  color=\"lightblue\", line_width=1, name=\"grid (Im z > 0)\",\n  lines(real_lines_in[1][1], real_lines_in[1][2]),\n  color=\"lightblue\",\n  lines(real_lines_in[2][1], real_lines_in[2][2]),\n  color=\"lightblue\",\n  lines(real_lines_in[3][1], real_lines_in[3][2]),\n  color=\"lightblue\",\n  lines(real_lines_in[4][1], real_lines_in[4][2]),\n  color=\"red\", line_width=1.5, name=\"image under 1/z\",\n  lines(real_lines_out[1][1], real_lines_out[1][2]),\n  color=\"red\",\n  lines(real_lines_out[2][1], real_lines_out[2][2]),\n  color=\"red\",\n  lines(real_lines_out[3][1], real_lines_out[3][2]),\n  color=\"red\",\n  lines(real_lines_out[4][1], real_lines_out[4][2]),\n  title=\"Möbius z → 1/z: horizontal lines map to circles\",\n  xlabel=\"Re\", ylabel=\"Im\",\n  grid=true, aspect_ratio=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 18,
+      "execution_count": 42,
       "outputs": [
         {
           "data": {
@@ -130,7 +130,12 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## Stereographic projection: the Riemann sphere\n\n$\\mathbb{C} \\cup \\{\\infty\\}$ is bijectively identified with the unit sphere $S^2$ via stereographic projection from the north pole. The point at infinity is the north pole; $0$ is the south pole; the unit circle is the equator.\n\nThis compactifies $\\mathbb{C}$ — every Möbius transformation extends to a smooth map of $S^2$ (rotations of the sphere are exactly the Möbius transformations $T(z) = (az + b)/(-\\bar b z + \\bar a)$ with $|a|^2 + |b|^2 = 1$, the so-called **special unitary group** $\\mathrm{SU}(2)$).\n\nThe Riemann sphere is the right setting for global complex analysis: **rational functions** $p(z)/q(z)$ are continuous maps $S^2 \\to S^2$.\n\n## What's coming\n\nStage 3 sits on top of three facts about $\\mathbb{C}$:\n\n1. $\\mathbb{C}$ is a field where multiplication has a beautiful geometric interpretation.\n2. The \"complex derivative\" $f'(z) = \\lim (f(z + h) - f(z))/h$ requires the limit to exist as $h \\to 0$ from *all* directions in $\\mathbb{C}$ — much stronger than mere $\\mathbb{R}^2$-differentiability.\n3. Holomorphic functions (those satisfying point 2) are stunningly rigid: analytic ($C^\\infty$ + Taylor series convergent), values determined by behaviour on small sets, etc.\n\nThe next notebook makes precise what \"complex differentiable\" means.\n",
+      "source": "## Stereographic projection: the Riemann sphere\n\n$\\mathbb{C} \\cup \\{\\infty\\}$ is bijectively identified with the unit sphere $S^2$ via stereographic projection from the north pole. The point at infinity is the north pole; $0$ is the south pole; the unit circle is the equator.\n\nThis compactifies $\\mathbb{C}$ — every Möbius transformation extends to a smooth map of $S^2$ (rotations of the sphere are exactly the Möbius transformations $T(z) = (az + b)/(-\\bar b z + \\bar a)$ with $|a|^2 + |b|^2 = 1$ — these come from the **special unitary group** $\\mathrm{SU}(2)$, but the correspondence is two-to-one, since $(a, b)$ and $-(a, b)$ give the same $T$. The rotation group is the quotient $\\mathrm{PSU}(2) = \\mathrm{SU}(2)/\\{\\pm I\\} \\cong \\mathrm{SO}(3)$; Stage 6/07 returns to this double cover).\n\nThe Riemann sphere is the right setting for global complex analysis: **rational functions** $p(z)/q(z)$ are continuous maps $S^2 \\to S^2$.\n\n## What's coming\n\nStage 3 sits on top of three facts about $\\mathbb{C}$:\n\n1. $\\mathbb{C}$ is a field where multiplication has a beautiful geometric interpretation.\n2. The \"complex derivative\" $f'(z) = \\lim (f(z + h) - f(z))/h$ requires the limit to exist as $h \\to 0$ from *all* directions in $\\mathbb{C}$ — much stronger than mere $\\mathbb{R}^2$-differentiability.\n3. Holomorphic functions (those satisfying point 2) are stunningly rigid: analytic ($C^\\infty$ + Taylor series convergent), values determined by behaviour on small sets, etc.\n\nThe next notebook makes precise what \"complex differentiable\" means.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nAhlfors, L.V. (1979) *Complex Analysis: An Introduction to the Theory of Analytic Functions of One Complex Variable*. 3rd edn. New York: McGraw-Hill — ch. 1, *Complex Numbers*.\n",
       "metadata": {}
     }
   ]

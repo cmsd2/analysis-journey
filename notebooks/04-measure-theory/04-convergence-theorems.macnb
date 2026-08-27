@@ -19,19 +19,19 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 5,
+      "execution_count": 21,
       "outputs": []
     },
     {
       "cell_type": "markdown",
-      "source": "## A Riemann counter-example that Lebesgue handles\n\nFor Riemann, swapping $\\lim$ and $\\int$ generally requires uniform convergence (Stage 1, notebook 6). Pointwise alone isn't enough. Counter-example: bump that drifts and shrinks.\n\nDefine $f_n$ on $[0, 1]$: $f_n(x) = n$ for $x \\in [0, 1/n]$, else $0$. Then:\n- $\\int_0^1 f_n\\,dx = 1$ for every $n$.\n- $f_n(x) \\to 0$ pointwise on $(0, 1]$ (and on the whole interval if we say $f(0) = 0$).\n- So $\\lim \\int f_n = 1 \\ne 0 = \\int \\lim f_n$.\n\nDCT doesn't help here because there's no integrable dominator: $\\sup_n f_n(x) = +\\infty$ near 0. Failure of DCT is *expected* — the conditions guarantee swapping; without them, anything can happen.\n",
+      "source": "## A Riemann counter-example that Lebesgue handles\n\nFor Riemann, swapping $\\lim$ and $\\int$ generally requires uniform convergence (Stage 1, notebook 6). Pointwise alone isn't enough. Counter-example: bump that drifts and shrinks.\n\nDefine $f_n$ on $[0, 1]$: $f_n(x) = n$ for $x \\in [0, 1/n]$, else $0$. Then:\n- $\\int_0^1 f_n\\,dx = 1$ for every $n$.\n- $f_n(x) \\to 0$ pointwise on $(0, 1]$ (and on the whole interval if we say $f(0) = 0$).\n- So $\\lim \\int f_n = 1 \\ne 0 = \\int \\lim f_n$.\n\nDCT doesn't help here because there's no integrable dominator. Fix an $x > 0$: $f_n(x) = n$ only while $n \\le 1/x$, and is $0$ after that, so $\\sup_n f_n(x) = \\lfloor 1/x \\rfloor$ — finite at every single point, but of size $\\sim 1/x$. Any dominator must beat that, and $\\int_0^1 dx/x = \\infty$. The smallest candidate is already non-integrable. Failure of DCT is *expected* — the conditions guarantee swapping; without them, anything can happen.\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
       "source": "/* Visualise the bump-train */\nplot_bump(n) := block([xs, ys],\n  xs : np_to_list(np_linspace(0, 1, 500)),\n  ys : map(lambda([x], if x <= 1.0/n then float(n) else 0.0), xs),\n  [xs, ys])$\n\n[xs1, ys1] : plot_bump(1)$\n[xs5, ys5] : plot_bump(5)$\n[xs20, ys20] : plot_bump(20)$\n\nax_draw2d(\n  color=\"blue\", line_width=2, name=\"n = 1\",\n  lines(xs1, ys1),\n  color=\"green\", line_width=2, name=\"n = 5\",\n  lines(xs5, ys5),\n  color=\"red\", line_width=2, name=\"n = 20\",\n  lines(xs20, ys20),\n  title=\"Bumps with mass 1 each, height → ∞, width → 0 — pointwise → 0, but ∫ = 1\",\n  xlabel=\"x\", ylabel=\"f_n(x)\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 6,
+      "execution_count": 22,
       "outputs": [
         {
           "data": {
@@ -53,7 +53,7 @@
       "cell_type": "code",
       "source": "/* Pointwise: lim_{n→∞} (1 - x/n)^n */\nprint(\"lim_{n→∞} (1 - x/n)^n =\")$\nlimit((1 - x/n)^n, n, inf);\n\n/* Integrals */\nfor n in [2, 5, 20, 100] do\n  print(\"∫₀ⁿ (1 - x/n)^n dx =\", float(integrate((1 - x/n)^n, x, 0, n)))$\n\nprint(\"∫₀^∞ e^{-x} dx = 1 (the limit)\")$",
       "metadata": {},
-      "execution_count": 7,
+      "execution_count": 23,
       "outputs": [
         {
           "name": "stdout",
@@ -73,7 +73,7 @@
       "cell_type": "code",
       "source": "print(\"F(t) = ∫₀^∞ e^{-t x²} dx =\")$\nF : assume(t > 0)$\nF_val : integrate(exp(-t*x^2), x, 0, inf)$\nF_val;\nprint(\"F'(t) =\")$\ndiff(F_val, t);\n\nprint()$\nprint(\"Swapping: -∫₀^∞ x² e^{-t x²} dx =\")$\nswap_val : -integrate(x^2 * exp(-t * x^2), x, 0, inf)$\nswap_val;\nforget(t > 0)$\nprint(\"Match — DCT validated the differentiation under the integral.\")$",
       "metadata": {},
-      "execution_count": 8,
+      "execution_count": 24,
       "outputs": [
         {
           "name": "stdout",
@@ -87,6 +87,11 @@
     {
       "cell_type": "markdown",
       "source": "## Bounded convergence — a special case of DCT\n\nIf the measure space is finite ($\\mu(X) < \\infty$) and $f_n$ are uniformly bounded by some constant $M$, the constant $M$ itself is integrable on a finite-measure space. So DCT applies — bounded pointwise convergence on finite measure space ⇒ integral converges.\n\nThis is why basic exchange-of-limits arguments work without fuss when integrating over a finite interval $[a, b]$ with bounded sequences. It's still a special case of DCT.\n\n## Practical recipe\n\nGiven a problem of the form \"compute $\\lim_n \\int f_n$\":\n\n1. Find $f = \\lim f_n$ pointwise. (Easy.)\n2. Find an integrable dominator $g$ with $|f_n| \\le g$ a.e. *for all $n$*. (Often the hard step.)\n3. Apply DCT: the answer is $\\int f$.\n\nWhen you can't find a dominator, fall back to Fatou (gives a lower bound on $\\liminf$) or MCT (if $f_n$ is monotone non-negative). When all three fail, the limit-of-integrals genuinely differs from the integral-of-limit — and the bump example is your guide to why.\n\n## Why this matters beyond integration\n\nThese theorems are the foundation of:\n\n- **$L^p$ space theory** — completeness of $L^p$ uses DCT.\n- **Probability theory** — the dominated convergence theorem in disguise is \"expectation respects almost-sure convergence under a uniform integrability condition.\"\n- **PDE and Fourier analysis** — almost any limit argument involving integrals.\n\nThe next notebook builds the $L^p$ spaces themselves — the natural Banach-space settings where DCT really earns its keep.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nAxler, S. (2020) *Measure, Integration & Real Analysis*. Cham: Springer International Publishing. doi:[10.1007/978-3-030-33143-6](https://doi.org/10.1007/978-3-030-33143-6) — ch. 3, *Integration* (§3A–3B: MCT, Fatou, DCT).\n",
       "metadata": {}
     }
   ]

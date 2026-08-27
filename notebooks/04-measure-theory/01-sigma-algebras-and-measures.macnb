@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 5,
+      "execution_count": 21,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "/* Symbolic check: countable additivity on a simple disjoint union */\nmu_interval(a, b) := b - a$\n/* μ([0, 1]) = 1 */\nprint(\"μ([0, 1]) =\", mu_interval(0, 1))$\n/* μ([0, 0.5] ∪ [0.5, 1]) — disjoint up to a measure-0 point — should be 1 */\nprint(\"μ([0, 0.5]) + μ([0.5, 1]) =\", mu_interval(0, 0.5) + mu_interval(0.5, 1))$\nprint(\"μ([0, 1]) =\", mu_interval(0, 1))$\nprint(\"Match — additive ✓\")$",
       "metadata": {},
-      "execution_count": 6,
+      "execution_count": 22,
       "outputs": [
         {
           "name": "stdout",
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "/* μ([-1/n, 1/n]) → 0 as n → ∞ */\nprint(\"Lebesgue measure of shrinking nested intervals:\")$\nfor n in [1, 10, 100, 1000, 10000] do\n  print(\"  μ([-1/\", n, \", 1/\", n, \"]) =\", float(2.0 / n))$\nprint(\"→ μ({0}) = 0  (single points have Lebesgue measure zero)\")$",
       "metadata": {},
-      "execution_count": 7,
+      "execution_count": 23,
       "outputs": [
         {
           "name": "stdout",
@@ -71,7 +71,7 @@
       "cell_type": "code",
       "source": "/* Exercise the countable additivity: μ(ℚ ∩ [0, 1]) = 0\n   even though ℚ ∩ [0, 1] is dense.\n\n   ℚ is countable, so μ(ℚ ∩ [0, 1]) ≤ Σ μ({q_n}) = Σ 0 = 0.\n*/\nprint(\"ℚ is countable.  μ({q_n}) = 0 for each q_n.\")$\nprint(\"Countable additivity ⇒ μ(ℚ ∩ [0, 1]) = Σ 0 = 0.\")$\nprint()$\nprint(\"Yet ℚ ∩ [0, 1] is dense in [0, 1] — every interval contains rationals.\")$\nprint(\"Density and measure are independent notions.\")$",
       "metadata": {},
-      "execution_count": 8,
+      "execution_count": 24,
       "outputs": [
         {
           "name": "stdout",
@@ -85,6 +85,11 @@
     {
       "cell_type": "markdown",
       "source": "## Borel sets — what's measurable?\n\nThe **Borel σ-algebra** $\\mathcal{B}(\\mathbb{R})$ is the smallest σ-algebra containing all open sets. By complement and countable union, it includes:\n\n- All open sets and closed sets.\n- $F_\\sigma$ sets (countable unions of closed sets).\n- $G_\\delta$ sets (countable intersections of open sets).\n- Iterated unions/intersections of those.\n\nEvery \"describable\" subset of $\\mathbb{R}$ is Borel. Constructing non-Borel sets requires (clever) transfinite induction or the axiom of choice. In practice, *every set you can write down explicitly is measurable*.\n\n## Measure spaces\n\nA **measure space** is a triple $(X, \\mathcal{F}, \\mu)$ — set, σ-algebra, measure. Examples we'll use:\n\n| Space | $X$ | $\\mathcal{F}$ | $\\mu$ |\n|-------|-----|---------------|-------|\n| Lebesgue | $\\mathbb{R}^n$ | Lebesgue σ-algebra | Lebesgue measure $\\lambda$ |\n| Counting | any set | $2^X$ | $\\mu(E) = |E|$ |\n| Dirac | any set | $2^X$ | $\\delta_{x_0}$ |\n| Probability | any set with $\\mu(X) = 1$ | σ-alg | probability measure |\n\nThe same integration theory works on all of them — that's the abstraction's payoff. Probability theory is just integration on a measure space with $\\mu(X) = 1$.\n\n## The big picture\n\nWe've built the language. The next notebook constructs Lebesgue measure explicitly via outer measures, dealing with the technicalities (Vitali's non-measurable set, the Cantor set as a measure-zero example). Once $\\lambda$ is in hand, the integral follows.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nAxler, S. (2020) *Measure, Integration & Real Analysis*. Cham: Springer International Publishing. doi:[10.1007/978-3-030-33143-6](https://doi.org/10.1007/978-3-030-33143-6) — ch. 2, *Measures*.\n",
       "metadata": {}
     }
   ]

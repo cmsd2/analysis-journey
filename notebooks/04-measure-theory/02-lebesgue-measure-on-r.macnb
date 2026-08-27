@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 5,
+      "execution_count": 21,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "/* Demonstrate the rationals-are-null cover */\nN : 10$\neps : 0.1$\ntotal : sum(eps / 2^n, n, 1, N)$\nprint(\"Cover q_n with interval of length\", eps, \"/2^n, n =1..\", N)$\nprint(\"Total length =\", float(total), \"<\", eps, \"→ μ*(ℚ) = 0\")$",
       "metadata": {},
-      "execution_count": 6,
+      "execution_count": 22,
       "outputs": [
         {
           "name": "stdout",
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "/* Plot the first few stages of the Cantor set */\nplot_cantor_stage(n, color_, line_width_) := block([intervals, k, ls],\n  intervals : [[0.0, 1.0]],\n  for k : 1 thru n do block([new],\n    new : [],\n    for I in intervals do block([a, b, len_third],\n      a : I[1], b : I[2],\n      len_third : (b - a) / 3.0,\n      new : append(new, [[a, a + len_third], [b - len_third, b]])),\n    intervals : new),\n  intervals)$\n\nints_n4 : plot_cantor_stage(4, \"blue\", 6)$\nprint(\"After 4 steps:\", length(ints_n4), \"intervals, each of length 1/3^4 =\", 1.0/3^4)$\nprint(\"Total length:\", length(ints_n4) * 1.0/3^4, \"= (2/3)^4\")$\n\n/* Plot stages stacked */\nplot_traces : []$\ny_levels : [4, 3, 2, 1, 0]$  /* stages 0..4 */\nax_args : [\n  color=\"black\", line_width=4, name=\"C_0 = [0, 1]\",\n  lines([0, 1], [4, 4])\n]$\n\n/* For each stage, list the segments at the corresponding y-level */\nints_0 : [[0.0, 1.0]]$\nints_1 : plot_cantor_stage(1, \"\", 4)$\nints_2 : plot_cantor_stage(2, \"\", 4)$\nints_3 : plot_cantor_stage(3, \"\", 4)$\nints_4 : plot_cantor_stage(4, \"\", 4)$\n\n/* Convert intervals to plot lines at each y-level */\nbuild_xy(intervals, y_lvl) := block([xs, ys, I],\n  xs : [], ys : [],\n  for I in intervals do (\n    xs : append(xs, [I[1], I[2], I[2]]),\n    ys : append(ys, [y_lvl, y_lvl, none])),\n  /* drop trailing none-style; we just split traces below */\n  [xs, ys])$\n",
       "metadata": {},
-      "execution_count": 7,
+      "execution_count": 23,
       "outputs": [
         {
           "name": "stdout",
@@ -66,7 +66,7 @@
       "cell_type": "code",
       "source": "/* Simpler: just plot each stage as a series of line segments using points pairs */\nax_draw2d(\n  color=\"black\", line_width=6, name=\"C_0\",\n  lines([0, 1], [4, 4]),\n  color=\"black\", line_width=6, name=\"C_1\",\n  lines([0, 1.0/3], [3, 3]),\n  color=\"black\", line_width=6,\n  lines([2.0/3, 1], [3, 3]),\n  color=\"black\", line_width=6, name=\"C_2\",\n  lines([0, 1.0/9], [2, 2]),\n  color=\"black\", line_width=6,\n  lines([2.0/9, 3.0/9], [2, 2]),\n  color=\"black\", line_width=6,\n  lines([6.0/9, 7.0/9], [2, 2]),\n  color=\"black\", line_width=6,\n  lines([8.0/9, 1.0], [2, 2]),\n  title=\"Cantor set construction — measure (2/3)^n → 0\",\n  xlabel=\"x\", ylabel=\"stage\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 8,
+      "execution_count": 24,
       "outputs": [
         {
           "data": {
@@ -82,6 +82,11 @@
     {
       "cell_type": "markdown",
       "source": "## Lebesgue measure on $\\mathbb{R}^n$\n\nSame construction extends to $\\mathbb{R}^n$: cover by *boxes* $\\prod_{i=1}^n (a_i, b_i)$, use the obvious volume $\\prod (b_i - a_i)$ as the basis. Carathéodory carries through, giving Lebesgue measure on $\\mathbb{R}^n$.\n\nThe Lebesgue σ-algebra is invariant under:\n- Translation: $\\lambda(E + t) = \\lambda(E)$.\n- Reflection: $\\lambda(-E) = \\lambda(E)$.\n- Linear maps: $\\lambda(T E) = |\\det T| \\lambda(E)$ — the Jacobian determinant from Stage 2/05.\n\n## What we got\n\n- An σ-algebra $\\mathcal{L}$ much larger than Borel, containing every Borel set and every subset of a Borel measure-zero set.\n- A measure $\\lambda$ extending the natural notion of length / area / volume.\n- A non-measurable example (Vitali) showing why we can't have everything.\n- A null + uncountable example (Cantor) showing measure isn't cardinality.\n\nThe next notebook builds the **integral** on top of this — a tour de force of constructing a robust, well-behaved integration theory by approximating from below with simple functions.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nStein, E.M. and Shakarchi, R. (2005) *Real Analysis: Measure Theory, Integration, and Hilbert Spaces*. Princeton Lectures in Analysis III. Princeton, NJ: Princeton University Press — ch. 1, *Measure Theory* (outer measure, Carathéodory, Vitali, Cantor).\n",
       "metadata": {}
     }
   ]

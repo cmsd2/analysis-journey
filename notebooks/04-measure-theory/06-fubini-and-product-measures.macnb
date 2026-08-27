@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 4,
+      "execution_count": 16,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "I_iterated : integrate(integrate(exp(-x^2 - y^2), x, -inf, inf), y, -inf, inf)$\nprint(\"∫∫ e^{-x²-y²} dA via iteration =\", I_iterated)$\nprint(\"(Tonelli gives π — same as polar Stage 2/05)\")$",
       "metadata": {},
-      "execution_count": 5,
+      "execution_count": 17,
       "outputs": [
         {
           "name": "stdout",
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "f_counter : (x^2 - y^2) / (x^2 + y^2)^2$\ninner_y : integrate(f_counter, y, 0, 1)$\nprint(\"Inner y-integral =\")$\ninner_y;\nouter_x : integrate(inner_y, x, 0, 1)$\nprint(\"∫₀¹ ∫₀¹ f dy dx =\")$\nouter_x;\nprint()$\ninner_x : integrate(f_counter, x, 0, 1)$\nprint(\"Inner x-integral =\")$\ninner_x;\nouter_y : integrate(inner_x, y, 0, 1)$\nprint(\"∫₀¹ ∫₀¹ f dx dy =\")$\nouter_y;",
       "metadata": {},
-      "execution_count": 6,
+      "execution_count": 18,
       "outputs": [
         {
           "name": "stdout",
@@ -66,7 +66,7 @@
               "-\\left({{\\pi}\\over{4}}\\right)"
             ]
           },
-          "execution_count": 6,
+          "execution_count": 18,
           "metadata": {},
           "output_type": "execute_result"
         }
@@ -74,7 +74,12 @@
     },
     {
       "cell_type": "markdown",
-      "source": "$\\pi/4$ and $-\\pi/4$ — different. The pathology comes from the non-integrable singularity at $(0, 0)$: $\\int |f|\\,d(\\mu\\otimes\\nu)$ diverges, so Fubini doesn't apply.\n\n## Practical recipe\n\nGiven $\\int\\int f\\,dA$:\n\n1. **First check** $\\int |f|\\,dA < \\infty$ (often by Tonelli on $|f|$ — non-negative, so Tonelli always applies).\n2. If yes, **Fubini** says iterated integrals exist, are equal, and equal the double integral.\n3. If no, the iterated integrals may not exist or may disagree — handle case-by-case.\n\nFor everyday integrals of nice continuous functions on bounded regions, this is automatic. For improper integrals or distribution-like behaviour, check absolute integrability first.\n\n## Product measures abstractly\n\nThe $\\sigma$-algebra on $X \\times Y$ is $\\mathcal{F} \\otimes \\mathcal{G}$ — the smallest σ-algebra containing all \"rectangles\" $A \\times B$ with $A \\in \\mathcal{F}$, $B \\in \\mathcal{G}$. The product measure $\\mu \\otimes \\nu$ satisfies $(\\mu \\otimes \\nu)(A \\times B) = \\mu(A)\\,\\nu(B)$ on rectangles, extended via Carathéodory to all measurable sets.\n\n**Important nuance**: the product Lebesgue σ-algebra on $\\mathbb{R}^2$ is *strictly contained* in the Lebesgue σ-algebra on $\\mathbb{R}^2$. They agree on Borel sets but differ on null subsets. For most practical purposes the difference doesn't matter.\n\n## Probability flavour: independence\n\nIf $X, Y$ are independent random variables on $(X \\times Y, \\mathcal{F} \\otimes \\mathcal{G}, \\mu \\otimes \\nu)$ with marginal distributions $\\mu_X, \\mu_Y$, then for any (measurable) functions $f, g$,\n\n$$E[f(X) g(Y)] = E[f(X)]\\,E[g(Y)] = \\int f\\,d\\mu_X\\,\\cdot\\int g\\,d\\mu_Y.$$\n\nThis is Tonelli applied to the joint distribution being a product measure. Independence ⇔ joint = product of marginals. Probability theory is just measure theory in dressy clothes.\n\n## What we got from Stage 4\n\nSix notebooks worth of Lebesgue theory:\n\n- **σ-algebras and measures** (notebook 1) — the language.\n- **Lebesgue measure on $\\mathbb{R}$** (notebook 2) — the canonical example, with Cantor and Vitali pathologies.\n- **The Lebesgue integral** (notebook 3) — partition the range, not the domain.\n- **Convergence theorems** (notebook 4) — MCT, Fatou, DCT — the workhorses.\n- **$L^p$ spaces** (notebook 5) — complete normed function spaces with Hölder, Minkowski.\n- **Fubini and product measures** (this notebook) — the right rules for iterated integration.\n\nWe're now equipped to do **functional analysis** properly — the abstract study of $L^p$ and similar function spaces. Stage 5 is next.\n",
+      "source": "$\\pi/4$ and $-\\pi/4$ — different. The pathology comes from the non-integrable singularity at $(0, 0)$: $\\int |f|\\,d(\\mu\\otimes\\nu)$ diverges, so Fubini doesn't apply.\n\n## Practical recipe\n\nGiven $\\int\\int f\\,dA$:\n\n1. **First check** $\\int |f|\\,dA < \\infty$ (often by Tonelli on $|f|$ — non-negative, so Tonelli always applies).\n2. If yes, **Fubini** says iterated integrals exist, are equal, and equal the double integral.\n3. If no, the iterated integrals may not exist or may disagree — handle case-by-case.\n\nFor everyday integrals of nice continuous functions on bounded regions, this is automatic. For improper integrals or distribution-like behaviour, check absolute integrability first.\n\n## Product measures abstractly\n\nThe $\\sigma$-algebra on $X \\times Y$ is $\\mathcal{F} \\otimes \\mathcal{G}$ — the smallest σ-algebra containing all \"rectangles\" $A \\times B$ with $A \\in \\mathcal{F}$, $B \\in \\mathcal{G}$. The product measure $\\mu \\otimes \\nu$ satisfies $(\\mu \\otimes \\nu)(A \\times B) = \\mu(A)\\,\\nu(B)$ on rectangles, extended via Carathéodory to all measurable sets.\n\n**Important nuance**: the product Lebesgue σ-algebra on $\\mathbb{R}^2$ is *strictly contained* in the Lebesgue σ-algebra on $\\mathbb{R}^2$. They agree on Borel sets but differ on null subsets. For most practical purposes the difference doesn't matter.\n\n## Probability flavour: independence\n\nIf $X, Y$ are independent random variables with marginal distributions $\\mu_X, \\mu_Y$, then their joint distribution is exactly the product measure $\\mu_X \\otimes \\mu_Y$, and for measurable $f, g$,\n\n$$E[f(X)\\,g(Y)] = E[f(X)]\\,E[g(Y)] = \\int f\\,d\\mu_X \\cdot \\int g\\,d\\mu_Y.$$\n\nThat's Tonelli when $f, g \\ge 0$, and Fubini once $f(X)$ and $g(Y)$ are integrable. Independence ⇔ joint = product of marginals. Probability theory is just measure theory in dressy clothes.\n\n## What we got from Stage 4\n\nSix notebooks worth of Lebesgue theory:\n\n- **σ-algebras and measures** (notebook 1) — the language.\n- **Lebesgue measure on $\\mathbb{R}$** (notebook 2) — the canonical example, with Cantor and Vitali pathologies.\n- **The Lebesgue integral** (notebook 3) — partition the range, not the domain.\n- **Convergence theorems** (notebook 4) — MCT, Fatou, DCT — the workhorses.\n- **$L^p$ spaces** (notebook 5) — complete normed function spaces with Hölder, Minkowski.\n- **Fubini and product measures** (this notebook) — the right rules for iterated integration.\n\nWe're now equipped to do **functional analysis** properly — the abstract study of $L^p$ and similar function spaces. Stage 5 is next.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nAxler, S. (2020) *Measure, Integration & Real Analysis*. Cham: Springer International Publishing. doi:[10.1007/978-3-030-33143-6](https://doi.org/10.1007/978-3-030-33143-6) — ch. 5, *Product Measures*.\n",
       "metadata": {}
     }
   ]

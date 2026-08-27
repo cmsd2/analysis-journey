@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 6,
+      "execution_count": 26,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "/* Compute the integral by direct sum */\nlevels : [1.0, 2.0, 0.5]$\nsets_lengths : [0.3, 0.4, 0.3]$\nintegral_phi : sum(levels[i] * sets_lengths[i], i, 1, length(levels))$\nprint(\"∫ φ dλ =\", integral_phi)$\n\n/* Plot the simple function */\nxs : [0, 0.3, 0.3, 0.7, 0.7, 1]$\nys : [1, 1, 2, 2, 0.5, 0.5]$\n\nax_draw2d(\n  color=\"blue\", line_width=3, name=\"simple function φ\",\n  lines(xs, ys),\n  title=\"Simple function — three pieces, three constant heights\",\n  xlabel=\"x\", ylabel=\"φ(x)\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 7,
+      "execution_count": 27,
       "outputs": [
         {
           "name": "stdout",
@@ -60,7 +60,7 @@
       "cell_type": "code",
       "source": "/* Build the staircase φ_n(x) for f(x) = √x on [0,1] with n levels per unit height */\nn_lvl : 8$\ndelta : 1.0 / n_lvl$\nxs : np_to_list(np_linspace(0, 1, 1000))$\nphi_vals : map(lambda([x], floor(sqrt(x) * n_lvl) / float(n_lvl)), xs)$\nsqrt_vals : map(lambda([x], float(sqrt(x))), xs)$\n\nax_draw2d(\n  color=\"blue\", line_width=2, name=\"f(x) = √x\",\n  lines(xs, sqrt_vals),\n  color=\"red\", line_width=1, name=\"simple φ_n approximating from below\",\n  lines(xs, phi_vals),\n  title=\"Lebesgue construction — approximate from below by simple functions\",\n  xlabel=\"x\", ylabel=\"value\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 8,
+      "execution_count": 28,
       "outputs": [
         {
           "data": {
@@ -82,7 +82,7 @@
       "cell_type": "code",
       "source": "/* Compute ∫ φ_n dλ for various n by summing levels × measures of the corresponding sets */\ncompute_simple_integral(n) := block([sum_v, k, lvl, set_meas],\n  sum_v : 0.0,\n  for k : 0 thru n - 1 do block([],\n    lvl : k / float(n),\n    /* set: {x : k/n ≤ √x < (k+1)/n} = [(k/n)², ((k+1)/n)²) */\n    set_meas : ((k+1)/float(n))^2 - (k/float(n))^2,\n    sum_v : sum_v + lvl * set_meas),\n  sum_v)$\n\nn_steps : [2, 4, 8, 16, 32, 64]$\nintegrals : map(compute_simple_integral, n_steps)$\nprint(\"n_steps:\", n_steps)$\nprint(\"∫ φ_n dλ:\", integrals)$\nprint(\"∫ √x dλ on [0,1] = 2/3 =\", 2.0/3.0)$",
       "metadata": {},
-      "execution_count": 9,
+      "execution_count": 29,
       "outputs": [
         {
           "name": "stdout",
@@ -102,7 +102,7 @@
       "cell_type": "code",
       "source": "/* Riemann/Lebesgue agree on continuous functions */\nprint(\"∫₀¹ √x dx =\", integrate(sqrt(x), x, 0, 1))$\nprint(\"(both Riemann and Lebesgue give 2/3)\")$",
       "metadata": {},
-      "execution_count": 10,
+      "execution_count": 30,
       "outputs": [
         {
           "name": "stdout",
@@ -116,6 +116,11 @@
     {
       "cell_type": "markdown",
       "source": "## Where this leaves us\n\nWe can now integrate measurable functions in a much more flexible setup than Riemann allowed:\n\n- Pointy / discontinuous functions are fine, as long as they're measurable.\n- Sets of measure zero can be ignored.\n- We have a clean linear theory.\n\nThe next notebook unlocks the **convergence theorems** — Monotone Convergence, Fatou, Dominated Convergence — which are the technical reason analysts adopted Lebesgue's theory in the first place.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nAxler, S. (2020) *Measure, Integration & Real Analysis*. Cham: Springer International Publishing. doi:[10.1007/978-3-030-33143-6](https://doi.org/10.1007/978-3-030-33143-6) — ch. 3, *Integration*.\n",
       "metadata": {}
     }
   ]

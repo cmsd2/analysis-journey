@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 19,
+      "execution_count": 53,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "f_polar : [r * cos(theta), r * sin(theta)]$\nJ_polar : genmatrix(lambda([i, j], diff(f_polar[i], [r, theta][j])), 2, 2)$\nprint(\"J_f =\")$ J_polar;\nprint(\"det(J_f) = r·cos²θ + r·sin²θ =\")$\nratsimp(determinant(J_polar));",
       "metadata": {},
-      "execution_count": 20,
+      "execution_count": 54,
       "outputs": [
         {
           "name": "stdout",
@@ -46,7 +46,7 @@
               "r\\,\\sin ^2\\theta+r\\,\\cos ^2\\theta"
             ]
           },
-          "execution_count": 20,
+          "execution_count": 54,
           "metadata": {},
           "output_type": "execute_result"
         }
@@ -61,7 +61,7 @@
       "cell_type": "code",
       "source": "J_inv_polar : invert(J_polar)$\nprint(\"J_{f^{-1}} = J_f^{-1} =\")$\nratsimp(J_inv_polar);\nprint(\"(In Cartesian coordinates these are ∂r/∂x, ∂r/∂y, ∂θ/∂x, ∂θ/∂y)\")$",
       "metadata": {},
-      "execution_count": 21,
+      "execution_count": 55,
       "outputs": [
         {
           "name": "stdout",
@@ -81,7 +81,7 @@
       "cell_type": "code",
       "source": "F_circle : x^2 + y^2 - 1$\ndF_dx : diff(F_circle, x)$\ndF_dy : diff(F_circle, y)$\ny_prime : -dF_dx / dF_dy$\nprint(\"y'(x) =\")$\nratsimp(y_prime);\nprint(\"At (0.6, 0.8): y'(x) =\", float(subst([x=0.6, y=0.8], y_prime)))$\nprint(\"Slope from explicit formula  d/dx √(1-x²) at x=0.6 =\")$\nprint(\"  \", float(subst(x=0.6, diff(sqrt(1 - x^2), x))))$",
       "metadata": {},
-      "execution_count": 22,
+      "execution_count": 56,
       "outputs": [
         {
           "name": "stdout",
@@ -101,7 +101,7 @@
       "cell_type": "code",
       "source": "theta_g : np_to_list(np_linspace(0, 2*float(%pi), 200))$\ncx : map(cos, theta_g)$  cy : map(sin, theta_g)$\nxs : np_to_list(np_linspace(-0.95, 0.95, 200))$\nys_upper : map(lambda([xx], float(sqrt(1 - xx*xx))), xs)$\n\nax_draw2d(\n  color=\"blue\", line_width=2, name=\"F(x,y) = x²+y² - 1 = 0\",\n  lines(cx, cy),\n  color=\"red\", line_width=2, name=\"y = +√(1-x²) — local branch\",\n  lines(xs, ys_upper),\n  marker_size=10, color=\"orange\", name=\"critical points (∂F/∂y = 0)\",\n  points([1.0, -1.0], [0.0, 0.0]),\n  title=\"Implicit function theorem — level set is locally a graph\",\n  xlabel=\"x\", ylabel=\"y\",\n  grid=true, aspect_ratio=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 23,
+      "execution_count": 57,
       "outputs": [
         {
           "data": {
@@ -116,14 +116,14 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## A deeper example: solving non-trivial systems\n\nSuppose we have $F : \\mathbb{R}^3 \\to \\mathbb{R}^2$ given by\n\n$$F(x, y, z) = \\begin{pmatrix} x^2 + y^2 + z^2 - 3 \\\\ x + y + z - 3 \\end{pmatrix}.$$\n\nThe set $\\{F = 0\\}$ is a 1D curve (a circle) in $\\mathbb{R}^3$ — the intersection of a sphere with a plane. The implicit function theorem says: if at a point $p_0 = (x_0, y_0, z_0)$ on this curve, the partial Jacobian $\\partial F / \\partial(y, z)$ (a $2 \\times 2$ matrix) is invertible, then near $p_0$ we can write $y, z$ as $C^1$ functions of $x$.\n",
+      "source": "## A deeper example: solving non-trivial systems\n\nSuppose we have $F : \\mathbb{R}^3 \\to \\mathbb{R}^2$ given by\n\n$$F(x, y, z) = \\begin{pmatrix} x^2 + y^2 + z^2 - 3 \\\\ x + y + z - 1 \\end{pmatrix}.$$\n\nThe set $\\{F = 0\\}$ is a 1D curve (a circle) in $\\mathbb{R}^3$ — the intersection of a sphere of radius $\\sqrt3$ with a plane. The constant in the second row matters: the plane $x + y + z = c$ sits at distance $|c|/\\sqrt3$ from the origin, so we need $|c| < 3$ for a genuine circle. At $c = 3$ the plane is *tangent* and the intersection collapses to the single point $(1, 1, 1)$; beyond that it's empty. The implicit function theorem says: if at a point $p_0 = (x_0, y_0, z_0)$ on this curve, the partial Jacobian $\\partial F / \\partial(y, z)$ (a $2 \\times 2$ matrix) is invertible, then near $p_0$ we can write $y, z$ as $C^1$ functions of $x$.\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
-      "source": "F_sys : [x^2 + y^2 + z^2 - 3, x + y + z - 3]$\nJ_full : genmatrix(lambda([i, j], diff(F_sys[i], [x, y, z][j])), 2, 3)$\nprint(\"Full Jacobian J_F (2x3) =\")$ J_full;\n\n/* Take ∂F/∂(y, z) — columns 2 and 3 */\nJ_yz : genmatrix(lambda([i, j], diff(F_sys[i], [y, z][j])), 2, 2)$\nprint(\"∂F/∂(y, z) =\")$ J_yz;\nprint(\"det(∂F/∂(y, z)) =\", ratsimp(determinant(J_yz)))$",
+      "source": "F_sys : [x^2 + y^2 + z^2 - 3, x + y + z - 1]$\nJ_full : genmatrix(lambda([i, j], diff(F_sys[i], [x, y, z][j])), 2, 3)$\nprint(\"Full Jacobian J_F (2x3) =\")$ J_full;\n\n/* Take ∂F/∂(y, z) — columns 2 and 3 */\nJ_yz : genmatrix(lambda([i, j], diff(F_sys[i], [y, z][j])), 2, 2)$\nprint(\"∂F/∂(y, z) =\")$ J_yz;\nprint(\"det(∂F/∂(y, z)) =\", ratsimp(determinant(J_yz)))$",
       "metadata": {},
-      "execution_count": 24,
+      "execution_count": 58,
       "outputs": [
         {
           "name": "stdout",
@@ -136,7 +136,12 @@
     },
     {
       "cell_type": "markdown",
-      "source": "$\\det \\partial F/\\partial(y, z) = 2(z - y)$. Non-zero whenever $y \\ne z$. At the point $(1, 0, 2)$: $\\det = 4 \\ne 0$, so we can solve for $(y, z)$ as functions of $x$ near that point. At a symmetric point like $(1, 1, 1)$ (centre of the curve), $\\det = 0$ — there the curve is \"vertical\" in the $x$-direction and $x$ alone can't parametrise.\n\n## Why these theorems matter\n\nBoth are *existence* results — they say \"yes, the function you want is there, even if you can't write it down\". This makes them load-bearing:\n\n- **Numerical solvers.** Newton's method converges quadratically near a root *because* the inverse function theorem says the linearised system is invertible, giving the next iterate.\n- **Optimisation under constraints.** Lagrange multipliers work because the implicit function theorem locally parametrises the constraint surface.\n- **Differential geometry.** A smooth manifold is *defined* as a space that, locally, looks like a graph of one set of coordinates over another — i.e., where the implicit function theorem applies everywhere.\n- **Bifurcation theory.** When $J$ becomes singular, the implicit function theorem fails — and that's where qualitative changes (bifurcations) happen.\n\nYou'll see all four ideas in modern applied analysis. The two theorems are the gateway.\n",
+      "source": "$\\det \\partial F/\\partial(y, z) = 2(y - z)$ — the rows are the components of $F$, the columns the variables $(y, z)$, giving $\\begin{pmatrix} 2y & 2z \\\\ 1 & 1\\end{pmatrix}$. Non-zero whenever $y \\ne z$.\n\nTake $p_0 = (1, 1, -1)$, which does lie on the curve: $1 + 1 + 1 = 3$ and $1 + 1 - 1 = 1$. There $\\det = 2(1 - (-1)) = 4 \\ne 0$, so near $p_0$ we can solve for $(y, z)$ as $C^1$ functions of $x$.\n\nThe determinant vanishes exactly where $y = z$. Substituting $x = 1 - 2y$ into the sphere equation gives $3y^2 - 2y - 1 = 0$, so $y \\in \\{1, -1/3\\}$ and the two bad points are $(-1, 1, 1)$ and $(5/3, -1/3, -1/3)$. These are precisely where $x$ is extremal on the circle — the curve is \"vertical\" in the $x$-direction there, and $x$ alone can't parametrise it.\n\n## Why these theorems matter\n\nBoth are *existence* results — they say \"yes, the function you want is there, even if you can't write it down\". This makes them load-bearing:\n\n- **Numerical solvers.** Newton's method converges quadratically near a root *because* the inverse function theorem says the linearised system is invertible, giving the next iterate.\n- **Optimisation under constraints.** Lagrange multipliers work because the implicit function theorem locally parametrises the constraint surface.\n- **Differential geometry.** A smooth manifold is *defined* as a space that, locally, looks like a graph of one set of coordinates over another — i.e., where the implicit function theorem applies everywhere.\n- **Bifurcation theory.** When $J$ becomes singular, the implicit function theorem fails — and that's where qualitative changes (bifurcations) happen.\n\nYou'll see all four ideas in modern applied analysis. The two theorems are the gateway.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nZorich, V.A. (2016) *Mathematical Analysis II*. 2nd edn. Berlin, Heidelberg: Springer Berlin Heidelberg. doi:[10.1007/978-3-662-48993-2](https://doi.org/10.1007/978-3-662-48993-2) — ch. 10, *Differential Calculus from a More General Point of View* — the inverse and implicit function theorems.\n\nTao, T. (2016) *Analysis II*. 3rd edn. Singapore: Springer Singapore. doi:[10.1007/978-981-10-1804-6](https://doi.org/10.1007/978-981-10-1804-6) — ch. 6, *Several variable differential calculus*.\n",
       "metadata": {}
     }
   ]

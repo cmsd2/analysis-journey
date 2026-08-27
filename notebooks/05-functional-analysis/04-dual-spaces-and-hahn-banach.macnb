@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 4,
+      "execution_count": 19,
       "outputs": []
     },
     {
@@ -29,15 +29,15 @@
     },
     {
       "cell_type": "code",
-      "source": "/* y = (1/n) for n = 1, 2, 3, ... — already shown to be in ℓ², not ℓ¹ */\ny_norm_sq : sum(1/n^2, n, 1, inf)$\nprint(\"‖y‖_2² = Σ 1/n² =\", y_norm_sq)$\nprint(\"‖y‖_2 = π/√6 =\", float(%pi/sqrt(6)))$\nprint()$\nprint(\"Functional φ(x) = Σ x_n / n on ℓ² has ‖φ‖ = ‖y‖_2 = π/√6 (Riesz).\")$",
+      "source": "/* y = (1/n) for n = 1, 2, 3, ... — already shown to be in ℓ², not ℓ¹ */\nsimpsum : true$   /* without this Maxima leaves the infinite sum unevaluated */\ny_norm_sq : sum(1/n^2, n, 1, inf)$\nprint(\"‖y‖_2² = Σ 1/n² =\", y_norm_sq, \"=\", float(y_norm_sq))$\nprint(\"‖y‖_2 = π/√6 =\", float(%pi/sqrt(6)))$\nprint()$\nprint(\"Functional φ(x) = Σ x_n / n on ℓ² has ‖φ‖ = ‖y‖_2 = π/√6 (Riesz).\")$",
       "metadata": {},
-      "execution_count": 5,
+      "execution_count": 20,
       "outputs": [
         {
           "name": "stdout",
           "output_type": "stream",
           "text": [
-            "‖y‖_2² = Σ 1/n² = 'sum(1/n^2,n,1,inf)\n‖y‖_2 = π/√6 = 1.2825498301618643\nFunctional φ(x) = Σ x_n / n on ℓ² has ‖φ‖ = ‖y‖_2 = π/√6 (Riesz)."
+            "‖y‖_2² = Σ 1/n² = %pi^2/6 = 1.6449340668482262\n‖y‖_2 = π/√6 = 1.2825498301618643\nFunctional φ(x) = Σ x_n / n on ℓ² has ‖φ‖ = ‖y‖_2 = π/√6 (Riesz)."
           ]
         }
       ]
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "/* Convex set A: disc around (-1, 0); convex set B: half-plane x >= 1 (illustrate as a region) */\ntheta_g : np_to_list(np_linspace(0, 2*float(%pi), 200))$\nA_x : map(lambda([t], -1.0 + 0.7*cos(t)), theta_g)$\nA_y : map(lambda([t], 0.5*sin(t)), theta_g)$\n\nax_draw2d(\n  color=\"blue\", line_width=2, name=\"convex set A (disc)\",\n  lines(A_x, A_y),\n  marker_size=4, color=\"red\", name=\"convex set B (right of x=1)\",\n  points([1.5, 2.0, 2.5, 3.0, 1.5, 2.0, 2.5, 3.0],\n         [0.0, 0.5, 0.0, -0.5, -0.5, 0.5, -0.3, 0.3]),\n  color=\"green\", dash=\"dash\", line_width=2, name=\"separating hyperplane\",\n  lines([0.5, 0.5], [-1.5, 1.5]),\n  title=\"Hahn-Banach separation: a line splits two disjoint convex sets\",\n  xlabel=\"x\", ylabel=\"y\",\n  grid=true, aspect_ratio=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 6,
+      "execution_count": 21,
       "outputs": [
         {
           "data": {
@@ -67,6 +67,11 @@
     {
       "cell_type": "markdown",
       "source": "The line $x = 0.5$ has $A$ to its left and $B$ to its right. The functional $\\varphi(x, y) = x$ achieves the separation: $\\varphi(a) < 0.5 \\le \\varphi(b)$ for all $a \\in A, b \\in B$.\n\n## Weak and weak-* topologies\n\nThe **weak topology** on $X$ is the coarsest topology making every $\\varphi \\in X^*$ continuous. The **weak-* topology** on $X^*$ is the coarsest making evaluations $\\varphi \\mapsto \\varphi(x)$ continuous for each $x \\in X$.\n\n**Banach-Alaoglu**: the closed unit ball of $X^*$ is **weak-* compact**. This is the basic compactness theorem of functional analysis — bounded sequences in $X^*$ have weak-* convergent subnets.\n\nThese notions look abstract but are everywhere in PDE existence theory, calculus of variations, and probability (the weak-* topology on probability measures).\n\n## Where this leaves us\n\nThree big results, all powered by Hahn-Banach:\n\n1. **Separation of points**: $X^*$ is rich enough to detect all of $X$.\n2. **Reflexivity** distinguishes \"nice\" Banach spaces ($L^p, 1 < p < \\infty$, Hilbert) from \"harder\" ones ($L^1, L^\\infty, C[a,b]$).\n3. **Geometric separation**: every duality theorem in optimisation traces back to this.\n\nNext: the three \"big theorems\" of functional analysis (open mapping, closed graph, uniform boundedness), which are about the structure of bounded operators rather than functionals.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nConway, J.B. (2007) *A Course in Functional Analysis*. 2nd edn. New York, NY: Springer New York. doi:[10.1007/978-1-4757-4383-8](https://doi.org/10.1007/978-1-4757-4383-8) — chs. III–IV (Hahn–Banach and its geometric consequences).\n",
       "metadata": {}
     }
   ]

@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 4,
+      "execution_count": 18,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "/* Verify: ∮ ω on unit circle = 2π */\nP_ang : -y / (x^2 + y^2)$\nQ_ang : x / (x^2 + y^2)$\nP_t : subst([x = cos(t), y = sin(t)], P_ang)$\nQ_t : subst([x = cos(t), y = sin(t)], Q_ang)$\nintegrand : P_t * (-sin(t)) + Q_t * cos(t)$\nresult : integrate(integrand, t, 0, 2*%pi)$\nprint(\"∮ ω = \", result, \" = 2π\")$\nprint(\"dω = 0 on punctured plane, but the integral around 0 is 2π —\")$\nprint(\"topology is non-trivial (S¹ ⊂ ℝ² \\\\ {0} doesn't bound).\")$",
       "metadata": {},
-      "execution_count": 5,
+      "execution_count": 19,
       "outputs": [
         {
           "name": "stdout",
@@ -44,20 +44,20 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## The integral theorems unified\n\nSpecial cases of $\\int_M d\\omega = \\int_{\\partial M} \\omega$:\n\n| Theorem | $M$ | $\\omega$ | $d\\omega$ |\n|---------|-----|----------|-----------|\n| FTC | $[a, b]$ | $f$ (a 0-form) | $f'\\,dx$ |\n| Green | 2D region $D$ | $P\\,dx + Q\\,dy$ | $(\\partial Q/\\partial x - \\partial P/\\partial y)\\,dx \\wedge dy$ |\n| Stokes (3D) | oriented surface $S$ | $\\mathbf{F} \\cdot d\\mathbf{r}$ | $(\\nabla \\times \\mathbf{F}) \\cdot d\\mathbf{S}$ |\n| Divergence | 3D region $V$ | $\\mathbf{F} \\cdot d\\mathbf{S}$ (a 2-form) | $\\nabla \\cdot \\mathbf{F}\\,dV$ |\n| Gauss-Bonnet | closed 2-manifold | curvature 2-form | (combinatorial Euler characteristic) |\n\nAll are reformulations of \"$\\int d\\omega = \\int \\omega$ on the boundary\". The classical formulations (Stage 2/06) get to use specific operations like grad/div/curl because in 3D those line up with $d$ on 0/1/2-forms.\n\n## Verifying generalised Stokes [S+N]\n\nTake a 2-form $\\omega = x\\,dy \\wedge dz$ on $\\mathbb{R}^3$. Its exterior derivative:\n\n$$d\\omega = dx \\wedge dy \\wedge dz \\quad (\\text{volume form on } \\mathbb{R}^3).$$\n\nFor any region $V$ with boundary $\\partial V$, the divergence theorem says\n\n$$\\int_V dx \\wedge dy \\wedge dz = \\int_{\\partial V} x\\,dy \\wedge dz.$$\n\nTake $V$ = unit ball, $\\partial V$ = unit sphere. LHS = volume = $4\\pi/3$. Compute RHS:\n",
+      "source": "## The integral theorems unified\n\nSpecial cases of $\\int_M d\\omega = \\int_{\\partial M} \\omega$:\n\n| Theorem | $M$ | $\\omega$ | $d\\omega$ |\n|---------|-----|----------|-----------|\n| FTC | $[a, b]$ | $f$ (a 0-form) | $f'\\,dx$ |\n| Green | 2D region $D$ | $P\\,dx + Q\\,dy$ | $(\\partial Q/\\partial x - \\partial P/\\partial y)\\,dx \\wedge dy$ |\n| Stokes (3D) | oriented surface $S$ | $\\mathbf{F} \\cdot d\\mathbf{r}$ | $(\\nabla \\times \\mathbf{F}) \\cdot d\\mathbf{S}$ |\n| Divergence | 3D region $V$ | $\\mathbf{F} \\cdot d\\mathbf{S}$ (a 2-form) | $\\nabla \\cdot \\mathbf{F}\\,dV$ |\n\nGauss-Bonnet is deliberately absent. It is proved *using* Stokes and the structure equations, but it is not an instance of the theorem: a closed surface has empty boundary, so an exact $K\\,dA$ would integrate to $0$ — whereas $\\int_{S^2} K\\,dA = 4\\pi$.\n\nAll of the above are reformulations of \"$\\int d\\omega = \\int \\omega$ on the boundary\". The classical formulations (Stage 2/06) get to use specific operations like grad/div/curl because in 3D those line up with $d$ on 0/1/2-forms.\n\n## Verifying generalised Stokes [S+N]\n\nTake a 2-form $\\omega = x\\,dy \\wedge dz$ on $\\mathbb{R}^3$. Its exterior derivative:\n\n$$d\\omega = dx \\wedge dy \\wedge dz \\quad (\\text{volume form on } \\mathbb{R}^3).$$\n\nFor any region $V$ with boundary $\\partial V$, the divergence theorem says\n\n$$\\int_V dx \\wedge dy \\wedge dz = \\int_{\\partial V} x\\,dy \\wedge dz.$$\n\nTake $V$ = unit ball, $\\partial V$ = unit sphere with the **outward** orientation. LHS = volume = $4\\pi/3$. Compute RHS — watching the orientation, which is where this computation is easy to get wrong by a sign:\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
-      "source": "/* RHS: ∫_S² x dy ∧ dz where x is the x-coordinate. Parametrise S² and compute. */\n/* Spherical: x = sin(v) cos(u), y = sin(v) sin(u), z = cos(v) */\n/* dy = ∂y/∂u du + ∂y/∂v dv; dz = ∂z/∂u du + ∂z/∂v dv;\n   dy ∧ dz coefficient = ∂y/∂u · ∂z/∂v - ∂y/∂v · ∂z/∂u */\ny_par : sin(v) * sin(u)$\nz_par : cos(v)$\ndy_du : diff(y_par, u)$  dy_dv : diff(y_par, v)$\ndz_du : diff(z_par, u)$  dz_dv : diff(z_par, v)$\ndy_dz : ratsimp(dy_du * dz_dv - dy_dv * dz_du)$\nprint(\"dy ∧ dz on S² =\", dy_dz, \"du ∧ dv\")$\nx_par : sin(v) * cos(u)$\nintegrand : x_par * dy_dz$\nprint(\"Integrand x · (dy ∧ dz) =\", trigsimp(integrand))$\nRHS : integrate(integrate(integrand, u, 0, 2*%pi), v, 0, %pi)$\nprint(\"RHS ∫_S² x dy ∧ dz =\", RHS)$\nprint(\"LHS volume of unit ball = 4π/3 =\", float(4*%pi/3))$",
+      "source": "/* RHS: ∫_S² x dy ∧ dz where x is the x-coordinate. Parametrise S² and compute. */\n/* Spherical: x = sin(v) cos(u), y = sin(v) sin(u), z = cos(v) */\n/* dy = ∂y/∂u du + ∂y/∂v dv; dz = ∂z/∂u du + ∂z/∂v dv;\n   dy ∧ dz = (∂y/∂u · ∂z/∂v - ∂y/∂v · ∂z/∂u) du ∧ dv.\n\n   Orientation matters here.  ∂r/∂u × ∂r/∂v = -sin(v) · r̂ points INWARD,\n   so (u, v) is the negatively-oriented chart for the outward-oriented\n   sphere.  The outward orientation is (v, u), i.e. dv ∧ du = -du ∧ dv,\n   hence the minus sign on the integrand below. */\ny_par : sin(v) * sin(u)$\nz_par : cos(v)$\ndy_du : diff(y_par, u)$  dy_dv : diff(y_par, v)$\ndz_du : diff(z_par, u)$  dz_dv : diff(z_par, v)$\ndy_dz : ratsimp(dy_du * dz_dv - dy_dv * dz_du)$\nprint(\"dy ∧ dz on S² =\", dy_dz, \"du ∧ dv\")$\nx_par : sin(v) * cos(u)$\nintegrand : -x_par * dy_dz$   /* minus: outward orientation dv ∧ du */\nprint(\"Integrand x · (dy ∧ dz), outward-oriented =\", trigsimp(integrand))$\nRHS : integrate(integrate(integrand, u, 0, 2*%pi), v, 0, %pi)$\nprint(\"RHS ∫_S² x dy ∧ dz =\", RHS)$\nprint(\"LHS volume of unit ball = 4π/3 =\", float(4*%pi/3))$",
       "metadata": {},
-      "execution_count": 6,
+      "execution_count": 20,
       "outputs": [
         {
           "name": "stdout",
           "output_type": "stream",
           "text": [
-            "dy ∧ dz on S² = -(cos(u)*sin(v)^2) du ∧ dv\nIntegrand x · (dy ∧ dz) = -(cos(u)^2*sin(v)^3)\nRHS ∫_S² x dy ∧ dz = -((4*%pi)/3)\nLHS volume of unit ball = 4π/3 = 4.1887902047863905"
+            "dy ∧ dz on S² = -(cos(u)*sin(v)^2) du ∧ dv\nIntegrand x · (dy ∧ dz), outward-oriented = cos(u)^2*sin(v)^3\nRHS ∫_S² x dy ∧ dz = (4*%pi)/3\nLHS volume of unit ball = 4π/3 = 4.1887902047863905"
           ]
         }
       ]
@@ -65,6 +65,11 @@
     {
       "cell_type": "markdown",
       "source": "Both sides $= 4\\pi/3$. The generalised Stokes theorem holds — and it's the same statement as the divergence theorem from Stage 2/06, just expressed in form-language.\n\n## Why forms?\n\nThe form formulation is \"just\" the multivariable calculus of Stage 2 — but it has *crucial* advantages:\n\n- **Coordinate-free**: $d$ commutes with pullbacks, so $\\int_M d\\omega = \\int_{\\partial M} \\omega$ is true *intrinsically*.\n- **Generalises** to manifolds and other dimensions seamlessly. Stokes in any dimension is just a special case.\n- **Topological**: closed-not-exact forms detect the topology of $M$.\n- **Computational**: cohomology gives finite invariants of infinite-dimensional spaces.\n\nThis is why differential forms have replaced classical vector calculus as the language of high-level mathematics and physics.\n\n## What's next\n\nForms gave us integration. Next we add **metric structure** — Riemannian geometry — which lets us measure lengths, angles, and curvature on manifolds. Then we'll see how curvature interacts with topology (Gauss-Bonnet) and with motion (geodesics).\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nLee, J.M. (2012) *Introduction to Smooth Manifolds*. 2nd edn. New York, NY: Springer New York. doi:[10.1007/978-1-4419-9982-5](https://doi.org/10.1007/978-1-4419-9982-5) — ch. 16, *Integration on Manifolds*.\n",
       "metadata": {}
     }
   ]

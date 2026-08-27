@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 28,
+      "execution_count": 64,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "f(x) := sin(x)$\nx0 : 1.0$\nh_vals : [1.0, 0.5, 0.1, 0.01, 0.001, 0.0001]$\nsecants : map(lambda([h], float((f(x0 + h) - f(x0)) / h)), h_vals)$\n\nprint(\"h values:        \", h_vals)$\nprint(\"secant slopes:   \", secants)$\nprint(\"true derivative: cos(1) =\", float(cos(x0)))$",
       "metadata": {},
-      "execution_count": 29,
+      "execution_count": 65,
       "outputs": [
         {
           "name": "stdout",
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "x_grid : np_to_list(np_linspace(-0.5, 2.5, 200))$\ny_grid : map(lambda([x], float(f(x))), x_grid)$\nderiv_x0 : float(cos(x0))$\ny0 : float(f(x0))$\n\n/* tangent: y = y0 + deriv*(x - x0) */\ny_tangent : map(lambda([x], y0 + deriv_x0 * (x - x0)), x_grid)$\n/* one secant for h=0.5 */\nh_show : 0.5$\nslope_sec : float((f(x0 + h_show) - y0) / h_show)$\ny_secant : map(lambda([x], y0 + slope_sec * (x - x0)), x_grid)$\n\nax_draw2d(\n  color=\"blue\", line_width=2, name=\"f(x) = sin(x)\",\n  lines(x_grid, y_grid),\n  color=\"green\", line_width=1, name=\"secant (h = 0.5)\",\n  lines(x_grid, y_secant),\n  color=\"red\", line_width=2, name=\"tangent (h → 0)\",\n  lines(x_grid, y_tangent),\n  marker_size=6, color=\"black\",\n  points([x0, x0 + h_show], [y0, float(f(x0 + h_show))]),\n  title=\"As h → 0 the secant rotates into the tangent\",\n  xlabel=\"x\", ylabel=\"y\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 30,
+      "execution_count": 66,
       "outputs": [
         {
           "data": {
@@ -73,7 +73,7 @@
       "cell_type": "code",
       "source": "g_sym : x^3 - 2*x$\na_pt : 0$ b_pt : 2$\ng_a : subst(x = a_pt, g_sym)$\ng_b : subst(x = b_pt, g_sym)$\nchord_slope : (g_b - g_a) / (b_pt - a_pt)$\nprint(\"chord slope =\", chord_slope)$\n\ng_prime : diff(g_sym, x)$\nprint(\"g'(x) =\", g_prime)$\nc_solns : solve(g_prime = chord_slope, x)$\nprint(\"c such that g'(c) = chord slope:\", c_solns)$",
       "metadata": {},
-      "execution_count": 31,
+      "execution_count": 67,
       "outputs": [
         {
           "name": "stdout",
@@ -93,7 +93,7 @@
       "cell_type": "code",
       "source": "g_func(x) := x^3 - 2*x$\nx_g : np_to_list(np_linspace(-0.2, 2.2, 200))$\ny_g : map(lambda([x], float(g_func(x))), x_g)$\n\nc_val : float(rhs(c_solns[2]))$  /* the positive root in (0, 2) */\nslope_val : float(chord_slope)$\ng_c : float(g_func(c_val))$\n\ny_chord   : map(lambda([x], float(g_a) + slope_val * (x - a_pt)), x_g)$\ny_tan_par : map(lambda([x], g_c     + slope_val * (x - c_val)), x_g)$\n\nax_draw2d(\n  color=\"blue\", line_width=2, name=\"g(x) = x³ - 2x\",\n  lines(x_g, y_g),\n  color=\"green\", line_width=1, name=\"chord\",\n  lines(x_g, y_chord),\n  color=\"red\", line_width=2, name=\"tangent at c (parallel to chord)\",\n  lines(x_g, y_tan_par),\n  marker_size=8, color=\"black\", name=\"(a, g(a)), (b, g(b))\",\n  points([float(a_pt), float(b_pt)], [float(g_a), float(g_b)]),\n  marker_size=8, color=\"orange\", name=\"(c, g(c))\",\n  points([c_val], [g_c]),\n  title=\"Mean Value Theorem — c exists where tangent ∥ chord\",\n  xlabel=\"x\", ylabel=\"g(x)\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 32,
+      "execution_count": 68,
       "outputs": [
         {
           "data": {
@@ -115,7 +115,7 @@
       "cell_type": "code",
       "source": "f_taylor : exp(x)$\nn_terms : [1, 2, 4, 6]$\nexpansions : map(lambda([N], taylor(f_taylor, x, 0, N)), n_terms)$\nfor i : 1 thru length(n_terms) do\n  print(\"P_\", n_terms[i], \"(x) =\", expansions[i])$",
       "metadata": {},
-      "execution_count": 33,
+      "execution_count": 69,
       "outputs": [
         {
           "name": "stdout",
@@ -135,7 +135,7 @@
       "cell_type": "code",
       "source": "x_t : np_to_list(np_linspace(-2, 2, 200))$\ny_truth : map(lambda([x], float(exp(x))), x_t)$\ny_p1 : map(lambda([xx], float(subst(x = xx, expand(expansions[1])))), x_t)$\ny_p2 : map(lambda([xx], float(subst(x = xx, expand(expansions[2])))), x_t)$\ny_p4 : map(lambda([xx], float(subst(x = xx, expand(expansions[3])))), x_t)$\ny_p6 : map(lambda([xx], float(subst(x = xx, expand(expansions[4])))), x_t)$\n\nax_draw2d(\n  color=\"black\", line_width=2, name=\"e^x (truth)\",\n  lines(x_t, y_truth),\n  color=\"red\", line_width=1, name=\"P₁\",\n  lines(x_t, y_p1),\n  color=\"orange\", line_width=1, name=\"P₂\",\n  lines(x_t, y_p2),\n  color=\"green\", line_width=1, name=\"P₄\",\n  lines(x_t, y_p4),\n  color=\"blue\", line_width=1, name=\"P₆\",\n  lines(x_t, y_p6),\n  title=\"Taylor approximations of e^x at 0 — error shrinks with order\",\n  xlabel=\"x\", ylabel=\"y\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 34,
+      "execution_count": 70,
       "outputs": [
         {
           "data": {
@@ -157,7 +157,7 @@
       "cell_type": "code",
       "source": "M : float(exp(2))$  /* sup |e^ξ| on [0, 2] */\nx_eval : 2.0$\nn_orders : [1, 2, 4, 6, 8, 10]$\nerrs_actual : []$ errs_bound : []$\nfor n in n_orders do block([Pn, val_Pn, err, bnd],\n  Pn : taylor(exp(x), x, 0, n),\n  val_Pn : float(subst(x = x_eval, expand(Pn))),\n  err : abs(float(exp(x_eval)) - val_Pn),\n  bnd : M * x_eval^(n+1) / float((n+1)!),\n  errs_actual : endcons(err, errs_actual),\n  errs_bound  : endcons(bnd, errs_bound))$\nprint(\"n:                \", n_orders)$\nprint(\"actual |R_n(2)|:  \", errs_actual)$\nprint(\"Lagrange bound:   \", errs_bound)$",
       "metadata": {},
-      "execution_count": 35,
+      "execution_count": 71,
       "outputs": [
         {
           "name": "stdout",
@@ -177,7 +177,7 @@
       "cell_type": "code",
       "source": "x_pat : np_to_list(np_linspace(-0.3, 0.3, 2000))$\ny_pat : map(lambda([x], if x = 0.0 then 0.0 else float(x*x*sin(1/x))), x_pat)$\n\nax_draw2d(\n  color=\"blue\", line_width=1, name=\"x² sin(1/x)\",\n  lines(x_pat, y_pat),\n  title=\"Differentiable everywhere, but f'(0) defined while f' itself is discontinuous\",\n  xlabel=\"x\", ylabel=\"f(x)\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 36,
+      "execution_count": 72,
       "outputs": [
         {
           "data": {
@@ -193,6 +193,11 @@
     {
       "cell_type": "markdown",
       "source": "The Mean Value Theorem and Taylor's theorem are the two engines that drive most of single-variable calculus — error bounds for numerical methods, optimisation conditions, the inverse function theorem, and the asymptotic analysis of all sorts of approximations.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nAbbott, S. (2015) *Understanding Analysis*. 2nd edn. New York, NY: Springer New York. doi:[10.1007/978-1-4939-2712-8](https://doi.org/10.1007/978-1-4939-2712-8) — ch. 5, *The Derivative*.\n",
       "metadata": {}
     }
   ]

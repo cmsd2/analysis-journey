@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 11,
+      "execution_count": 31,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "u : x^2 - y^2$\nv : 2*x*y$\nprint(\"∂u/∂x =\", diff(u, x), \"  ∂v/∂y =\", diff(v, y))$\nprint(\"∂u/∂y =\", diff(u, y), \"  -∂v/∂x =\", -diff(v, x))$\nprint(\"CR holds:\", is(equal(diff(u,x), diff(v,y))) and is(equal(diff(u,y), -diff(v,x))))$\nprint()$\nprint(\"f'(z) = ∂u/∂x + i ∂v/∂x =\", diff(u, x), \"+\", diff(v, x), \"i = 2(x + iy) = 2z ✓\")$",
       "metadata": {},
-      "execution_count": 12,
+      "execution_count": 32,
       "outputs": [
         {
           "name": "stdout",
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "u_conj : x$  v_conj : -y$\nprint(\"For f(z) = z̄: ∂u/∂x =\", diff(u_conj, x), \"  ∂v/∂y =\", diff(v_conj, y))$\nprint(\"CR fails — z̄ is not holomorphic, anywhere.\")$",
       "metadata": {},
-      "execution_count": 13,
+      "execution_count": 33,
       "outputs": [
         {
           "name": "stdout",
@@ -71,7 +71,7 @@
       "cell_type": "code",
       "source": "u_check : x^2 - y^2$\nlaplacian_u : diff(u_check, x, 2) + diff(u_check, y, 2)$\nprint(\"Δu for u = x² - y²:\", laplacian_u)$\nprint(\"→ harmonic ✓\")$\nprint()$\nv_check : 2*x*y$\nlaplacian_v : diff(v_check, x, 2) + diff(v_check, y, 2)$\nprint(\"Δv for v = 2xy:\", laplacian_v)$\nprint(\"→ harmonic ✓\")$",
       "metadata": {},
-      "execution_count": 14,
+      "execution_count": 34,
       "outputs": [
         {
           "name": "stdout",
@@ -91,7 +91,7 @@
       "cell_type": "code",
       "source": "/* Grid of horizontal/vertical lines in the strip 0 < Re z < 1.5, -1 < Im z < 1 */\nn_pts : 80$\nxs : np_to_list(np_linspace(0.1, 1.5, n_pts))$\nys : np_to_list(np_linspace(-1, 1, n_pts))$\n\n/* Vertical line at x = 0.5: image under z² = (x²-y²) + i(2xy) at fixed x */\nout_x_v_re : map(lambda([yy], 0.5*0.5 - yy*yy), ys)$\nout_x_v_im : map(lambda([yy], 2*0.5*yy), ys)$\nout_x_h_re : map(lambda([yy], 1.0*1.0 - yy*yy), ys)$\nout_x_h_im : map(lambda([yy], 2*1.0*yy), ys)$\nout_y_h_re : map(lambda([xx], xx*xx - 0.5*0.5), xs)$\nout_y_h_im : map(lambda([xx], 2*xx*0.5), xs)$\n\nax_draw2d(\n  color=\"blue\", line_width=2, name=\"image of x = 0.5\",\n  lines(out_x_v_re, out_x_v_im),\n  color=\"green\", line_width=2, name=\"image of x = 1.0\",\n  lines(out_x_h_re, out_x_h_im),\n  color=\"red\", line_width=2, name=\"image of y = 0.5\",\n  lines(out_y_h_re, out_y_h_im),\n  title=\"Image of grid lines under z² — parabolas\",\n  xlabel=\"Re\", ylabel=\"Im\",\n  grid=true, aspect_ratio=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 15,
+      "execution_count": 35,
       "outputs": [
         {
           "data": {
@@ -106,7 +106,12 @@
     },
     {
       "cell_type": "markdown",
-      "source": "**Conformality**: holomorphic functions with $f'(z) \\ne 0$ preserve angles. The intersecting grid lines stay perpendicular after transformation. This is a geometric consequence of CR — and underpins the conformal-mapping notebook (#7).\n\n## Why holomorphy is so much stronger than $C^\\infty$\n\nThree foreshadowing facts (proven in coming notebooks):\n\n- **Holomorphic ⇒ $C^\\infty$**: a single complex derivative implies infinitely many.\n- **Holomorphic ⇒ analytic**: locally, $f$ equals its Taylor series.\n- **Identity theorem**: if $f, g$ are holomorphic and agree on a set with a limit point, they're equal everywhere on the connected component.\n\nNone of these has a real analogue. Smooth real functions are *much* more permissive; holomorphic complex functions are bound by an extraordinary internal coherence.\n",
+      "source": "**Conformality**: holomorphic functions with $f'(z) \\ne 0$ preserve angles. The intersecting grid lines stay perpendicular after transformation. This is a geometric consequence of CR — and underpins the conformal-mapping notebook (#7).\n\n## Why holomorphy is so much stronger than $C^\\infty$\n\nThree foreshadowing facts (proven in coming notebooks):\n\n- **Holomorphic ⇒ $C^\\infty$**: a single complex derivative implies infinitely many.\n- **Holomorphic ⇒ analytic**: locally, $f$ equals its Taylor series.\n- **Identity theorem**: if $f, g$ are holomorphic on a domain and agree on a set having a limit point *in that domain*, they're equal on the whole connected component. The limit point must be interior: $\\sin(\\pi/z)$ vanishes at every $z = 1/n$, and those accumulate at $0$ — but $0 \\notin \\mathbb{C} \\setminus \\{0\\}$, and $\\sin(\\pi/z)$ is certainly not identically zero.\n\nNone of these has a real analogue. Smooth real functions are *much* more permissive; holomorphic complex functions are bound by an extraordinary internal coherence.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nStein, E.M. and Shakarchi, R. (2003) *Complex Analysis*. Princeton Lectures in Analysis II. Princeton, NJ: Princeton University Press — ch. 1, *Preliminaries to Complex Analysis*.\n",
       "metadata": {}
     }
   ]

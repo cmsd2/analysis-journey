@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 13,
+      "execution_count": 29,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "theta_grid : np_to_list(np_linspace(0, 2*float(%pi), 200))$\ndisc_x : map(lambda([t], cos(t)), theta_grid)$\ndisc_y : map(lambda([t], sin(t)), theta_grid)$\n\nax_draw2d(\n  color=\"blue\", line_width=2, name=\"∂B₁(0) — boundary not in B₁\",\n  lines(disc_x, disc_y),\n  marker_size=4, color=\"lightblue\", name=\"interior\",\n  points(np_to_list(np_scale(0.7, ndarray(disc_x))),\n         np_to_list(np_scale(0.7, ndarray(disc_y)))),\n  title=\"Open ball B_1(0) in ℝ² — disc, boundary excluded\",\n  xlabel=\"x₁\", ylabel=\"x₂\",\n  aspect_ratio=true, grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 14,
+      "execution_count": 30,
       "outputs": [
         {
           "data": {
@@ -46,14 +46,14 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## Open vs closed: the boundary changes the type\n\nA set $S$ is **closed** iff its complement is open, equivalently iff every convergent sequence in $S$ has its limit in $S$.\n\n- The closed disc $\\overline{B_1(0)} = \\{x : \\|x\\| \\le 1\\}$ is closed (it contains its boundary).\n- $B_1(0)$ is open (it doesn't).\n- $\\{x : \\|x\\| = 1\\}$ alone (just the circle) is closed.\n- $\\{x : 0 < \\|x\\| < 1\\}$ (annulus minus origin) is open but neither open *nor* closed if we make it $\\{0 < \\|x\\| \\le 1\\}$.\n\nA set can be *neither* open nor closed — most subsets of $\\mathbb{R}^n$ are like that.\n\n## Compactness — Heine-Borel in $\\mathbb{R}^n$\n\nIn **finite-dimensional** spaces, $K \\subseteq \\mathbb{R}^n$ is compact iff $K$ is **closed and bounded**. (In infinite dimensions this fails — closed bounded sets need not be compact.)\n\nCompactness is the property that makes most theorems work:\n\n- Continuous functions on compact sets attain their max and min.\n- Continuous functions on compact sets are uniformly continuous.\n- Sequences in compact sets have convergent subsequences (Bolzano-Weierstrass).\n\nVisualise some compact and non-compact sets in $\\mathbb{R}^2$:\n",
+      "source": "## Open vs closed: the boundary changes the type\n\nA set $S$ is **closed** iff its complement is open, equivalently iff every convergent sequence in $S$ has its limit in $S$.\n\n- The closed disc $\\overline{B_1(0)} = \\{x : \\|x\\| \\le 1\\}$ is closed (it contains its boundary).\n- $B_1(0)$ is open (it doesn't).\n- $\\{x : \\|x\\| = 1\\}$ alone (just the circle) is closed.\n- $\\{x : 0 < \\|x\\| < 1\\}$ (the *punctured* open disc) is open — removing a point from an open set leaves it open.\n- $\\{x : 0 < \\|x\\| \\le 1\\}$ (puncture the *closed* disc instead) is **neither** open nor closed: it isn't open because no ball around a boundary point stays inside, and it isn't closed because the sequence $x_k = (1/k, 0, \\ldots)$ lies in it but its limit $0$ does not.\n\nA set can be *neither* open nor closed — most subsets of $\\mathbb{R}^n$ are like that.\n\n## Compactness — Heine-Borel in $\\mathbb{R}^n$\n\nIn **finite-dimensional** spaces, $K \\subseteq \\mathbb{R}^n$ is compact iff $K$ is **closed and bounded**. (In infinite dimensions this fails — closed bounded sets need not be compact.)\n\nCompactness is the property that makes most theorems work:\n\n- Continuous functions on compact sets attain their max and min.\n- Continuous functions on compact sets are uniformly continuous.\n- Sequences in compact sets have convergent subsequences (Bolzano-Weierstrass).\n\nVisualise some compact and non-compact sets in $\\mathbb{R}^2$:\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
       "source": "/* The closed unit square (compact) */\nsq_x : [-1, 1, 1, -1, -1]$\nsq_y : [-1, -1, 1, 1, -1]$\n\n/* A bounded but not closed set: the open unit ball, indicated by dashed boundary */\n/* And an unbounded but closed set: the half-plane y >= 0 */\n\nax_draw2d(\n  color=\"green\", line_width=2, name=\"closed square: compact\",\n  lines(sq_x, sq_y),\n  color=\"red\", dash=\"dash\", line_width=2, name=\"open disc: bounded but not closed\",\n  lines(map(lambda([t], 0.6*cos(t)), theta_grid),\n        map(lambda([t], 0.6*sin(t)), theta_grid)),\n  color=\"orange\", line_width=2, name=\"ray (unbounded but closed)\",\n  points([2, 5], [2, 2]),\n  title=\"Compactness in ℝ² — closed AND bounded\",\n  xlabel=\"x₁\", ylabel=\"x₂\",\n  grid=true, aspect_ratio=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 15,
+      "execution_count": 31,
       "outputs": [
         {
           "data": {
@@ -75,7 +75,7 @@
       "cell_type": "code",
       "source": "theta_grid : np_to_list(np_linspace(0, 2*float(%pi), 400))$\nb2_x : map(lambda([t], cos(t)), theta_grid)$\nb2_y : map(lambda([t], sin(t)), theta_grid)$\n\n/* l^infty unit ball: square [-1, 1]^2 */\nbinf_x : [-1, 1, 1, -1, -1]$\nbinf_y : [-1, -1, 1, 1, -1]$\n\n/* l^1 unit ball: diamond |x|+|y|<=1 */\nb1_x : [1, 0, -1, 0, 1]$\nb1_y : [0, 1, 0, -1, 0]$\n\nax_draw2d(\n  color=\"blue\", line_width=2, name=\"ℓ² (Euclidean)\",\n  lines(b2_x, b2_y),\n  color=\"green\", line_width=2, name=\"ℓ¹ (Manhattan)\",\n  lines(b1_x, b1_y),\n  color=\"red\", line_width=2, name=\"ℓ^∞ (sup)\",\n  lines(binf_x, binf_y),\n  title=\"Unit balls of three equivalent norms on ℝ²\",\n  xlabel=\"x₁\", ylabel=\"x₂\",\n  grid=true, aspect_ratio=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 16,
+      "execution_count": 32,
       "outputs": [
         {
           "data": {
@@ -90,7 +90,12 @@
     },
     {
       "cell_type": "markdown",
-      "source": "Each ball is contained in some scalar multiple of any other — that's all \"topologically equivalent\" requires. Continuity, compactness, completeness are insensitive to which norm you pick.\n\nIn **infinite-dimensional** spaces (function spaces) this fails — different norms produce genuinely different topologies. That's why functional analysis has so many distinct flavours: $L^1, L^2, L^\\infty, C^0, C^k, $ Sobolev spaces, ...\n\n## Connectedness\n\nA set is **connected** if it can't be split into two disjoint non-empty open subsets. In $\\mathbb{R}^n$ for \"nice\" sets, this is equivalent to **path-connectedness**: any two points can be joined by a continuous path.\n\nExamples in $\\mathbb{R}^2$:\n- A disc is connected.\n- Two disjoint discs together are not connected — two components.\n- The complement of a single point in $\\mathbb{R}^2$ is *still* connected (you can go around the missing point). In $\\mathbb{R}^1$, removing a point splits the line — connectedness depends on the dimension.\n\n## Why this all matters\n\nThe next two notebooks build directly on this:\n\n- **Continuity** in $\\mathbb{R}^n$ requires the open-set definition (or ε-δ in any equivalent norm).\n- **Differentiation** in $\\mathbb{R}^n$ depends on having an open neighbourhood to define the limit on.\n- **Integration** over a region needs the region to be (at least) measurable, with a well-defined boundary.\n\nWithout the topology, none of the rest happens.\n",
+      "source": "Each ball is contained in some scalar multiple of any other — that's all \"topologically equivalent\" requires. Continuity, compactness, completeness are insensitive to which norm you pick.\n\nIn **infinite-dimensional** spaces (function spaces) this fails — different norms produce genuinely different topologies. That's why functional analysis has so many distinct flavours: $L^1, L^2, L^\\infty, C^0, C^k, $ Sobolev spaces, ...\n\n## Connectedness\n\nA set $S$ is **connected** if it can't be split into two disjoint non-empty subsets that are open *in $S$* (its subspace topology). The relativisation matters: $[0,1]$ is connected, yet it is the union of the disjoint sets $[0, 1/2]$ and $(1/2, 1]$ — neither of which is open in $\\mathbb{R}$. In $\\mathbb{R}^n$ for \"nice\" sets, this is equivalent to **path-connectedness**: any two points can be joined by a continuous path.\n\nExamples in $\\mathbb{R}^2$:\n- A disc is connected.\n- Two disjoint discs together are not connected — two components.\n- The complement of a single point in $\\mathbb{R}^2$ is *still* connected (you can go around the missing point). In $\\mathbb{R}^1$, removing a point splits the line — connectedness depends on the dimension.\n\n## Why this all matters\n\nThe next two notebooks build directly on this:\n\n- **Continuity** in $\\mathbb{R}^n$ requires the open-set definition (or ε-δ in any equivalent norm).\n- **Differentiation** in $\\mathbb{R}^n$ depends on having an open neighbourhood to define the limit on.\n- **Integration** over a region needs the region to be (at least) measurable, with a well-defined boundary.\n\nWithout the topology, none of the rest happens.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nTao, T. (2016) *Analysis II*. 3rd edn. Singapore: Springer Singapore. doi:[10.1007/978-981-10-1804-6](https://doi.org/10.1007/978-981-10-1804-6) — ch. 1, *Metric spaces*.\n\nZorich, V.A. (2016) *Mathematical Analysis II*. 2nd edn. Berlin, Heidelberg: Springer Berlin Heidelberg. doi:[10.1007/978-3-662-48993-2](https://doi.org/10.1007/978-3-662-48993-2) — ch. 9, *Continuous Mappings (General Theory)* — §9.1 metric spaces, §9.2 topological spaces.\n",
       "metadata": {}
     }
   ]

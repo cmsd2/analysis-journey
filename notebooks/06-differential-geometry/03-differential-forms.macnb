@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 5,
+      "execution_count": 21,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "/* 1-form: ω = P dx + Q dy. dω = (Q_x - P_y) dx ∧ dy */\nP : x$\nQ : y$\ndQ_dx : diff(Q, x)$\ndP_dy : diff(P, y)$\nprint(\"ω = x dx + y dy\")$\nprint(\"dω = (∂Q/∂x - ∂P/∂y) dx ∧ dy = (\", dQ_dx, \"-\", dP_dy, \") dx ∧ dy =\", dQ_dx - dP_dy, \"(exact form, dω = 0 ✓)\")$\nprint()$\n/* Now ω = x dy - y dx — area element */\nP2 : -y$\nQ2 : x$\nprint(\"ω = -y dx + x dy\")$\nprint(\"dω = (∂Q/∂x - ∂P/∂y) dx ∧ dy = (\", diff(Q2, x), \"-\", diff(P2, y), \") dx ∧ dy =\",\n      diff(Q2, x) - diff(P2, y), \"  ⇒ dω = 2 dx ∧ dy (twice the area element)\")$",
       "metadata": {},
-      "execution_count": 6,
+      "execution_count": 22,
       "outputs": [
         {
           "name": "stdout",
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "/* Verify: d(r cos θ) ∧ d(r sin θ) coefficient */\nx_polar : r * cos(theta)$\ny_polar : r * sin(theta)$\n/* dx = ∂x/∂r dr + ∂x/∂θ dθ;  dy = similarly */\nax_dr : diff(x_polar, r)$\nax_dt : diff(x_polar, theta)$\nay_dr : diff(y_polar, r)$\nay_dt : diff(y_polar, theta)$\n/* Wedge: dx ∧ dy = (ax_dr ay_dt - ax_dt ay_dr) dr ∧ dθ */\njacobian : ratsimp(ax_dr * ay_dt - ax_dt * ay_dr)$\nprint(\"Φ*(dx ∧ dy) =\", jacobian, \"dr ∧ dθ\")$\nprint(\"(Polar Jacobian = r — same answer as Stage 2/05)\")$",
       "metadata": {},
-      "execution_count": 7,
+      "execution_count": 23,
       "outputs": [
         {
           "name": "stdout",
@@ -71,7 +71,7 @@
       "cell_type": "code",
       "source": "/* Verify closedness of the angular form */\nP_ang : -y / (x^2 + y^2)$\nQ_ang : x / (x^2 + y^2)$\ndP_dy : diff(P_ang, y)$\ndQ_dx : diff(Q_ang, x)$\nprint(\"dP/dy =\", ratsimp(dP_dy))$\nprint(\"dQ/dx =\", ratsimp(dQ_dx))$\nprint(\"dω = (dQ/dx - dP/dy) dx ∧ dy = \", ratsimp(dQ_dx - dP_dy), \"  → ω is closed ✓\")$",
       "metadata": {},
-      "execution_count": 8,
+      "execution_count": 24,
       "outputs": [
         {
           "name": "stdout",
@@ -85,6 +85,11 @@
     {
       "cell_type": "markdown",
       "source": "## Volume form on Riemannian manifolds\n\nA Riemannian metric $g$ (next notebook) determines a canonical **volume form** $\\omega_g \\in \\Omega^n(M)$. In local coordinates,\n\n$$\\omega_g = \\sqrt{\\det g_{ij}}\\,dx^1 \\wedge \\cdots \\wedge dx^n.$$\n\nFor Euclidean $\\mathbb{R}^n$ with the standard metric, $\\sqrt{\\det g} = 1$ and we get $dx^1 \\wedge \\cdots \\wedge dx^n$. On a curved space, $\\sqrt{\\det g}$ accounts for the local stretching.\n\nSpherical coordinates: $g = dr^2 + r^2\\,d\\theta^2 + r^2 \\sin^2 \\theta\\,d\\phi^2$, so $\\sqrt{\\det g} = r^2 \\sin\\theta$ — the volume element from Stage 2/05 falls out.\n\n## What's coming\n\nForms are the natural objects to integrate. The next notebook builds the integration theory: orientations, $\\int_M \\omega$, and the generalised Stokes theorem $\\int_M d\\omega = \\int_{\\partial M} \\omega$ that unifies every classical \"fundamental theorem of $\\nabla$\" we've seen.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nLee, J.M. (2012) *Introduction to Smooth Manifolds*. 2nd edn. New York, NY: Springer New York. doi:[10.1007/978-1-4419-9982-5](https://doi.org/10.1007/978-1-4419-9982-5) — ch. 14, *Differential Forms*.\n",
       "metadata": {}
     }
   ]

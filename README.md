@@ -1,6 +1,10 @@
 # Mathematical Analysis — A Journey
 
-A self-contained tour of mathematical analysis, built as a sequence of Maxima notebooks. The arc moves from the **real line** (single-variable analysis) to **$\mathbb{R}^n$** (multivariable / topology / vector calculus) to the **complex plane** (holomorphic functions, residues, conformal maps).
+[![Docs](https://img.shields.io/badge/docs-online-blue)](https://cmsd2.github.io/analysis-journey/)
+
+A self-contained tour of mathematical analysis, built as a sequence of Maxima notebooks. The arc moves from the **real line** (single-variable analysis) to **$\mathbb{R}^n$** (multivariable / topology / vector calculus) to the **complex plane** (holomorphic functions, residues, conformal maps), then rebuilds integration on **measure theory**, generalises linear algebra in **functional analysis**, and finally carries calculus onto curved spaces in **differential geometry**.
+
+Rendered notebooks are published at **<https://cmsd2.github.io/analysis-journey/>**.
 
 Each notebook combines **symbolic computation** (limits, derivatives, integrals, series) with **numerical experiments** (Riemann sums, convergence rates, contour integrals) and **visualisation** (functions, level sets, vector fields, complex-plane plots). When the symbolic-numeric bridge is the main idea, the row is marked [S+N].
 
@@ -49,6 +53,7 @@ Multivariable: the topology, calculus, and integration that classical real analy
 | 04 | [inverse-implicit-functions](notebooks/02-multivariable/04-inverse-implicit-functions.macnb) | [S+N] Inverse and implicit function theorems with concrete examples |
 | 05 | [multiple-integration](notebooks/02-multivariable/05-multiple-integration.macnb) | [S+N] Fubini, polar/spherical change of variables, Gaussian integral |
 | 06 | [vector-calculus-and-stokes](notebooks/02-multivariable/06-vector-calculus-and-stokes.macnb) | [S+N] Gradient/div/curl, Green/Stokes/divergence theorems |
+| 07 | [general-metric-spaces](notebooks/02-multivariable/07-general-metric-spaces.macnb) | Abstract metrics, completeness, completion, compactness ↔ sequential ↔ complete+totally bounded, continuity = preimages of open sets |
 
 ### Stage 3 — Complex Analysis
 
@@ -112,6 +117,24 @@ Read straight through — each stage builds on the last, and within each stage t
 A short "must-read" path through the whole journey:
 
 > 1.01 → 1.03 → 1.04 → 1.07 → 2.03 → 2.06 → 3.02 → 3.04 → 3.06 → 4.03 → 4.04 → 5.02 → 5.07 → 6.04 → 6.06
+
+## Building
+
+Notebooks are executed with [`aximar-mcp`](https://github.com/cmsd2/aximar) and exported to
+HTML with `maxima-nbconvert`; `docs/pages/` is committed and served by GitHub Pages.
+
+```
+./build.sh                 # execute every notebook, export HTML, regenerate the index
+./build.sh --no-exec       # re-export only, using the outputs already baked in
+./build.sh --pdf           # export PDF instead
+./build.sh notebooks/01-real-analysis/02-continuity.macnb   # just one
+```
+
+`make` does the same thing incrementally, rebuilding only the pages whose notebook
+changed; `make html` skips execution, and `make clean` removes `docs/pages`.
+
+Requires `aximar-mcp` on `PATH` and `uv` for the nbconvert venv. Executing a notebook
+needs `--allow-dangerous`, because every notebook calls `load()`.
 
 ## License
 

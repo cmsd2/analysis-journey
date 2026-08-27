@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 6,
+      "execution_count": 26,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "f_ex : x$\ng_ex : exp(x)$\nint_fg : integrate(abs(f_ex * g_ex), x, 0, 1)$\nnorm_f : sqrt(integrate(f_ex^2, x, 0, 1))$\nnorm_g : sqrt(integrate(g_ex^2, x, 0, 1))$\nprint(\"∫₀¹ x·e^x dx =\", float(int_fg))$\nprint(\"‖f‖_2 · ‖g‖_2 =\", float(norm_f * norm_g))$\nprint(\"Hölder/CS bound holds:\", float(int_fg) <= float(norm_f * norm_g))$",
       "metadata": {},
-      "execution_count": 7,
+      "execution_count": 27,
       "outputs": [
         {
           "name": "stdout",
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "print(\"‖x^{-1/2}‖_1 = ∫₀¹ x^{-1/2} dx =\")$\nintegrate(x^(-1/2), x, 0, 1);\nprint()$\n/* ∫_ε¹ 1/x dx = -log(ε) which → +∞ as ε → 0⁺ */\nprint(\"‖x^{-1/2}‖_2² = ∫_ε¹ 1/x dx = -log(ε), which diverges as ε → 0⁺.\")$\nprint(\"→ x^{-1/2} ∈ L¹ but not L²\")$",
       "metadata": {},
-      "execution_count": 8,
+      "execution_count": 28,
       "outputs": [
         {
           "name": "stdout",
@@ -71,7 +71,7 @@
       "cell_type": "code",
       "source": "/* Verify orthogonality: ∫₀¹ e^{2πi m x} · e^{-2πi n x} dx = δ_{m,n} */\nm_test : 1$ n_test : 2$\nresult : integrate(exp(2*%pi*%i*m_test*x) * exp(-2*%pi*%i*n_test*x), x, 0, 1)$\nprint(\"⟨e^{2πi·1·x}, e^{2πi·2·x}⟩ =\", result, \"(=0, orthogonal ✓)\")$\nprint()$\nresult_self : integrate(exp(2*%pi*%i*1*x) * exp(-2*%pi*%i*1*x), x, 0, 1)$\nprint(\"⟨e^{2πi·x}, e^{2πi·x}⟩ =\", result_self, \"(=1, unit norm ✓)\")$",
       "metadata": {},
-      "execution_count": 9,
+      "execution_count": 29,
       "outputs": [
         {
           "name": "stdout",
@@ -84,14 +84,14 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## Convexity and clipping\n\nA useful identity in $L^p$: $\\|f\\|_p$ is **monotone in $p$** under finite measure (and reverses for counting measure). Concretely, $L^p$ inclusions can be quantified via Jensen's inequality applied to $|f|^p$.\n\n## Examples of $L^p$ functions\n\nTwo ways a function can fail to be in $L^1([0, \\infty))$:\n- **Decay too slow at infinity**: $1/x$ on $[1, \\infty)$ has $\\int 1/x = \\infty$.\n- **Singular**: $1/\\sqrt{x}$ on $(0, 1]$ has $\\int 1/\\sqrt x = 2$ but $1/x$ has $\\int 1/x = \\infty$.\n\nA function being in *every* $L^p$ is a strong regularity condition: $e^{-x^2}$ on $\\mathbb{R}$ is in every $L^p$ (decays faster than any polynomial). Compactly-supported continuous functions are in every $L^p$.\n",
+      "source": "## Convexity and clipping\n\nOn a **probability** space ($\\mu(X) = 1$), $\\|f\\|_p$ is non-decreasing in $p$ — Jensen's inequality applied to $|f|^p$. On a general finite measure space the comparison picks up a factor, $\\|f\\|_p \\le \\mu(X)^{1/p - 1/q}\\,\\|f\\|_q$ for $p < q$, so it is only monotone after normalising. For counting measure the inequality runs the other way: $\\|f\\|_q \\le \\|f\\|_p$ when $p < q$.\n\n## Examples of $L^p$ functions\n\nTwo ways a function can fail to be in $L^1([0, \\infty))$:\n- **Decaying too slowly at infinity**: $\\int_1^\\infty dx/x = \\infty$.\n- **Blowing up too fast at a point**: $\\int_0^1 dx/x = \\infty$.\n\nThe borderline is delicate, and the same exponent falls on opposite sides at the two ends: $1/\\sqrt x$ *is* integrable near $0$ ($\\int_0^1 dx/\\sqrt x = 2$) but not near infinity, while $1/x^2$ is integrable near infinity but not near $0$.\n\nA function being in *every* $L^p$ is a strong regularity condition: $e^{-x^2}$ on $\\mathbb{R}$ is in every $L^p$ (decays faster than any polynomial). Compactly-supported continuous functions are in every $L^p$.\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
       "source": "/* Compute ‖e^{-x²}‖_p for various p */\nfor p in [1, 2, 3, 5] do\n  print(\"‖e^{-x²}‖_\", p, \" = (\",\n        float(integrate(exp(-p * x^2), x, -inf, inf)), \")^{1/\", p, \"} =\",\n        float(integrate(exp(-p * x^2), x, -inf, inf))^(1.0/p))$",
       "metadata": {},
-      "execution_count": 10,
+      "execution_count": 30,
       "outputs": [
         {
           "name": "stdout",
@@ -105,6 +105,11 @@
     {
       "cell_type": "markdown",
       "source": "## What $L^p$ buys us\n\nThe big picture:\n\n- $L^p$ for $p \\ge 1$ is a Banach space (complete normed space).\n- $L^2$ is a Hilbert space, with all the geometric tools that come with that.\n- Bounded linear operators between $L^p$ spaces have a rich theory (next stage).\n- DCT, Fubini, and the Lebesgue integral all live naturally in $L^1$.\n\nThe $L^p$ scale interpolates between $L^1$ (integrable) and $L^\\infty$ (essentially bounded), letting us match the right space to the problem at hand. A function that's just barely in $L^1$ might be safely in $L^2$; a function bounded but not integrable lives in $L^\\infty$ but not $L^1$.\n\nThe next notebook ties up the last loose end of multivariable Lebesgue: when can we exchange the order of integration in $\\int\\int f\\,d\\mu\\,d\\nu$?\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nAxler, S. (2020) *Measure, Integration & Real Analysis*. Cham: Springer International Publishing. doi:[10.1007/978-3-030-33143-6](https://doi.org/10.1007/978-3-030-33143-6) — ch. 7, *$L^p$ Spaces*.\n",
       "metadata": {}
     }
   ]

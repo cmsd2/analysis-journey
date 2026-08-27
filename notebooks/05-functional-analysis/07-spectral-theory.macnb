@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 5,
+      "execution_count": 28,
       "outputs": []
     },
     {
@@ -29,35 +29,35 @@
     },
     {
       "cell_type": "code",
-      "source": "/* A 4x4 Hermitian matrix */\nA_herm : ndarray(matrix(\n  [3.0, 1.0, 0.0, 0.0],\n  [1.0, 3.0, 1.0, 0.0],\n  [0.0, 1.0, 3.0, 1.0],\n  [0.0, 0.0, 1.0, 3.0]))$\n[evals, evecs] : np_eig(A_herm)$\nprint(\"Eigenvalues (all real, since A is Hermitian):\")$\nprint(np_to_list(evals))$\nprint()$\nprint(\"(Spectrum lies in the convex hull of diagonal — Gershgorin bound)\")$",
+      "source": "/* A 4x4 Hermitian matrix */\nA_herm : ndarray(matrix(\n  [3.0, 1.0, 0.0, 0.0],\n  [1.0, 3.0, 1.0, 0.0],\n  [0.0, 1.0, 3.0, 1.0],\n  [0.0, 0.0, 1.0, 3.0]))$\n[evals, evecs] : np_eig(A_herm)$\nprint(\"Eigenvalues (all real, since A is Hermitian):\")$\nprint(np_to_list(evals))$\nprint()$\nprint(\"(Gershgorin: each eigenvalue lies within the off-diagonal row sum\")$\nprint(\" of a diagonal entry — here within 2 of 3, so σ(A) ⊂ [1, 5])\")$",
       "metadata": {},
-      "execution_count": 6,
+      "execution_count": 29,
       "outputs": [
         {
           "name": "stdout",
           "output_type": "stream",
           "text": [
-            "Eigenvalues (all real, since A is Hermitian):\n[1.3819660112501055,2.3819660112501064,4.618033988749896,3.618033988749895]\n(Spectrum lies in the convex hull of diagonal — Gershgorin bound)"
+            "Eigenvalues (all real, since A is Hermitian):\n[1.3819660112501055,2.3819660112501064,4.618033988749896,3.618033988749895]\n(Gershgorin: each eigenvalue lies within the off-diagonal row sum\n of a diagonal entry — here within 2 of 3, so σ(A) ⊂ [1, 5])"
           ]
         }
       ]
     },
     {
       "cell_type": "markdown",
-      "source": "## Compact self-adjoint operators on Hilbert space\n\nFor compact self-adjoint $T$ on infinite-dimensional Hilbert space:\n\n$$T = \\sum_n \\lambda_n P_n, \\qquad \\lambda_n \\to 0,\\;\\;P_n = $ projection onto eigenspace of }\\lambda_n.$$\n\nSame structure as matrices, but only **countably many** non-zero eigenvalues, accumulating at 0 (which is always in the spectrum).\n\nA canonical example: the **integral operator on $L^2([0, 1])$** with symmetric kernel $K(x, y) = \\min(x, y) - x y$. The eigenfunctions are $\\sqrt{2} \\sin(n \\pi x)$ with eigenvalues $1/(n^2 \\pi^2)$.\n",
+      "source": "## Compact self-adjoint operators on Hilbert space\n\nFor compact self-adjoint $T$ on infinite-dimensional Hilbert space:\n\n$$T = \\sum_n \\lambda_n P_n, \\qquad \\lambda_n \\to 0,$$\n\nwhere $P_n$ is the orthogonal projection onto the eigenspace of $\\lambda_n$.\n\nSame structure as matrices, but only **countably many** non-zero eigenvalues, accumulating at 0 (which is always in the spectrum).\n\nA canonical example: the **integral operator on $L^2([0, 1])$** with symmetric kernel $K(x, y) = \\min(x, y) - x y$. The eigenfunctions are $\\sqrt{2} \\sin(n \\pi x)$ with eigenvalues $1/(n^2 \\pi^2)$.\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
-      "source": "/* Verify this kernel-eigenvalue claim by direct integration */\nn_test : 3$\nphi_n(x_, n) := sqrt(2) * sin(n * %pi * x_)$\nK_kernel(xv, yv) := min(xv, yv) - xv * yv$\n\n/* T φ_n = λ_n φ_n means ∫ K(x, y) φ_n(y) dy = λ_n φ_n(x).\n   Evaluate at x = 0.3, n = 3, expecting λ_3 = 1/(9 π²) ≈ 0.01125 */\nresult_at : float(integrate(K_kernel(0.3, y) * phi_n(y, 3), y, 0, 1))$\nexpected_lhs : (1.0 / (9 * float(%pi)^2)) * phi_n(0.3, 3)$\nprint(\"Tφ_3(0.3) =\", result_at)$\nprint(\"λ_3 · φ_3(0.3) =\", float(expected_lhs))$",
+      "source": "/* Verify this kernel-eigenvalue claim by direct integration */\nn_test : 3$\nphi_n(x_, n) := sqrt(2) * sin(n * %pi * x_)$\nK_kernel(xv, yv) := min(xv, yv) - xv * yv$\n\n/* T φ_n = λ_n φ_n means ∫₀¹ K(x, y) φ_n(y) dy = λ_n φ_n(x).\n   Maxima won't integrate min(x, y) symbolically, so split the range at y = x:\n     y ≤ x :  K(x, y) = y - x y = y (1 - x)\n     y ≥ x :  K(x, y) = x - x y = x (1 - y)                           */\nx0 : 0.3$\nlo : integrate(y * (1 - x0) * phi_n(y, n_test), y, 0, x0)$\nhi : integrate(x0 * (1 - y) * phi_n(y, n_test), y, x0, 1)$\nresult_at : float(lo + hi)$\nexpected_lhs : (1.0 / (n_test^2 * float(%pi)^2)) * phi_n(x0, n_test)$\nprint(\"Tφ_3(0.3) =\", result_at)$\nprint(\"λ_3 · φ_3(0.3) =\", float(expected_lhs))$",
       "metadata": {},
-      "execution_count": 7,
+      "execution_count": 30,
       "outputs": [
         {
           "name": "stdout",
           "output_type": "stream",
           "text": [
-            "rat: replaced 0.3 by 3/10 = 0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced 0.7 by 7/10 = 0.7\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced -0.09999999999999999 by -1/10 = -0.1\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced -0.09999999999999999 by -1/10 = -0.1\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced -0.3 by -3/10 = -0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced -0.3 by -3/10 = -0.3\nTφ_3(0.3) =\n           1.4142135623730951*'integrate(\n                              (min(0.3,y)-0.3*y)*sin(9.42477796076938*y),y,\n                              0.0,1.0)\nλ_3 · φ_3(0.3) = 0.0049198867630914946"
+            "rat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.8999999999999999 by 9/10 = 0.9\nrat: replaced 0.8999999999999999 by 9/10 = 0.9\nrat: replaced -0.8999999999999999 by -9/10 = -0.9\nrat: replaced 0.7 by 7/10 = 0.7\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.7 by 7/10 = 0.7\nrat: replaced 0.7 by 7/10 = 0.7\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.7 by 7/10 = 0.7\nrat: replaced 0.8999999999999999 by 9/10 = 0.9\nrat: replaced 0.8999999999999999 by 9/10 = 0.9\nrat: replaced -0.8999999999999999 by -9/10 = -0.9\nTφ_3(0.3) = 0.004919886763091484\nλ_3 · φ_3(0.3) = 0.0049198867630914946"
           ]
         }
       ]
@@ -71,7 +71,7 @@
       "cell_type": "code",
       "source": "/* Compute exp(A) for our 4x4 Hermitian via diagonalisation */\n[evals, U_evecs] : np_eig(A_herm)$\n/* Build diagonal exp(Λ) */\nexp_Lambda : np_zeros([4, 4])$\nfor i : 0 thru 3 do np_set(exp_Lambda, i, i, exp(np_ref(evals, i)))$\nexp_A_via_spectral : np_matmul(np_matmul(U_evecs, exp_Lambda),\n                               np_transpose(U_evecs))$\nexp_A_direct : np_expm(A_herm)$\nprint(\"exp(A) via spectral theorem (top-left 2x2):\")$\nprint(\"  [0,0] =\", np_ref(exp_A_via_spectral, 0, 0),\n      \"  vs np_expm =\", np_ref(exp_A_direct, 0, 0))$",
       "metadata": {},
-      "execution_count": 8,
+      "execution_count": 31,
       "outputs": [
         {
           "name": "stdout",
@@ -85,6 +85,11 @@
     {
       "cell_type": "markdown",
       "source": "## Unbounded self-adjoint — Stone's theorem\n\nMost operators in physics (Hamiltonians, momentum, position) are **unbounded** self-adjoint. They aren't defined on the whole Hilbert space, but on a dense **domain**.\n\n**Stone's theorem.** If $T$ is unbounded self-adjoint, then $\\{e^{i t T}\\}_{t \\in \\mathbb{R}}$ is a strongly-continuous one-parameter unitary group on the Hilbert space. Conversely, every such group has a unique self-adjoint generator.\n\nThis is **the** machinery of quantum dynamics: Schrödinger's equation $i\\partial_t \\psi = H\\psi$ with self-adjoint Hamiltonian $H$ has the unique solution $\\psi(t) = e^{-i t H} \\psi(0)$.\n\n## Where Stage 5 leaves us\n\nFunctional analysis closes the abstract loop:\n\n- **Banach spaces** — completeness, infinite dimensions, equivalence-of-norms breaks.\n- **Hilbert spaces** — geometry returns: orthogonality, projections, Riesz, Fourier.\n- **Bounded operators** — the morphisms of the category.\n- **Hahn-Banach** — the dual is rich enough.\n- **Three big theorems** — uniform structure forced by Baire category.\n- **Compact operators** — discrete spectrum, the matrix-like case.\n- **Spectral theorem** — diagonalisation in disguise, even for continuous spectrum.\n\nThe whole apparatus underpins modern PDE theory, quantum mechanics, signal processing, ergodic theory, and probability theory. With Stage 5 done, you have the tools to read the foundational chapters of any of those subjects.\n\nThe final stage (manifolds + diff geom) takes us in a different direction: instead of generalising linear algebra, we generalise calculus to curved spaces.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nHall, B.C. (2013) *Quantum Theory for Mathematicians*. New York, NY: Springer New York. doi:[10.1007/978-1-4614-7116-5](https://doi.org/10.1007/978-1-4614-7116-5) — chs. 7–10 (spectral theorem, bounded and unbounded; one-parameter unitary groups).\n",
       "metadata": {}
     }
   ]

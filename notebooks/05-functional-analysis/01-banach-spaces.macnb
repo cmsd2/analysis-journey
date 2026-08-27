@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 6,
+      "execution_count": 26,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "/* Compute sup-norm of a couple of test functions on [0, 1] */\nsup_norm_on_01(f_expr) := block([xs, vals, vmax],\n  xs : np_to_list(np_linspace(0, 1, 1000)),\n  vals : map(lambda([xx], abs(float(subst(x = xx, f_expr)))), xs),\n  lmax(vals))$\n\nf1 : x^2 + sin(3*x)$\nf2 : exp(-x) * cos(5*x)$\nprint(\"‖x² + sin(3x)‖_∞ ≈\", sup_norm_on_01(f1))$\nprint(\"‖e^{-x} cos(5x)‖_∞ ≈\", sup_norm_on_01(f2))$",
       "metadata": {},
-      "execution_count": 7,
+      "execution_count": 27,
       "outputs": [
         {
           "name": "stdout",
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "print(\"Σ 1/n =\")$\nprint(\"  diverges (harmonic), so (1/n) ∉ ℓ¹\")$\nprint(\"Σ 1/n² = π²/6 ≈\", float(%pi^2/6))$\nprint(\"  ⇒ (1/n) ∈ ℓ²\")$\nprint(\"sup |1/n| = 1, so (1/n) ∈ ℓ^∞\")$",
       "metadata": {},
-      "execution_count": 8,
+      "execution_count": 28,
       "outputs": [
         {
           "name": "stdout",
@@ -71,7 +71,7 @@
       "cell_type": "code",
       "source": "theta_grid : np_to_list(np_linspace(0, 2*float(%pi), 400))$\nb2_x : map(cos, theta_grid)$  b2_y : map(sin, theta_grid)$\n\nax_draw2d(\n  color=\"blue\", line_width=2, name=\"ℓ²\",\n  lines(b2_x, b2_y),\n  color=\"green\", line_width=2, name=\"ℓ¹\",\n  lines([1, 0, -1, 0, 1], [0, 1, 0, -1, 0]),\n  color=\"red\", line_width=2, name=\"ℓ^∞\",\n  lines([-1, 1, 1, -1, -1], [-1, -1, 1, 1, -1]),\n  title=\"Equivalent norms on ℝ² — different shapes, same topology\",\n  xlabel=\"x₁\", ylabel=\"x₂\",\n  grid=true, aspect_ratio=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 9,
+      "execution_count": 29,
       "outputs": [
         {
           "data": {
@@ -93,7 +93,7 @@
       "cell_type": "code",
       "source": "/* Verify numerically */\nfor n in [1, 2, 5, 10, 50, 100] do\n  print(\"n =\", n, \":  ‖x^n‖_∞ = 1,  ‖x^n‖_2 = \",\n        float(sqrt(integrate(x^(2*n), x, 0, 1))))$",
       "metadata": {},
-      "execution_count": 10,
+      "execution_count": 30,
       "outputs": [
         {
           "name": "stdout",
@@ -106,7 +106,12 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## Bounded vs continuous linear maps\n\nA linear map $T : X \\to Y$ between normed spaces is **bounded** if $\\|T x\\|_Y \\le M\\,\\|x\\|_X$ for some $M$ and all $x$. The smallest such $M$ is the **operator norm** $\\|T\\|$.\n\nTwo equivalences for linear maps:\n\n- **Bounded** ⇔ **continuous** ⇔ continuous at $0$.\n\nIn finite dimensions every linear map is bounded; in infinite dimensions, unbounded ones exist (e.g., differentiation $C^1([0,1]) \\to C([0,1])$ with sup-norm). We'll come back to this in notebook 3.\n\n## What we have\n\nThe infrastructure is in place:\n\n- Vector space + norm + completeness = Banach space.\n- $C([a,b])$, $L^p$, $\\ell^p$ — the canonical examples.\n- Finite vs infinite dimensions: equivalence vs not.\n- Linear maps split into bounded and unbounded.\n\nThe next notebook adds *inner product structure* — Hilbert spaces, where geometry returns.\n",
+      "source": "## Bounded vs continuous linear maps\n\nA linear map $T : X \\to Y$ between normed spaces is **bounded** if $\\|T x\\|_Y \\le M\\,\\|x\\|_X$ for some $M$ and all $x$. The smallest such $M$ is the **operator norm** $\\|T\\|$.\n\nTwo equivalences for linear maps:\n\n- **Bounded** ⇔ **continuous** ⇔ continuous at $0$.\n\nIn finite dimensions every linear map is bounded; in infinite dimensions, unbounded ones exist. The standard example is differentiation from $C^1([0,1])$ to $C([0,1])$ when *both* carry the sup-norm: $f_n(x) = \\sin(nx)/n$ has $\\|f_n\\|_\\infty = 1/n \\to 0$ while $\\|f_n'\\|_\\infty = 1$ for every $n$. Give $C^1$ its natural norm $\\|f\\|_\\infty + \\|f'\\|_\\infty$ instead and differentiation becomes bounded — the choice of norm is doing the work. Notebooks 3 and 5 come back to this.\n\n## What we have\n\nThe infrastructure is in place:\n\n- Vector space + norm + completeness = Banach space.\n- $C([a,b])$, $L^p$, $\\ell^p$ — the canonical examples.\n- Finite vs infinite dimensions: equivalence vs not.\n- Linear maps split into bounded and unbounded.\n\nThe next notebook adds *inner product structure* — Hilbert spaces, where geometry returns.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nConway, J.B. (2007) *A Course in Functional Analysis*. 2nd edn. New York, NY: Springer New York. doi:[10.1007/978-1-4757-4383-8](https://doi.org/10.1007/978-1-4757-4383-8) — ch. III, *Banach Spaces*.\n",
       "metadata": {}
     }
   ]

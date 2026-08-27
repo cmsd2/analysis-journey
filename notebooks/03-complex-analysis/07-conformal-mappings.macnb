@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 11,
+      "execution_count": 31,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "/* Plot horizontal lines y = const and vertical lines x = const, then their images under z² */\nn_show : 5$\nn_pts : 100$\nys_const : [0.4, 0.7, 1.0, 1.3]$\nxs_const : [0.4, 0.7, 1.0, 1.3]$\n\n/* Image of horizontal line y = c: z = x + ic, z² = (x²-c²) + i(2xc) */\nbuild_h_image(c) := block([xs, re_im, im_im],\n  xs : np_to_list(np_linspace(-1.5, 1.5, n_pts)),\n  re_im : map(lambda([xx], xx*xx - c*c), xs),\n  im_im : map(lambda([xx], 2*xx*c), xs),\n  [re_im, im_im])$\nbuild_v_image(c) := block([ys, re_im, im_im],\n  ys : np_to_list(np_linspace(-1.5, 1.5, n_pts)),\n  re_im : map(lambda([yy], c*c - yy*yy), ys),\n  im_im : map(lambda([yy], 2*c*yy), ys),\n  [re_im, im_im])$\n\nh1 : build_h_image(0.4)$  h2 : build_h_image(0.8)$  h3 : build_h_image(1.2)$\nv1 : build_v_image(0.4)$  v2 : build_v_image(0.8)$  v3 : build_v_image(1.2)$\n\nax_draw2d(\n  color=\"blue\", line_width=2, name=\"image of horizontals\",\n  lines(h1[1], h1[2]),\n  color=\"blue\",\n  lines(h2[1], h2[2]),\n  color=\"blue\",\n  lines(h3[1], h3[2]),\n  color=\"red\", line_width=2, name=\"image of verticals\",\n  lines(v1[1], v1[2]),\n  color=\"red\",\n  lines(v2[1], v2[2]),\n  color=\"red\",\n  lines(v3[1], v3[2]),\n  title=\"Image of orthogonal grid under z² — angles preserved (parabolas meet at right angles)\",\n  xlabel=\"Re\", ylabel=\"Im\",\n  grid=true, aspect_ratio=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 12,
+      "execution_count": 32,
       "outputs": [
         {
           "data": {
@@ -53,7 +53,7 @@
       "cell_type": "code",
       "source": "/* Check that φ_a maps the unit disc to itself: |φ_a(z)| < 1 when |z| < 1 */\nphi_a(z, a) := (z - a) / (1 - conjugate(a) * z)$\na_test : 0.3 + 0.4*%i$\ntest_pts : [0.5*exp(%i*0.3), 0.8*exp(%i*1.2), 0.95*exp(%i*5.1)]$\nfor z in test_pts do\n  print(\"|φ_a(\", float(cabs(z)), \"·e^iθ) | =\", float(cabs(phi_a(z, a_test))))$",
       "metadata": {},
-      "execution_count": 13,
+      "execution_count": 33,
       "outputs": [
         {
           "name": "stdout",
@@ -66,14 +66,14 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## Schwarz lemma\n\nIf $f : \\mathbb{D} \\to \\mathbb{D}$ is holomorphic with $f(0) = 0$, then $|f(z)| \\le |z|$ for all $z \\in \\mathbb{D}$, and $|f'(0)| \\le 1$. Equality at any interior point forces $f$ to be a rotation $f(z) = e^{i\\theta} z$.\n\nReading: *holomorphic self-maps of the disc fixing zero are contractions*. Combined with disc automorphisms, this characterises all such maps.\n\nDemonstration with $f(z) = z^2$ (so $f(0) = 0$ and $|z^2| \\le |z|$ on the closed disc):\n",
+      "source": "## Schwarz lemma\n\nIf $f : \\mathbb{D} \\to \\mathbb{D}$ is holomorphic with $f(0) = 0$, then $|f(z)| \\le |z|$ for all $z \\in \\mathbb{D}$, and $|f'(0)| \\le 1$. If $|f(z_0)| = |z_0|$ for a single $z_0 \\ne 0$, or if $|f'(0)| = 1$, then $f$ is a rotation $f(z) = e^{i\\theta} z$. (Equality at $z = 0$ says nothing — it holds for every such $f$.)\n\nReading: *holomorphic self-maps of the disc fixing zero are contractions*. Combined with disc automorphisms, this characterises all such maps.\n\nDemonstration with $f(z) = z^2$ (so $f(0) = 0$ and $|z^2| \\le |z|$ on the closed disc):\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
       "source": "for r in [0.2, 0.5, 0.8, 0.95] do\n  print(\"|z| = \", r, \"  |z²| = \", r^2,\n        \"  Schwarz |z²| ≤ |z|:\", r^2 <= r)$",
       "metadata": {},
-      "execution_count": 14,
+      "execution_count": 34,
       "outputs": [
         {
           "name": "stdout",
@@ -86,14 +86,14 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## Riemann mapping theorem\n\nThe capstone result of complex analysis. **Statement**: Let $\\Omega \\subsetneq \\mathbb{C}$ be a simply connected open set ($\\Omega \\ne \\mathbb{C}$). Then there's a biholomorphism $\\Omega \\to \\mathbb{D}$.\n\nIn words: *any simply connected proper open subset of $\\mathbb{C}$ is conformally equivalent to the unit disc*. Solving a problem on an arbitrary simply connected region reduces to solving it on the disc.\n\nConcrete examples:\n- The upper half-plane $\\mathbb{H} = \\{\\mathrm{Im}\\,z > 0\\}$: $f(z) = (z - i)/(z + i)$ maps $\\mathbb{H} \\to \\mathbb{D}$.\n- The strip $\\{0 < \\mathrm{Im}\\,z < \\pi\\}$: $f(z) = \\tanh(z/2)$ maps to $\\mathbb{D}$.\n\nThese maps are unique up to a 3-parameter family of disc automorphisms.\n\nVerify the upper-half-plane to disc map:\n",
+      "source": "## Riemann mapping theorem\n\nThe capstone result of complex analysis. **Statement**: Let $\\Omega \\subsetneq \\mathbb{C}$ be a simply connected open set ($\\Omega \\ne \\mathbb{C}$). Then there's a biholomorphism $\\Omega \\to \\mathbb{D}$.\n\nIn words: *any simply connected proper open subset of $\\mathbb{C}$ is conformally equivalent to the unit disc*. Solving a problem on an arbitrary simply connected region reduces to solving it on the disc.\n\nConcrete examples:\n- The upper half-plane $\\mathbb{H} = \\{\\mathrm{Im}\\,z > 0\\}$: $f(z) = (z - i)/(z + i)$ maps $\\mathbb{H} \\to \\mathbb{D}$.\n- The strip $\\{|\\mathrm{Im}\\,z| < \\pi/2\\}$: $f(z) = \\tanh(z/2) = (e^z - 1)/(e^z + 1)$ maps to $\\mathbb{D}$. ($z \\mapsto e^z$ sends this strip to the right half-plane, then $w \\mapsto (w-1)/(w+1)$ sends that to the disc.) Watch the width: for the strip $\\{0 < \\mathrm{Im}\\,z < \\pi\\}$ the corresponding map is $(e^z - i)/(e^z + i)$ — $\\tanh(z/2)$ would send $z = i\\pi/2$ to $i$, on the *boundary* of $\\mathbb{D}$.\n\nThese maps are unique up to a 3-parameter family of disc automorphisms.\n\nVerify the upper-half-plane to disc map:\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
       "source": "f_uh(z) := (z - %i) / (z + %i)$\nhp_pts : [1.0 + 0.5*%i, 0.0 + 1.0*%i, -2.0 + 0.3*%i, 5.0 + 2.0*%i]$\nprint(\"Upper-half-plane points → disc images (|·| < 1):\")$\nfor p in hp_pts do block([img],\n  img : float(cabs(f_uh(p))),\n  print(\"  z =\", p, \"  → |f(z)| =\", img))$",
       "metadata": {},
-      "execution_count": 15,
+      "execution_count": 35,
       "outputs": [
         {
           "name": "stdout",
@@ -107,6 +107,11 @@
     {
       "cell_type": "markdown",
       "source": "## Practical applications\n\nConformal maps are heavily used in:\n\n- **Aerodynamics** — Joukowski transformation maps a circle to an aerofoil shape; the flow around the circle (easy) gives the flow around the aerofoil (useful).\n- **Electrostatics** — solving Laplace's equation in 2D regions reduces, via conformal maps, to solving on a disc.\n- **Complex analytic dynamics** — Riemann surfaces, Möbius transformations of $\\mathbb{H}^3$, the Mandelbrot set's combinatorial structure.\n\n## What we got from Stage 3\n\nA flying tour of complex analysis:\n\n1. **Complex plane geometry** — multiplication = rotation + scaling.\n2. **Holomorphic functions and Cauchy-Riemann** — direction-independent differentiability.\n3. **Power series and analyticity** — radius of convergence governed by complex singularities.\n4. **Contour integrals and Cauchy's theorem** — closed loops integrate to zero.\n5. **Cauchy's integral formula** — interior values from boundary; analytic = $C^\\infty$.\n6. **Residues** — calculus of singularities, real integrals via the complex plane.\n7. **Conformal maps** — angle-preservation, disc automorphisms, Riemann mapping.\n\nThe arc real → $\\mathbb{R}^n$ → $\\mathbb{C}$ is now complete. Each stage builds on the last, and the rigidity gained at each step (compactness, total derivative, holomorphy) is what unlocks the next layer of techniques.\n\n## Where to go from here\n\nNatural follow-ups:\n\n- **Functional analysis** — extending to infinite-dimensional spaces; Banach and Hilbert spaces; bounded operators.\n- **Lebesgue integration and measure theory** — completing the Riemann integral; $L^p$ spaces; integration on more general measure spaces.\n- **Differential geometry / manifolds** — Stokes' theorem in its general form $\\int_M d\\omega = \\int_{\\partial M} \\omega$.\n- **Riemann surfaces** — multi-valued functions like $\\sqrt{z}$, $\\log z$ become single-valued on the right covering space.\n- **Several complex variables** — much richer than one-variable complex analysis; Hartogs's theorem, plurisubharmonic functions.\n\nThe journey is finite; the subject is not.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nAhlfors, L.V. (1979) *Complex Analysis: An Introduction to the Theory of Analytic Functions of One Complex Variable*. 3rd edn. New York: McGraw-Hill — ch. 6, *Conformal Mapping* (and ch. 3 §3 for Möbius transformations).\n",
       "metadata": {}
     }
   ]

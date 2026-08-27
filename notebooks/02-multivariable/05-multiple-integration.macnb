@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 25,
+      "execution_count": 57,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "inner : integrate(x + y, y, 0, x)$\nprint(\"Inner integral ∫₀^x (x+y) dy =\")$\ninner;\nouter : integrate(inner, x, 0, 1)$\nprint(\"Outer integral =\")$\nouter;",
       "metadata": {},
-      "execution_count": 26,
+      "execution_count": 58,
       "outputs": [
         {
           "name": "stdout",
@@ -46,7 +46,7 @@
               "{{1}\\over{2}}"
             ]
           },
-          "execution_count": 26,
+          "execution_count": 58,
           "metadata": {},
           "output_type": "execute_result"
         }
@@ -54,14 +54,14 @@
     },
     {
       "cell_type": "markdown",
-      "source": "$3/8$. The order of integration matters: if we integrate over the same region as $\\int_0^1 \\int_y^1 (x+y)\\,dx\\,dy$ we should get the same answer — Fubini guarantees it for continuous integrands on rectangles, and for nice regions (like our triangle) by extending.\n",
+      "source": "$1/2$. (Sanity check: by the $x \\leftrightarrow y$ symmetry of $x + y$, the two half-triangles of the unit square split $\\int_0^1\\!\\int_0^1 (x+y) = 1$ evenly.) Swapping the order integrates over the same region as $\\int_0^1 \\int_y^1 (x+y)\\,dx\\,dy$ and must give the same answer — Fubini guarantees it for continuous integrands on rectangles, and for nice regions (like our triangle) by extending.\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
       "source": "inner_swap : integrate(x + y, x, y, 1)$\nprint(\"Other order, inner =\")$\ninner_swap;\nprint(\"Other order, outer =\")$\nintegrate(inner_swap, y, 0, 1);",
       "metadata": {},
-      "execution_count": 27,
+      "execution_count": 59,
       "outputs": [
         {
           "name": "stdout",
@@ -76,7 +76,7 @@
               "{{1}\\over{2}}"
             ]
           },
-          "execution_count": 27,
+          "execution_count": 59,
           "metadata": {},
           "output_type": "execute_result"
         }
@@ -91,7 +91,7 @@
       "cell_type": "code",
       "source": "I_polar : integrate(integrate(exp(-r^2) * r, r, 0, inf), theta, 0, 2*%pi)$\nprint(\"∫₀^{2π} ∫₀^∞ e^{-r²} r dr dθ =\")$\nI_polar;\nprint(\"→ Gaussian integral: √π =\", float(sqrt(%pi)))$",
       "metadata": {},
-      "execution_count": 28,
+      "execution_count": 60,
       "outputs": [
         {
           "name": "stdout",
@@ -111,7 +111,7 @@
       "cell_type": "code",
       "source": "Phi : [r * cos(theta), r * sin(theta)]$\nJ_Phi : genmatrix(lambda([i, j], diff(Phi[i], [r, theta][j])), 2, 2)$\nprint(\"J_Φ =\")$ J_Phi;\nprint(\"|det J_Φ| =\")$\nratsimp(abs(determinant(J_Phi)));",
       "metadata": {},
-      "execution_count": 29,
+      "execution_count": 61,
       "outputs": [
         {
           "name": "stdout",
@@ -126,7 +126,7 @@
               "\\left| r\\,\\sin ^2\\theta+r\\,\\cos ^2\\theta\\right| "
             ]
           },
-          "execution_count": 29,
+          "execution_count": 61,
           "metadata": {},
           "output_type": "execute_result"
         }
@@ -141,7 +141,7 @@
       "cell_type": "code",
       "source": "Phi3 : [rho * sin(phi) * cos(theta),\n        rho * sin(phi) * sin(theta),\n        rho * cos(phi)]$\nJ3 : genmatrix(lambda([i, j], diff(Phi3[i], [rho, phi, theta][j])), 3, 3)$\nprint(\"J_Φ in 3D =\")$ J3;\ndet_J3 : ratsimp(trigsimp(determinant(J3)))$\nprint(\"det J_Φ =\")$\ndet_J3;",
       "metadata": {},
-      "execution_count": 30,
+      "execution_count": 62,
       "outputs": [
         {
           "name": "stdout",
@@ -156,7 +156,7 @@
               "\\sin \\phi\\,\\rho^2"
             ]
           },
-          "execution_count": 30,
+          "execution_count": 62,
           "metadata": {},
           "output_type": "execute_result"
         }
@@ -166,7 +166,7 @@
       "cell_type": "code",
       "source": "V_ball : integrate(integrate(integrate(rho^2 * sin(phi),\n                                          rho, 0, 1),\n                                phi, 0, %pi),\n                      theta, 0, 2*%pi)$\nprint(\"Volume of unit ball ∫₀^{2π} ∫₀^π ∫₀^1 ρ² sin(φ) dρ dφ dθ =\")$\nV_ball;\nprint(\"4π/3 =\", float(4*%pi/3))$",
       "metadata": {},
-      "execution_count": 31,
+      "execution_count": 63,
       "outputs": [
         {
           "name": "stdout",
@@ -186,7 +186,7 @@
       "cell_type": "code",
       "source": "I_sym : integrate(integrate(sin(x*y), x, 0, 1), y, 0, 1)$\nprint(\"Symbolic ∫₀¹ ∫₀¹ sin(xy) dx dy =\")$\nI_sym;\nprint(\"(numeric value =\", float(I_sym), \")\")$\n\n/* Numeric Riemann sum on a 100×100 grid */\nn_grid : 100$\nh : 1.0 / n_grid$\ntotal : 0.0$\nfor i : 0 thru n_grid - 1 do\n  for j : 0 thru n_grid - 1 do\n    total : total + sin((i + 0.5)*h * (j + 0.5)*h) * h * h$\nprint(\"Numeric (midpoint, 100×100 grid) =\", total)$",
       "metadata": {},
-      "execution_count": 32,
+      "execution_count": 64,
       "outputs": [
         {
           "name": "stdout",
@@ -200,6 +200,11 @@
     {
       "cell_type": "markdown",
       "source": "Multiple integration is mostly mechanical once you have:\n\n- The right coordinate system (radial symmetry → polar/spherical/cylindrical).\n- The Jacobian determinant of the transformation.\n- A nested 1D integral that Maxima or numerics can crunch.\n\nThe next notebook generalises this to *vector-valued* integration over curves and surfaces, and culminates in the integral theorems (Stokes, divergence) that tie everything together.\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "markdown",
+      "source": "## Reference\n\nZorich, V.A. (2016) *Mathematical Analysis II*. 2nd edn. Berlin, Heidelberg: Springer Berlin Heidelberg. doi:[10.1007/978-3-662-48993-2](https://doi.org/10.1007/978-3-662-48993-2) — ch. 11, *Multiple Integrals*.\n\nTao, T. (2016) *Analysis II*. 3rd edn. Singapore: Springer Singapore. doi:[10.1007/978-981-10-1804-6](https://doi.org/10.1007/978-981-10-1804-6) — ch. 8, *Lebesgue integration* (Fubini's theorem).\n",
       "metadata": {}
     }
   ]
