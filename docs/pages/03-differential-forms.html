@@ -7771,7 +7771,7 @@ a.anchor-link {
 </head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=988bccd2">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=32a71fd8">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7786,12 +7786,12 @@ a.anchor-link {
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=975a8e83">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=7edba730">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [21]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [25]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-maxima"><pre><span></span><span class="nf">load</span><span class="p">(</span><span class="s">"numerics"</span><span class="p">)$</span>
@@ -7802,7 +7802,7 @@ a.anchor-link {
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a7bb8aa1">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5a86c76f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7862,12 +7862,12 @@ a.anchor-link {
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=181f1b45">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=7d14a2cd">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [22]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [26]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-maxima"><pre><span></span><span class="cm">/* 1-form: ω = P dx + Q dy. dω = (Q_x - P_y) dx ∧ dy */</span>
@@ -7906,7 +7906,7 @@ dω = (∂Q/∂x - ∂P/∂y) dx ∧ dy = ( 1 - -1 ) dx ∧ dy = 2
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2eab54a6">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0ad89593">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7921,12 +7921,12 @@ dω = (∂Q/∂x - ∂P/∂y) dx ∧ dy = ( 1 - -1 ) dx ∧ dy = 2
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=c677b1ef">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=833e235f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [23]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [27]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-maxima"><pre><span></span><span class="cm">/* Verify: d(r cos θ) ∧ d(r sin θ) coefficient */</span>
@@ -7938,7 +7938,7 @@ dω = (∂Q/∂x - ∂P/∂y) dx ∧ dy = ( 1 - -1 ) dx ∧ dy = 2
 <span class="nv">ay_dr</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nf">diff</span><span class="p">(</span><span class="nv">y_polar</span><span class="p">,</span><span class="w"> </span><span class="nv">r</span><span class="p">)$</span>
 <span class="nv">ay_dt</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nf">diff</span><span class="p">(</span><span class="nv">y_polar</span><span class="p">,</span><span class="w"> </span><span class="nv">theta</span><span class="p">)$</span>
 <span class="cm">/* Wedge: dx ∧ dy = (ax_dr ay_dt - ax_dt ay_dr) dr ∧ dθ */</span>
-<span class="nv">jacobian</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nf">ratsimp</span><span class="p">(</span><span class="nv">ax_dr</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">ay_dt</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">ax_dt</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">ay_dr</span><span class="p">)$</span>
+<span class="nv">jacobian</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nf">trigsimp</span><span class="p">(</span><span class="nv">ax_dr</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">ay_dt</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">ax_dt</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">ay_dr</span><span class="p">)$</span>
 <span class="nf">print</span><span class="p">(</span><span class="s">"Φ*(dx ∧ dy) ="</span><span class="p">,</span><span class="w"> </span><span class="nv">jacobian</span><span class="p">,</span><span class="w"> </span><span class="s">"dr ∧ dθ"</span><span class="p">)$</span>
 <span class="nf">print</span><span class="p">(</span><span class="s">"(Polar Jacobian = r — same answer as Stage 2/05)"</span><span class="p">)$</span>
 </pre></div>
@@ -7953,14 +7953,14 @@ dω = (∂Q/∂x - ∂P/∂y) dx ∧ dy = ( 1 - -1 ) dx ∧ dy = 2
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Φ*(dx ∧ dy) = r*sin(theta)^2+r*cos(theta)^2 dr ∧ dθ
+<pre>Φ*(dx ∧ dy) = r dr ∧ dθ
 (Polar Jacobian = r — same answer as Stage 2/05)</pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6194d32f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=50730fa8">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7970,19 +7970,19 @@ dω = (∂Q/∂x - ∂P/∂y) dx ∧ dy = ( 1 - -1 ) dx ∧ dy = 2
 <p>By $d^2 = 0$, <strong>every exact form is closed</strong>. The converse holds <em>locally</em> (Poincaré lemma), but not globally — there exist closed forms that are not exact, and they detect the <strong>topology</strong> of $M$.</p>
 <p>The <strong>de Rham cohomology</strong> of $M$:</p>
 <p>$$H^k_{dR}(M) = \{\text{closed }k\text{-forms}\} / \{\text{exact }k\text{-forms}\}.$$</p>
-<p>These groups are <strong>topological invariants</strong> — they tell you about holes, loops, voids in $M$. For example, $H^1(S^1) = \mathbb{R}$ (one non-trivial closed-but-not-exact 1-form, the angular form $d\theta$).</p>
+<p>These groups are <strong>topological invariants</strong> — they tell you about holes, loops, voids in $M$. For example, $H^1(S^1) = \mathbb{R}$, spanned by the class of the angular form $d\theta$ (closed, but not exact: the angle $\theta$ is not a global function).</p>
 <p>The <strong>angular 1-form</strong> on $\mathbb{R}^2 \setminus \{0\}$ is</p>
 <p>$$\omega = \frac{-y\,dx + x\,dy}{x^2 + y^2}.$$</p>
 <p>It's closed everywhere it's defined, but <strong>not exact</strong> — there's no global function $\theta : \mathbb{R}^2 \setminus \{0\} \to \mathbb{R}$ whose differential is $\omega$. (You'd want $\theta$ = angle, but that jumps by $2\pi$ on a closed loop.) Integrating $\omega$ around a closed loop encircling 0 gives $2\pi$ — that's the topology talking.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=947b978a">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=feaa0a0d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [24]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [28]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-maxima"><pre><span></span><span class="cm">/* Verify closedness of the angular form */</span>
@@ -8013,7 +8013,7 @@ dω = (dQ/dx - dP/dy) dx ∧ dy =  0   → ω is closed ✓</pre>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7c6eade0">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=06c5ba43">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8028,7 +8028,7 @@ dω = (dQ/dx - dP/dy) dx ∧ dy =  0   → ω is closed ✓</pre>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ff1bfdeb">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d1c604c0">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>

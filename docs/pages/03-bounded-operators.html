@@ -7771,7 +7771,7 @@ a.anchor-link {
 </head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d1703f90">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4e0f074b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7780,12 +7780,12 @@ a.anchor-link {
 <h1 id="Bounded-Linear-Operators">Bounded Linear Operators<a class="anchor-link" href="#Bounded-Linear-Operators">¶</a></h1><p>For Banach spaces $X, Y$, the <strong>bounded linear operators</strong> $\mathcal{B}(X, Y)$ are linear maps $T : X \to Y$ with finite <strong>operator norm</strong></p>
 <p>$$\|T\| = \sup_{\|x\|_X = 1} \|T x\|_Y &lt; \infty.$$</p>
 <p>Equivalently: $T$ is continuous. (In normed spaces, linear + continuous ⇔ linear + bounded.)</p>
-<p>$\mathcal{B}(X, Y)$ is itself a Banach space under the operator norm; if $X = Y$ it's also an algebra (composition is multiplication). For $X = Y$ Hilbert spaces, it's a <em>C</em>-algebra, the prototypical noncommutative geometry object.</p>
+<p>$\mathcal{B}(X, Y)$ is itself a Banach space under the operator norm; if $X = Y$ it's also an algebra (composition is multiplication). For $X = Y$ Hilbert spaces, it's a $C^*$-algebra, the prototypical noncommutative geometry object.</p>
 <p>This notebook surveys typical operators, computes some operator norms, and previews the spectral picture.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=b331ccc3">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=98c1fcc6">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7801,7 +7801,7 @@ a.anchor-link {
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a9bc7efc">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b727948c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7817,7 +7817,7 @@ a.anchor-link {
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=dde3278f">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=4e8f894c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7854,7 +7854,7 @@ a.anchor-link {
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b5574607">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=fee883b0">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7862,7 +7862,7 @@ a.anchor-link {
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="Integral-operators-on-$L%5E2$">Integral operators on $L^2$<a class="anchor-link" href="#Integral-operators-on-$L%5E2$">¶</a></h2><p>For a measurable kernel $K(x, y)$ on $[0, 1]^2$, define $T_K f(x) = \int_0^1 K(x, y) f(y)\,dy$. If $K \in L^2([0, 1]^2)$, then $T_K$ is bounded on $L^2([0, 1])$ with $\|T_K\| \le \|K\|_2$ (Hilbert-Schmidt operators).</p>
 <p>These are <strong>compact</strong> (next notebook): they map bounded sets to relatively compact sets. They have eigenvalues that accumulate only at 0.</p>
-<p>Example: the Volterra operator $V f(x) = \int_0^x f(y)\,dy$ has kernel $K(x, y) = \mathbf{1}_{y \le x}$. It's compact, has spectrum $\{0\}$ (zero is its only "eigenvalue" — well, accumulation point — Volterra has empty point spectrum), but it's not the zero operator.</p>
+<p>Example: the Volterra operator $V f(x) = \int_0^x f(y)\,dy$ has kernel $K(x, y) = \mathbf{1}_{y \le x}$. It's compact and its spectrum is $\{0\}$, yet $0$ is not an eigenvalue ($V$ is injective), so the point spectrum is empty. $V$ is <em>quasinilpotent</em>: spectral radius $0$, while $\|V\| = 2/\pi$.</p>
 <h2 id="Operator-norm-computations">Operator norm computations<a class="anchor-link" href="#Operator-norm-computations">¶</a></h2><p>For a finite-dimensional operator $A : \mathbb{R}^n \to \mathbb{R}^m$ in matrix form, the operator norm depends on the choice of vector norms:</p>
 <ul>
 <li>$\|A\|_{1 \to 1} = \max_j \sum_i |A_{ij}|$ (max column sum).</li>
@@ -7873,7 +7873,7 @@ a.anchor-link {
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=da88e38e">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=01600372">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7906,7 +7906,7 @@ Largest singular value (‖A‖_{2 → 2}): 3.6180339887498953</pre>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f5a6b06c">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=54340170">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7931,7 +7931,7 @@ Largest singular value (‖A‖_{2 → 2}): 3.6180339887498953</pre>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=ed24a2e8">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=b20e2546">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7972,7 +7972,7 @@ because a Jordan block is not normal:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=42d6ec3f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4aa7d469">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7996,7 +7996,7 @@ because a Jordan block is not normal:
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2654a480">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e932199a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>

@@ -21,7 +21,7 @@ Some notebooks load sub-modules:
 
 ```maxima
 load("numerics")$            /* core ndarray + linear algebra */
-load("numerics-integrate")$  /* numerical ODE / quadrature */
+load("numerics-sundials")$   /* ODE solver np_cvode (used in 6.05) */
 load("ax-plots")$
 ```
 
@@ -57,7 +57,7 @@ Multivariable: the topology, calculus, and integration that classical real analy
 
 ### Stage 3 — Complex Analysis
 
-Where the rigidity gets remarkable. Holomorphic functions are wildly more constrained than $C^\infty$ real functions, and that rigidity unlocks extraordinary tools.
+Holomorphic functions are far more constrained than $C^\infty$ real functions, and that rigidity yields tools with no real analogue: contour integration, residues, conformal maps.
 
 | # | Notebook | Idea |
 |---|----------|------|

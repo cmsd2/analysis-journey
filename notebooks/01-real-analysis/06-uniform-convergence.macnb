@@ -12,14 +12,14 @@
   "cells": [
     {
       "cell_type": "markdown",
-      "source": "# Uniform Convergence [S+N]\n\nLet $f_n : [a, b] \\to \\mathbb{R}$ be a sequence of functions. Two convergence notions:\n\n- **Pointwise**: $f_n \\to f$ pointwise if for each $x$, $f_n(x) \\to f(x)$ as a number sequence. Equivalently, $\\forall x\\,\\forall \\varepsilon > 0\\,\\exists N(\\varepsilon, x)$ such that $n \\ge N \\Rightarrow |f_n(x) - f(x)| < \\varepsilon$.\n\n- **Uniform**: $f_n \\to f$ uniformly if $N$ can be chosen *independent of* $x$. Equivalently, $\\sup_{x \\in [a,b]} |f_n(x) - f(x)| \\to 0$.\n\nPointwise is too weak to preserve continuity, integration, differentiation. Uniform is exactly what makes those exchanges legal.\n",
+      "source": "# Uniform Convergence [S+N]\n\nLet $f_n : [a, b] \\to \\mathbb{R}$ be a sequence of functions. Two convergence notions:\n\n- **Pointwise**: $f_n \\to f$ pointwise if for each $x$, $f_n(x) \\to f(x)$ as a number sequence. Equivalently, $\\forall x\\,\\forall \\varepsilon > 0\\,\\exists N(\\varepsilon, x)$ such that $n \\ge N \\Rightarrow |f_n(x) - f(x)| < \\varepsilon$.\n\n- **Uniform**: $f_n \\to f$ uniformly if $N$ can be chosen *independent of* $x$. Equivalently, $\\sup_{x \\in [a,b]} |f_n(x) - f(x)| \\to 0$.\n\nPointwise convergence does not preserve continuity, and it does not let you swap limits with integrals or derivatives. Uniform convergence fixes continuity and integration. Differentiation needs more: uniform convergence of the derivatives.\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 29,
+      "execution_count": 33,
       "outputs": []
     },
     {
@@ -29,9 +29,9 @@
     },
     {
       "cell_type": "code",
-      "source": "x_grid : np_to_list(np_linspace(0, 1, 200))$\nn_show : [1, 2, 5, 20, 100]$\nplot_args : [color=\"blue\", line_width=1, name=\"n=1\", lines(x_grid, map(lambda([x], float(x^1)), x_grid))]$\n\nax_draw2d(\n  color=\"cornflowerblue\", line_width=1, name=\"n=1\",\n  lines(x_grid, map(lambda([x], float(x^1)), x_grid)),\n  color=\"green\", line_width=1, name=\"n=2\",\n  lines(x_grid, map(lambda([x], float(x^2)), x_grid)),\n  color=\"orange\", line_width=1, name=\"n=5\",\n  lines(x_grid, map(lambda([x], float(x^5)), x_grid)),\n  color=\"red\", line_width=2, name=\"n=20\",\n  lines(x_grid, map(lambda([x], float(x^20)), x_grid)),\n  color=\"purple\", line_width=2, name=\"n=100\",\n  lines(x_grid, map(lambda([x], float(x^100)), x_grid)),\n  title=\"x^n on [0,1] — pointwise limit is discontinuous\",\n  xlabel=\"x\", ylabel=\"x^n\",\n  grid=true, showlegend=true\n)$",
+      "source": "x_grid : np_to_list(np_linspace(0, 1, 200))$\n\nax_draw2d(\n  color=\"cornflowerblue\", line_width=1, name=\"n=1\",\n  lines(x_grid, map(lambda([x], float(x^1)), x_grid)),\n  color=\"green\", line_width=1, name=\"n=2\",\n  lines(x_grid, map(lambda([x], float(x^2)), x_grid)),\n  color=\"orange\", line_width=1, name=\"n=5\",\n  lines(x_grid, map(lambda([x], float(x^5)), x_grid)),\n  color=\"red\", line_width=2, name=\"n=20\",\n  lines(x_grid, map(lambda([x], float(x^20)), x_grid)),\n  color=\"purple\", line_width=2, name=\"n=100\",\n  lines(x_grid, map(lambda([x], float(x^100)), x_grid)),\n  title=\"x^n on [0,1] — pointwise limit is discontinuous\",\n  xlabel=\"x\", ylabel=\"x^n\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 30,
+      "execution_count": 34,
       "outputs": [
         {
           "data": {
@@ -46,14 +46,14 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## What goes wrong without uniform convergence\n\nThe exchange of limits fails:\n$$\\lim_{n\\to\\infty} \\lim_{x\\to 1^-} f_n(x) = \\lim_{n\\to\\infty} 1 = 1 \\;\\ne\\; \\lim_{x\\to 1^-} \\lim_{n\\to\\infty} f_n(x) = \\lim_{x\\to 1^-} 0 = 0.$$\n\nContinuity, integrability, and differentiability of the limit can all break down.\n\n## Theorem: uniform convergence preserves continuity\n\nIf each $f_n$ is continuous on $[a, b]$ and $f_n \\to f$ uniformly, then $f$ is continuous. Conversely, the $x^n$ counter-example shows uniformity matters: drop it, and the limit can become discontinuous.\n\n## Weierstrass M-test\n\nFor $\\sum f_n(x)$ on a domain, if there are constants $M_n$ with $|f_n(x)| \\le M_n$ for all $x$ and $\\sum M_n$ converges, then $\\sum f_n$ converges **uniformly** on the domain.\n\nApplication: $\\sum_{n=1}^\\infty \\cos(n x)/n^2$ on $\\mathbb{R}$. Bound: $|\\cos(nx)/n^2| \\le 1/n^2$; $\\sum 1/n^2 = \\pi^2/6$ converges; therefore the series converges uniformly to a continuous function on all of $\\mathbb{R}$.\n",
+      "source": "## What goes wrong without uniform convergence\n\nThe exchange of limits fails:\n$$\\lim_{n\\to\\infty} \\lim_{x\\to 1^-} f_n(x) = \\lim_{n\\to\\infty} 1 = 1 \\;\\ne\\; \\lim_{x\\to 1^-} \\lim_{n\\to\\infty} f_n(x) = \\lim_{x\\to 1^-} 0 = 0.$$\n\nContinuity, integrability, and differentiability of the limit can all break down.\n\n## Theorem: uniform convergence preserves continuity\n\nIf each $f_n$ is continuous on $[a, b]$ and $f_n \\to f$ uniformly, then $f$ is continuous. The $x^n$ example shows the hypothesis matters: drop uniformity, and the limit can become discontinuous.\n\n## Weierstrass M-test\n\nFor $\\sum f_n(x)$ on a domain, if there are constants $M_n$ with $|f_n(x)| \\le M_n$ for all $x$ and $\\sum M_n$ converges, then $\\sum f_n$ converges **uniformly** on the domain.\n\nApplication: $\\sum_{n=1}^\\infty \\cos(n x)/n^2$ on $\\mathbb{R}$. Bound: $|\\cos(nx)/n^2| \\le 1/n^2$; $\\sum 1/n^2 = \\pi^2/6$ converges; therefore the series converges uniformly to a continuous function on all of $\\mathbb{R}$.\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
       "source": "g_uniform(x, N) := sum(cos(n * x) / n^2, n, 1, N)$\nx_g : np_to_list(np_linspace(-2*float(%pi), 2*float(%pi), 400))$\n\nax_draw2d(\n  color=\"lightcoral\", line_width=1, name=\"N=1 partial\",\n  lines(x_g, map(lambda([x], float(g_uniform(x, 1))), x_g)),\n  color=\"orange\", line_width=1, name=\"N=5 partial\",\n  lines(x_g, map(lambda([x], float(g_uniform(x, 5))), x_g)),\n  color=\"green\", line_width=1, name=\"N=20 partial\",\n  lines(x_g, map(lambda([x], float(g_uniform(x, 20))), x_g)),\n  color=\"blue\", line_width=2, name=\"N=100 partial (≈ uniform limit)\",\n  lines(x_g, map(lambda([x], float(g_uniform(x, 100))), x_g)),\n  title=\"Σ cos(nx)/n² — uniform convergence by Weierstrass M-test\",\n  xlabel=\"x\", ylabel=\"partial sum\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 31,
+      "execution_count": 35,
       "outputs": [
         {
           "data": {
@@ -68,20 +68,20 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## Why uniform convergence buys you so much\n\nThree transfer theorems for uniformly convergent $f_n \\to f$ on $[a, b]$, $f_n$ continuous:\n\n1. **Continuity**: $f$ is continuous.\n2. **Integration**: $\\int_a^b f_n \\to \\int_a^b f$. (Pointwise alone doesn't guarantee this — see Lebesgue dominated convergence for the right pointwise version.)\n3. **Differentiation**: more delicate. If $f_n \\to f$ pointwise *and* $f_n' \\to g$ uniformly, then $f$ is differentiable with $f' = g$.\n\nPointwise + integration: the bumps that drift around in pointwise convergence can carry their integrals off — see \"moving-bump\" examples in any analysis text.\n\n## Checking uniform convergence numerically [S+N]\n\nThe criterion $\\sup_x |f_n(x) - f(x)| \\to 0$ can be tested empirically. For $f_n(x) = x^n$ vs the pointwise limit:\n",
+      "source": "## Why uniform convergence buys you so much\n\nThree transfer theorems for uniformly convergent $f_n \\to f$ on $[a, b]$, $f_n$ continuous:\n\n1. **Continuity**: $f$ is continuous.\n2. **Integration**: $\\int_a^b f_n \\to \\int_a^b f$. (Pointwise alone doesn't guarantee this — see Lebesgue dominated convergence for the right pointwise version.)\n3. **Differentiation**: more delicate. If each $f_n$ is differentiable, $f_n \\to f$ pointwise *and* $f_n' \\to g$ uniformly, then $f$ is differentiable with $f' = g$.\n\nPointwise + integration: the bumps that drift around in pointwise convergence can carry their integrals off — see \"moving-bump\" examples in any analysis text.\n\n## Checking uniform convergence numerically [S+N]\n\nThe criterion $\\sup_x |f_n(x) - f(x)| \\to 0$ can be probed numerically, with care. A fixed grid misleads here. At the grid point $x = 1$ the error is $0$, and at every grid point below $1$ the error $x^n$ eventually drops to nearly $0$. So the sampled sup *decays*, even though the true sup is $1$ for every $n$: the bad region near $x = 1$ shrinks between the grid points. A moving witness catches it. At $x_n = 2^{-1/n}$, $|f_n(x_n) - f(x_n)| = 1/2$ for every $n$.\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
-      "source": "sup_err(n_val) := block([xs, fns, fs],\n  xs : np_to_list(np_linspace(0, 1, 1000)),\n  fns : map(lambda([x], float(x^n_val)), xs),\n  /* pointwise limit f: 1 if x = 1 else 0; sample doesn't include x=1 exactly,\n     so limit is essentially 0 for our test points except very near 1.\n     sup |f_n - 0| over [0, 1] = max of |x^n| = 1 (at x=1). */\n  lmax(map(abs, fns)))$\n\nn_test : [2, 5, 10, 100, 1000]$\nsups : map(sup_err, n_test)$\nprint(\"n:        \", n_test)$\nprint(\"sup_x x^n:\", sups)$\nprint(\"sup never decays — convergence is not uniform.\")$",
+      "source": "/* Pointwise limit of x^n on [0, 1]: 0 for x < 1, 1 at x = 1 */\nf_lim(x) := if x < 1 then 0.0 else 1.0$\n\n/* Sup of |f_n - f| over a fixed 1000-point grid */\ngrid_sup(n_val) := block([xs],\n  xs : np_to_list(np_linspace(0, 1, 1000)),\n  lmax(map(lambda([x], abs(float(x^n_val) - f_lim(x))), xs)))$\n\n/* Error at the moving point x_n = 2^(-1/n) */\nwitness(n_val) := block([xn],\n  xn : float(2^(-1/n_val)),\n  abs(xn^n_val - f_lim(xn)))$\n\nn_test : [2, 5, 10, 100, 1000, 10000]$\nprint(\"n:                 \", n_test)$\nprint(\"grid sup |f_n - f|:\", map(grid_sup, n_test))$\nprint(\"error at 2^(-1/n): \", map(witness, n_test))$\nprint(\"The grid sup decays; the witness stays at 1/2, so sup |f_n - f| ≥ 1/2 for every n.\")$",
       "metadata": {},
-      "execution_count": 32,
+      "execution_count": 36,
       "outputs": [
         {
           "name": "stdout",
           "output_type": "stream",
           "text": [
-            "n:         [2,5,10,100,1000]\nsup_x x^n: [1.0,1.0,1.0,1.0,1.0]\nsup never decays — convergence is not uniform."
+            "n:                  [2,5,10,100,1000,10000]\ngrid sup |f_n - f|:\n                   [0.9979990000010021,0.9950050049999941,0.9900349599750383,\n                    0.904701491165304,0.36732717718970204,\n                    4.4722967638160086e-5]\nerror at 2^(-1/n):\n                   [0.4999999999999999,0.49999999999999994,\n                    0.49999999999999994,0.5000000000000013,0.4999999999999919,\n                    0.5000000000001773]\nThe grid sup decays; the witness stays at 1/2, so sup |f_n - f| ≥ 1/2 for every n."
           ]
         }
       ]

@@ -7771,7 +7771,7 @@ a.anchor-link {
 </head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c3c3c720">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0a85f7ab">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7824,7 +7824,7 @@ a.anchor-link {
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a83e9fb0">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=d37c5100">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7840,7 +7840,7 @@ a.anchor-link {
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e3bf6997">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=896c4e34">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7855,7 +7855,7 @@ a.anchor-link {
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=bc5da228">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=31b35db5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7896,7 +7896,7 @@ cos(0.5) = 0.8775825618903728   sin(0.5) = 0.479425538604203</pre>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=14923ff5">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6ee1b682">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7921,11 +7921,11 @@ cos(0.5) = 0.8775825618903728   sin(0.5) = 0.479425538604203</pre>
 <p>$$[e_i, e_j] = c^k_{ij}\,e_k$$</p>
 <p>for <strong>structure constants</strong> $c^k_{ij}$. These determine the algebra (and locally the group). For $\mathfrak{so}(3)$ with the standard basis $\{L_x, L_y, L_z\}$:</p>
 <p>$$[L_x, L_y] = L_z, \quad [L_y, L_z] = L_x, \quad [L_z, L_x] = L_y.$$</p>
-<p>These are <em>the</em> commutation relations of angular momentum in classical and quantum mechanics.</p>
+<p>Up to factors of $i\hbar$, these are the commutation relations of angular momentum in quantum mechanics (and, as Poisson brackets, in classical mechanics).</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=2b8d0398">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=6cefe992">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7972,7 +7972,7 @@ Match — confirms so(3) commutation relation</pre>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=52633bbd">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5d53ca64">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7982,11 +7982,11 @@ Match — confirms so(3) commutation relation</pre>
 <ul>
 <li><strong>Classical mechanics</strong>: rotation, translation, Galilean transformations.</li>
 <li><strong>Special relativity</strong>: Lorentz group $\mathrm{SO}(3, 1)$.</li>
-<li><strong>General relativity</strong>: diffeomorphism group of spacetime.</li>
+<li><strong>General relativity</strong>: diffeomorphism group of spacetime (infinite-dimensional).</li>
 <li><strong>Quantum mechanics</strong>: $\mathrm{SU}(2)$ (spin), $\mathrm{SU}(3)$ (colour charge).</li>
 <li><strong>Robotics</strong>: $\mathrm{SE}(3) = \mathrm{SO}(3) \ltimes \mathbb{R}^3$ (rigid motions in 3D).</li>
 <li><strong>Computer graphics</strong>: $\mathrm{SL}(3)$ for projective transformations.</li>
-<li><strong>Fluid dynamics</strong>: volume-preserving diffeomorphisms.</li>
+<li><strong>Fluid dynamics</strong>: volume-preserving diffeomorphisms (Arnold's infinite-dimensional picture of the Euler equations).</li>
 </ul>
 <p>Wherever there's smooth symmetry, there's a Lie group — and the structure of the group dictates much of the dynamics.</p>
 <h2 id="What-we-have-at-the-end-of-the-analysis-journey">What we have at the end of the analysis journey<a class="anchor-link" href="#What-we-have-at-the-end-of-the-analysis-journey">¶</a></h2><p>Six stages, 41 notebooks, covering the trunk of mathematical analysis:</p>
@@ -8040,12 +8040,12 @@ Match — confirms so(3) commutation relation</pre>
 <li>Functional analysis abstracted finite-dimensional linear algebra to infinite dimensions.</li>
 <li>Differential geometry generalised calculus to curved spaces.</li>
 </ul>
-<p>You're now equipped to read the foundational chapters of probability theory, PDE theory, ergodic theory, mathematical physics, geometric topology — most of "modern" analysis. The journey ends here, but the subject is, as always, infinite.</p>
+<p>You're now equipped to read the foundational chapters of probability theory, PDE theory, ergodic theory, mathematical physics, geometric topology — most of "modern" analysis. The journey ends here; those subjects pick up where it stops.</p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1fc9ce30">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1b425049">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>

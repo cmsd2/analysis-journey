@@ -7771,7 +7771,7 @@ a.anchor-link {
 </head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=471c0213">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e25eb683">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7788,7 +7788,7 @@ a.anchor-link {
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=447e6d27">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=803ca6fb">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7804,7 +7804,7 @@ a.anchor-link {
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=973a96bc">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c50bf190">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7823,7 +7823,7 @@ a.anchor-link {
 <li><strong>Power set</strong>: $2^\mathbb{R}$ — every subset is measurable. Too big to support nice measures (axiom of choice constructs non-measurable sets).</li>
 <li><strong>Borel σ-algebra</strong> $\mathcal{B}(\mathbb{R})$: smallest σ-algebra containing all open intervals. Includes every "describable" set (open, closed, $F_\sigma$, $G_\delta$, etc.).</li>
 </ul>
-<p>The <strong>Lebesgue σ-algebra</strong> is slightly larger than Borel — it includes Borel sets and all subsets of measure-zero Borel sets. Most of analysis works on either; we'll use Lebesgue.</p>
+<p>The <strong>Lebesgue σ-algebra</strong> is the <em>completion</em> of Borel: it adds every subset of a Borel null set. As a collection it is far bigger ($2^{\mathfrak c}$ sets against $\mathfrak c$ Borel sets), but every Lebesgue set differs from some Borel set by a null set. Most of analysis works on either; we'll use Lebesgue.</p>
 <h2 id="What's-a-measure?">What's a measure?<a class="anchor-link" href="#What's-a-measure?">¶</a></h2><p>A <strong>measure</strong> $\mu$ on $(X, \mathcal{F})$ is a function $\mathcal{F} \to [0, \infty]$ with:</p>
 <ul>
 <li>$\mu(\emptyset) = 0$.</li>
@@ -7835,11 +7835,11 @@ a.anchor-link {
 <li><strong>Dirac mass at $x_0$</strong>: $\delta_{x_0}(E) = 1$ if $x_0 \in E$ else $0$.</li>
 <li><strong>Lebesgue measure</strong> on $\mathbb{R}$: assigns intervals their length, $\lambda([a, b]) = b - a$. Constructed in the next notebook.</li>
 </ul>
-<p>These three already span a wide range — counting measure is "discrete," Dirac is "concentrated," Lebesgue is "continuous." Most measures of interest are weighted combinations of these flavours.</p>
+<p>These three already span a wide range — counting measure is "discrete," Dirac is "concentrated," Lebesgue is "continuous." Lebesgue's decomposition theorem makes this precise on $\mathbb{R}$: every locally finite Borel measure splits into a part with a density against Lebesgue measure, a discrete part (weighted Diracs), and a <em>singular continuous</em> part, like the Cantor measure, that fits neither picture.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=800a4935">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=9d63cd6d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7876,7 +7876,7 @@ Match — additive ✓</pre>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3aea0dd7">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=150bc79b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7893,7 +7893,7 @@ Match — additive ✓</pre>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=6aba7523">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d263d903">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7930,7 +7930,7 @@ Match — additive ✓</pre>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=744268bd">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b75621b4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7946,7 +7946,7 @@ Match — additive ✓</pre>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=59f7399f">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=ed0fdb8b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7985,7 +7985,7 @@ Density and measure are independent notions.</pre>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9dafb6fd">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0f96e3ae">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7998,7 +7998,7 @@ Density and measure are independent notions.</pre>
 <li>$G_\delta$ sets (countable intersections of open sets).</li>
 <li>Iterated unions/intersections of those.</li>
 </ul>
-<p>Every "describable" subset of $\mathbb{R}$ is Borel. Constructing non-Borel sets requires (clever) transfinite induction or the axiom of choice. In practice, <em>every set you can write down explicitly is measurable</em>.</p>
+<p>Non-Borel sets exist without any appeal to choice: Lusin and Suslin built explicit ones as projections of Borel subsets of the plane. Those are still Lebesgue measurable. <em>Non-measurable</em> sets do need the axiom of choice (Solovay showed that, given an inaccessible cardinal, ZF with dependent choice is consistent with every set of reals being measurable). In practice, <em>every set you meet in analysis is measurable</em>.</p>
 <h2 id="Measure-spaces">Measure spaces<a class="anchor-link" href="#Measure-spaces">¶</a></h2><p>A <strong>measure space</strong> is a triple $(X, \mathcal{F}, \mu)$ — set, σ-algebra, measure. Examples we'll use:</p>
 <p>| Space | $X$ | $\mathcal{F}$ | $\mu$ |
 |-------|-----|---------------|-------|
@@ -8006,13 +8006,13 @@ Density and measure are independent notions.</pre>
 | Counting | any set | $2^X$ | $\mu(E) = |E|$ |
 | Dirac | any set | $2^X$ | $\delta_{x_0}$ |
 | Probability | any set with $\mu(X) = 1$ | σ-alg | probability measure |</p>
-<p>The same integration theory works on all of them — that's the abstraction's payoff. Probability theory is just integration on a measure space with $\mu(X) = 1$.</p>
+<p>The same integration theory works on all of them — that's the abstraction's payoff. Kolmogorov's axioms make probability theory the study of measure spaces with $\mu(X) = 1$.</p>
 <h2 id="The-big-picture">The big picture<a class="anchor-link" href="#The-big-picture">¶</a></h2><p>We've built the language. The next notebook constructs Lebesgue measure explicitly via outer measures, dealing with the technicalities (Vitali's non-measurable set, the Cantor set as a measure-zero example). Once $\lambda$ is in hand, the integral follows.</p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3ea0a008">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=47fb3b54">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>

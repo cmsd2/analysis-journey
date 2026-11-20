@@ -12,7 +12,7 @@
   "cells": [
     {
       "cell_type": "markdown",
-      "source": "# Continuity\n\nA function $f : \\mathbb{R} \\to \\mathbb{R}$ is **continuous at** $x_0$ if for every $\\varepsilon > 0$ there is $\\delta > 0$ such that\n\n$$|x - x_0| < \\delta \\;\\Longrightarrow\\; |f(x) - f(x_0)| < \\varepsilon.$$\n\nRead aloud: *if you want $f(x)$ within $\\varepsilon$ of $f(x_0)$, you can guarantee it by keeping $x$ within $\\delta$ of $x_0$.* The δ depends on both ε **and** $x_0$. When the same δ works for *every* $x_0$, the function is **uniformly continuous**.\n\nThis notebook exposes the difference: pointwise continuity is the weakest useful version, uniform continuity is what you actually need for most theorems (Riemann integrability, the fundamental theorem, exchange of limits...).\n",
+      "source": "# Continuity\n\nA function $f : \\mathbb{R} \\to \\mathbb{R}$ is **continuous at** $x_0$ if for every $\\varepsilon > 0$ there is $\\delta > 0$ such that\n\n$$|x - x_0| < \\delta \\;\\Longrightarrow\\; |f(x) - f(x_0)| < \\varepsilon.$$\n\nRead aloud: *if you want $f(x)$ within $\\varepsilon$ of $f(x_0)$, you can guarantee it by keeping $x$ within $\\delta$ of $x_0$.* The δ depends on both ε **and** $x_0$. When the same δ works for *every* $x_0$, the function is **uniformly continuous**.\n\nThis notebook exposes the difference: pointwise continuity is the weakest useful version; uniform continuity is what several theorems need (Riemann integrability of continuous functions, extending a function from $(a, b)$ to $[a, b]$).\n",
       "metadata": {}
     },
     {
@@ -53,7 +53,7 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## Discontinuities — three flavours\n\nThe Heaviside step is the canonical **jump** discontinuity at $x = 0$. Define $g$ piecewise.\n",
+      "source": "## Discontinuities — three flavours\n\nA step function has the canonical **jump** discontinuity. Take $g(x) = -1$ for $x < 0$ and $g(x) = 1$ for $x \\ge 0$ (the sign function, up to its value at $0$).\n",
       "metadata": {}
     },
     {
@@ -161,7 +161,7 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## Why uniform continuity matters\n\nSeveral big theorems require it:\n\n- **Riemann integrability**: every continuous function on $[a, b]$ is integrable, because compact ⇒ uniformly continuous (Heine-Cantor).\n- **Exchange of limits**: $\\lim_{n\\to\\infty} \\lim_{x\\to x_0} f_n(x) = \\lim_{x\\to x_0} \\lim_{n\\to\\infty} f_n(x)$ requires uniform convergence (next notebook).\n- **Numerical stability**: uniformly continuous functions tolerate small input perturbations with bounded error.\n\nPointwise continuity is enough for *evaluating* a function, but uniform continuity is what makes analysis hang together.\n",
+      "source": "## Why uniform continuity matters\n\nSeveral big theorems require it:\n\n- **Riemann integrability**: every continuous function on $[a, b]$ is integrable, because compact ⇒ uniformly continuous (Heine-Cantor).\n- **Extension**: a uniformly continuous $f$ on $(a, b)$ extends continuously to $[a, b]$. $1/x$ on $(0, 1)$ shows what fails without it.\n- **Cauchy sequences**: uniformly continuous maps send Cauchy sequences to Cauchy sequences. Merely continuous ones need not: $1/x$ sends $1/n$ to $n$.\n\nA different idea with a similar name, *uniform convergence* of a sequence of functions, governs exchanging limits; notebook 1.06 covers it.\n\nPointwise continuity is a statement about one point at a time; uniform continuity controls the whole domain at once.\n",
       "metadata": {}
     },
     {

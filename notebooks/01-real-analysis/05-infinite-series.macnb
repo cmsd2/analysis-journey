@@ -164,7 +164,7 @@
     },
     {
       "cell_type": "markdown",
-      "source": "So the same set of terms, in a different order, converges to a different number. The lesson: **for conditionally convergent series, the order matters.** Absolute convergence is what guarantees you can rearrange freely.\n\n## What we got\n\n- Convergence is about partial sums, not individual terms.\n- Standard tests (ratio, root, integral, comparison) handle most series.\n- Conditional convergence is a fragile thing — robustness comes from absolute convergence.\n- The integral test and ratio test are direct stepping stones to power series (next notebook).\n",
+      "source": "So the same set of terms, in a different order, converges to a different number. The lesson: **for conditionally convergent series, the order matters.** Absolute convergence is what guarantees you can rearrange freely.\n\n## What we got\n\n- Convergence is about partial sums, not individual terms.\n- Standard tests (ratio, root, integral, comparison) handle most series.\n- Conditional convergence is a fragile thing — robustness comes from absolute convergence.\n- The integral test and ratio test are direct stepping stones to power series (notebook 1.07).\n",
       "metadata": {}
     },
     {

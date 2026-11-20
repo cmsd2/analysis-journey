@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 26,
+      "execution_count": 31,
       "outputs": []
     },
     {
@@ -29,15 +29,15 @@
     },
     {
       "cell_type": "code",
-      "source": "f_ex : x$\ng_ex : exp(x)$\nint_fg : integrate(abs(f_ex * g_ex), x, 0, 1)$\nnorm_f : sqrt(integrate(f_ex^2, x, 0, 1))$\nnorm_g : sqrt(integrate(g_ex^2, x, 0, 1))$\nprint(\"∫₀¹ x·e^x dx =\", float(int_fg))$\nprint(\"‖f‖_2 · ‖g‖_2 =\", float(norm_f * norm_g))$\nprint(\"Hölder/CS bound holds:\", float(int_fg) <= float(norm_f * norm_g))$",
+      "source": "f_ex : x$\ng_ex : exp(x)$\nint_fg : integrate(abs(f_ex * g_ex), x, 0, 1)$\nnorm_f : sqrt(integrate(f_ex^2, x, 0, 1))$\nnorm_g : sqrt(integrate(g_ex^2, x, 0, 1))$\nprint(\"∫₀¹ x·e^x dx =\", float(int_fg))$\nprint(\"‖f‖_2 · ‖g‖_2 =\", float(norm_f * norm_g))$\nprint(\"Hölder/CS bound holds:\", is(float(int_fg) <= float(norm_f * norm_g)))$",
       "metadata": {},
-      "execution_count": 27,
+      "execution_count": 32,
       "outputs": [
         {
           "name": "stdout",
           "output_type": "stream",
           "text": [
-            "∫₀¹ x·e^x dx = 1.0\n‖f‖_2 · ‖g‖_2 = 1.0319121489521812\nHölder/CS bound holds: 1.0 <= 1.0319121489521812"
+            "∫₀¹ x·e^x dx = 1.0\n‖f‖_2 · ‖g‖_2 = 1.0319121489521812\nHölder/CS bound holds: true"
           ]
         }
       ]
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "print(\"‖x^{-1/2}‖_1 = ∫₀¹ x^{-1/2} dx =\")$\nintegrate(x^(-1/2), x, 0, 1);\nprint()$\n/* ∫_ε¹ 1/x dx = -log(ε) which → +∞ as ε → 0⁺ */\nprint(\"‖x^{-1/2}‖_2² = ∫_ε¹ 1/x dx = -log(ε), which diverges as ε → 0⁺.\")$\nprint(\"→ x^{-1/2} ∈ L¹ but not L²\")$",
       "metadata": {},
-      "execution_count": 28,
+      "execution_count": 33,
       "outputs": [
         {
           "name": "stdout",
@@ -71,7 +71,7 @@
       "cell_type": "code",
       "source": "/* Verify orthogonality: ∫₀¹ e^{2πi m x} · e^{-2πi n x} dx = δ_{m,n} */\nm_test : 1$ n_test : 2$\nresult : integrate(exp(2*%pi*%i*m_test*x) * exp(-2*%pi*%i*n_test*x), x, 0, 1)$\nprint(\"⟨e^{2πi·1·x}, e^{2πi·2·x}⟩ =\", result, \"(=0, orthogonal ✓)\")$\nprint()$\nresult_self : integrate(exp(2*%pi*%i*1*x) * exp(-2*%pi*%i*1*x), x, 0, 1)$\nprint(\"⟨e^{2πi·x}, e^{2πi·x}⟩ =\", result_self, \"(=1, unit norm ✓)\")$",
       "metadata": {},
-      "execution_count": 29,
+      "execution_count": 34,
       "outputs": [
         {
           "name": "stdout",
@@ -84,14 +84,14 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## Convexity and clipping\n\nOn a **probability** space ($\\mu(X) = 1$), $\\|f\\|_p$ is non-decreasing in $p$ — Jensen's inequality applied to $|f|^p$. On a general finite measure space the comparison picks up a factor, $\\|f\\|_p \\le \\mu(X)^{1/p - 1/q}\\,\\|f\\|_q$ for $p < q$, so it is only monotone after normalising. For counting measure the inequality runs the other way: $\\|f\\|_q \\le \\|f\\|_p$ when $p < q$.\n\n## Examples of $L^p$ functions\n\nTwo ways a function can fail to be in $L^1([0, \\infty))$:\n- **Decaying too slowly at infinity**: $\\int_1^\\infty dx/x = \\infty$.\n- **Blowing up too fast at a point**: $\\int_0^1 dx/x = \\infty$.\n\nThe borderline is delicate, and the same exponent falls on opposite sides at the two ends: $1/\\sqrt x$ *is* integrable near $0$ ($\\int_0^1 dx/\\sqrt x = 2$) but not near infinity, while $1/x^2$ is integrable near infinity but not near $0$.\n\nA function being in *every* $L^p$ is a strong regularity condition: $e^{-x^2}$ on $\\mathbb{R}$ is in every $L^p$ (decays faster than any polynomial). Compactly-supported continuous functions are in every $L^p$.\n",
+      "source": "## Comparing $L^p$ norms\n\nOn a **probability** space ($\\mu(X) = 1$), $\\|f\\|_p$ is non-decreasing in $p$ — Jensen's inequality applied to $|f|^p$. On a general finite measure space the comparison picks up a factor, $\\|f\\|_p \\le \\mu(X)^{1/p - 1/q}\\,\\|f\\|_q$ for $p < q$, so it is only monotone after normalising. For counting measure the inequality runs the other way: $\\|f\\|_q \\le \\|f\\|_p$ when $p < q$.\n\n## Examples of $L^p$ functions\n\nTwo ways a function can fail to be in $L^1([0, \\infty))$:\n- **Decaying too slowly at infinity**: $\\int_1^\\infty dx/x = \\infty$.\n- **Blowing up too fast at a point**: $\\int_0^1 dx/x = \\infty$.\n\nThe borderline is delicate, and the same exponent falls on opposite sides at the two ends: $1/\\sqrt x$ *is* integrable near $0$ ($\\int_0^1 dx/\\sqrt x = 2$) but not near infinity, while $1/x^2$ is integrable near infinity but not near $0$.\n\nBeing in *every* $L^p$, $1 \\le p \\le \\infty$, needs both boundedness and enough decay at infinity. $e^{-x^2}$ on $\\mathbb{R}$ qualifies (it decays faster than any polynomial), and so does every compactly supported continuous function.\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
       "source": "/* Compute ‖e^{-x²}‖_p for various p */\nfor p in [1, 2, 3, 5] do\n  print(\"‖e^{-x²}‖_\", p, \" = (\",\n        float(integrate(exp(-p * x^2), x, -inf, inf)), \")^{1/\", p, \"} =\",\n        float(integrate(exp(-p * x^2), x, -inf, inf))^(1.0/p))$",
       "metadata": {},
-      "execution_count": 30,
+      "execution_count": 35,
       "outputs": [
         {
           "name": "stdout",
@@ -104,7 +104,7 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## What $L^p$ buys us\n\nThe big picture:\n\n- $L^p$ for $p \\ge 1$ is a Banach space (complete normed space).\n- $L^2$ is a Hilbert space, with all the geometric tools that come with that.\n- Bounded linear operators between $L^p$ spaces have a rich theory (next stage).\n- DCT, Fubini, and the Lebesgue integral all live naturally in $L^1$.\n\nThe $L^p$ scale interpolates between $L^1$ (integrable) and $L^\\infty$ (essentially bounded), letting us match the right space to the problem at hand. A function that's just barely in $L^1$ might be safely in $L^2$; a function bounded but not integrable lives in $L^\\infty$ but not $L^1$.\n\nThe next notebook ties up the last loose end of multivariable Lebesgue: when can we exchange the order of integration in $\\int\\int f\\,d\\mu\\,d\\nu$?\n",
+      "source": "## What $L^p$ buys us\n\nThe big picture:\n\n- $L^p$ for $p \\ge 1$ is a Banach space (complete normed space).\n- $L^2$ is a Hilbert space, with all the geometric tools that come with that.\n- Bounded linear operators between $L^p$ spaces have a rich theory (next stage).\n- DCT, Fubini, and the Lebesgue integral all live naturally in $L^1$.\n\nThe $L^p$ scale interpolates between $L^1$ (integrable) and $L^\\infty$ (essentially bounded), letting us match the right space to the problem at hand. On $[0, \\infty)$ neither of $L^1$ and $L^2$ contains the other: $x^{-1/2}\\mathbf{1}_{[0,1]}$ lies in $L^1$ only, $1/(1+x)$ in $L^2$ only. A bounded function that is not integrable lies in $L^\\infty$ but not $L^1$.\n\nThe next notebook ties up the last loose end of multivariable Lebesgue: when can we exchange the order of integration in $\\int\\int f\\,d\\mu\\,d\\nu$?\n",
       "metadata": {}
     },
     {

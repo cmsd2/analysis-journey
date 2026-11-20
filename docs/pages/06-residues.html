@@ -7771,7 +7771,7 @@ a.anchor-link {
 </head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=61326693">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=41764f1d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7780,18 +7780,18 @@ a.anchor-link {
 <h1 id="Residues-and-the-Residue-Theorem-%5BS+N%5D">Residues and the Residue Theorem [S+N]<a class="anchor-link" href="#Residues-and-the-Residue-Theorem-%5BS+N%5D">¶</a></h1><p>If $f$ has an <strong>isolated singularity</strong> at $z_0$, the <strong>residue</strong> at $z_0$ is the coefficient $a_{-1}$ in the Laurent expansion</p>
 <p>$$f(z) = \sum_{n=-\infty}^{\infty} a_n (z - z_0)^n, \quad \text{convergent on some annulus around } z_0.$$</p>
 <p>We write $\mathrm{Res}_{z_0} f = a_{-1}$.</p>
-<p><strong>Residue theorem</strong>: if $f$ is holomorphic on an open set $\Omega$ except at finitely many isolated singularities $z_1, \ldots, z_k$ inside a positively-oriented simple closed contour $\gamma$ in $\Omega$, then</p>
+<p><strong>Residue theorem</strong>: if $f$ is holomorphic on an open set $\Omega$ except at finitely many isolated singularities $z_1, \ldots, z_k$ inside a positively-oriented simple closed contour $\gamma$, with $\gamma$ and its interior contained in $\Omega$ and no singularity on $\gamma$, then</p>
 <p>$$\oint_\gamma f(z)\,dz = 2\pi i \sum_{j=1}^k \mathrm{Res}_{z_j} f.$$</p>
-<p>This converts contour integrals into a finite sum and powers a remarkable trick: <strong>evaluate real integrals by closing the contour in the complex plane</strong>.</p>
+<p>This converts contour integrals into a finite sum and gives a practical method: <strong>evaluate real integrals by closing the contour in the complex plane</strong>.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=c344b3cd">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=16951c35">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [37]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [43]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-maxima"><pre><span></span><span class="nf">load</span><span class="p">(</span><span class="s">"numerics"</span><span class="p">)$</span>
@@ -7802,7 +7802,7 @@ a.anchor-link {
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=488fe969">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=31add19a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7818,12 +7818,12 @@ a.anchor-link {
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=0990d8a8">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=9356fc1d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [38]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [44]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-maxima"><pre><span></span><span class="nv">f1</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="nv">z</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="nv">z</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">))$</span>
@@ -7850,7 +7850,7 @@ Res at 1: 1</pre>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=eba89113">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=f063a393">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7862,20 +7862,20 @@ Res at 1: 1</pre>
 <p>By the residue theorem: $\oint_{\gamma_R} f = 2\pi i \cdot \dfrac{1}{2i} = \pi$.</p>
 <p>The contour splits: $\int_{-R}^R + \int_{C_R}$. On $C_R$, $|f| \le 1/(R^2 - 1)$ and the path length is $\pi R$, so by ML the semicircle contribution $\to 0$ as $R \to \infty$. The real-axis part is exactly the integral we want, so</p>
 <p>$$\int_{-\infty}^{\infty} \frac{1}{1 + x^2}\,dx = \pi.$$</p>
-<p>Of course we already knew $\int 1/(1+x^2) = \arctan x$, so this real integral is $\pi$. But the same method works on integrals with no elementary antiderivative.</p>
+<p>Of course we already knew $\int 1/(1+x^2) = \arctan x$, so this real integral is $\pi$. The method earns its keep on integrals whose antiderivatives are messy or not elementary (the Fourier example below).</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=28519aa1">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=66ab9975">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [39]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [45]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-maxima"><pre><span></span><span class="nv">f_test</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">z</span><span class="o">^</span><span class="mi">2</span><span class="p">)$</span>
-<span class="nf">print</span><span class="p">(</span><span class="s">"Singularities of 1/(1 + z²):"</span><span class="p">);</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">z</span><span class="o">^</span><span class="mi">2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">z</span><span class="p">);</span>
+<span class="nf">print</span><span class="p">(</span><span class="s">"Singularities of 1/(1 + z²):"</span><span class="p">)$</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">z</span><span class="o">^</span><span class="mi">2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">z</span><span class="p">);</span>
 <span class="nf">print</span><span class="p">(</span><span class="s">"Res at i ="</span><span class="p">,</span><span class="w"> </span><span class="nf">residue</span><span class="p">(</span><span class="nv">f_test</span><span class="p">,</span><span class="w"> </span><span class="nv">z</span><span class="p">,</span><span class="w"> </span><span class="no">%i</span><span class="p">))$</span>
 <span class="nf">print</span><span class="p">(</span><span class="s">"Res at -i ="</span><span class="p">,</span><span class="w"> </span><span class="nf">residue</span><span class="p">(</span><span class="nv">f_test</span><span class="p">,</span><span class="w"> </span><span class="nv">z</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="no">%i</span><span class="p">))$</span>
 <span class="nf">print</span><span class="p">(</span><span class="s">"∫_{-∞}^∞ 1/(1+x²) dx = 2πi · Res at i ="</span><span class="p">,</span><span class="w"> </span><span class="nf">expand</span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="no">%pi</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="no">%i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nf">residue</span><span class="p">(</span><span class="nv">f_test</span><span class="p">,</span><span class="w"> </span><span class="nv">z</span><span class="p">,</span><span class="w"> </span><span class="no">%i</span><span class="p">)))$</span>
@@ -7892,7 +7892,6 @@ Res at 1: 1</pre>
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Singularities of 1/(1 + z²):
-"Singularities of 1/(1 + z²):"
 [z = -%i,z = %i]
 Res at i = -(%i/2)
 Res at -i = %i/2
@@ -7902,13 +7901,13 @@ Res at -i = %i/2
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3fdcfe43">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=eab93102">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="A-more-interesting-example">A more interesting example<a class="anchor-link" href="#A-more-interesting-example">¶</a></h2><p>Compute $\int_0^\infty \dfrac{1}{1 + x^4}\,dx$ — no elementary antiderivative.</p>
+<h2 id="A-more-interesting-example">A more interesting example<a class="anchor-link" href="#A-more-interesting-example">¶</a></h2><p>Compute $\int_0^\infty \dfrac{1}{1 + x^4}\,dx$. Partial fractions give an elementary antiderivative, but a messy one (two logarithms and two arctangents); residues reach the answer faster.</p>
 <p>Consider $f(z) = 1/(1 + z^4)$. Poles where $1 + z^4 = 0$, i.e. $z = e^{i\pi/4}, e^{3i\pi/4}, e^{5i\pi/4}, e^{7i\pi/4}$. Only the first two lie in the upper half-plane.</p>
 <p>Use the same semicircular contour. By residue theorem,</p>
 <p>$$\int_{-\infty}^\infty \frac{1}{1 + x^4}\,dx = 2\pi i\,(\mathrm{Res}_{e^{i\pi/4}} + \mathrm{Res}_{e^{3i\pi/4}}).$$</p>
@@ -7916,12 +7915,12 @@ Res at -i = %i/2
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=5394ea82">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=a0f6f47f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [40]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [46]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-maxima"><pre><span></span><span class="nv">f4</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">z</span><span class="o">^</span><span class="mi">4</span><span class="p">)$</span>
@@ -7940,10 +7939,9 @@ Res at -i = %i/2
 <span class="nf">print</span><span class="p">(</span><span class="s">"Sum of residues:"</span><span class="p">,</span><span class="w"> </span><span class="nf">ratsimp</span><span class="p">(</span><span class="nv">sum_res</span><span class="p">))$</span>
 <span class="nf">print</span><span class="p">()$</span>
 <span class="nv">I_full</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="no">%pi</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="no">%i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">sum_res</span><span class="p">$</span>
-<span class="nf">print</span><span class="p">(</span><span class="s">"∫_{-∞}^∞ 1/(1+x⁴) dx ="</span><span class="p">,</span><span class="w"> </span><span class="nf">ratsimp</span><span class="p">(</span><span class="nv">I_full</span><span class="p">))$</span>
-<span class="nf">print</span><span class="p">(</span><span class="s">"(numerical:"</span><span class="p">,</span><span class="w"> </span><span class="nf">float</span><span class="p">(</span><span class="nv">I_full</span><span class="p">),</span><span class="w"> </span><span class="s">")"</span><span class="p">)$</span>
-<span class="nf">print</span><span class="p">(</span><span class="s">"∫_0^∞ 1/(1+x⁴) dx (half) ="</span><span class="p">,</span><span class="w"> </span><span class="nf">ratsimp</span><span class="p">(</span><span class="nv">I_full</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">))$</span>
-<span class="nf">print</span><span class="p">(</span><span class="s">"(numerical:"</span><span class="p">,</span><span class="w"> </span><span class="nf">float</span><span class="p">(</span><span class="nv">I_full</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">),</span><span class="w"> </span><span class="s">")"</span><span class="p">)$</span>
+<span class="nv">I_clean</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nf">trigsimp</span><span class="p">(</span><span class="nf">rectform</span><span class="p">(</span><span class="nv">I_full</span><span class="p">))$</span><span class="w">  </span><span class="cm">/* clear the (-1)^(1/4) radicals */</span>
+<span class="nf">print</span><span class="p">(</span><span class="s">"∫_{-∞}^∞ 1/(1+x⁴) dx ="</span><span class="p">,</span><span class="w"> </span><span class="nv">I_clean</span><span class="p">,</span><span class="w"> </span><span class="s">"≈"</span><span class="p">,</span><span class="w"> </span><span class="nf">float</span><span class="p">(</span><span class="nv">I_clean</span><span class="p">))$</span>
+<span class="nf">print</span><span class="p">(</span><span class="s">"∫_0^∞ 1/(1+x⁴) dx (half) ="</span><span class="p">,</span><span class="w"> </span><span class="nv">I_clean</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">"≈"</span><span class="p">,</span><span class="w"> </span><span class="nf">float</span><span class="p">(</span><span class="nv">I_clean</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">))$</span>
 </pre></div>
 </div>
 </div>
@@ -7960,34 +7958,32 @@ Res at -i = %i/2
 Upper-half-plane poles: [(-1)^(1/4)*%i,(-1)^(1/4)]
 Residues at those poles: [-(((-1)^(1/4)*%i)/4),-((-1)^(1/4)/4)]
 Sum of residues: -(((-1)^(1/4)*%i+(-1)^(1/4))/4)
-∫_{-∞}^∞ 1/(1+x⁴) dx = -((((-1)^(1/4)*%i-(-1)^(1/4))*%pi)/2)
-(numerical: 6.283185307179586*%i*(-(0.25*(-1)^(1/4)*%i)-0.25*(-1)^(1/4)) )
-∫_0^∞ 1/(1+x⁴) dx (half) = -((((-1)^(1/4)*%i-(-1)^(1/4))*%pi)/4)
-(numerical: 3.141592653589793*%i*(-(0.25*(-1)^(1/4)*%i)-0.25*(-1)^(1/4)) )</pre>
+∫_{-∞}^∞ 1/(1+x⁴) dx = %pi/sqrt(2) ≈ 2.221441469079183
+∫_0^∞ 1/(1+x⁴) dx (half) = %pi/2^(3/2) ≈ 1.1107207345395913</pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5f9214c6">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e1336247">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>So $\int_0^\infty \dfrac{dx}{1 + x^4} = \dfrac{\pi}{2\sqrt{2}}$ — a clean result extracted from a contour integral with two residues.</p>
-<h2 id="Fourier-style-integrals:-$%5Cint-e%5E%7Bi-a-x%7D-g(x)%5C,dx$">Fourier-style integrals: $\int e^{i a x} g(x)\,dx$<a class="anchor-link" href="#Fourier-style-integrals:-$%5Cint-e%5E%7Bi-a-x%7D-g(x)%5C,dx$">¶</a></h2><p>The technique generalises beautifully to integrals like</p>
+<h2 id="Fourier-style-integrals:-$%5Cint-e%5E%7Bi-a-x%7D-g(x)%5C,dx$">Fourier-style integrals: $\int e^{i a x} g(x)\,dx$<a class="anchor-link" href="#Fourier-style-integrals:-$%5Cint-e%5E%7Bi-a-x%7D-g(x)%5C,dx$">¶</a></h2><p>The technique extends to integrals like</p>
 <p>$$\int_{-\infty}^\infty \frac{e^{i a x}}{1 + x^2}\,dx \qquad (a &gt; 0).$$</p>
 <p>Close the contour in the upper half-plane (where $|e^{iaz}|$ decays for $a &gt; 0$). Pole at $z = i$, residue $e^{-a}/(2i)$. Result: $\pi e^{-a}$. Maxima:</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=247f10d7">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=7d7ed668">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [41]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [47]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-maxima"><pre><span></span><span class="nv">g_test</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nf">exp</span><span class="p">(</span><span class="no">%i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">z</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">z</span><span class="o">^</span><span class="mi">2</span><span class="p">)$</span>
@@ -8016,7 +8012,7 @@ Real part (a &gt; 0 implicit): π e^{-a}</pre>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=fd1dd83f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=bc7d6ea6">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8034,12 +8030,12 @@ Real part (a &gt; 0 implicit): π e^{-a}</pre>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=ae081a42">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=9e059820">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [42]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [48]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-maxima"><pre><span></span><span class="nv">I_num_1</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">$</span>
@@ -8069,19 +8065,19 @@ Symbolic π/√2 = 2.221441469079183</pre>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=88433929">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=afe36edb">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Residues are the most powerful way to evaluate definite integrals that don't have elementary antiderivatives. The technique stretches further: contour integrals of branch-cut functions, sums of trigonometric series, asymptotic expansions, special function identities — all built on this single theorem.</p>
+<p>The numerical sum falls short of $\pi/\sqrt 2$ by about $8.3 \times 10^{-5}$, which is the truncated tails: $2\int_{20}^\infty x^{-4}\,dx = 1/12000$. Residues evaluate many definite integrals that resist antiderivatives. The technique stretches further: contour integrals of branch-cut functions, sums of trigonometric series, asymptotic expansions, special function identities — all built on this single theorem.</p>
 <p>Next, the final notebook: conformal mappings.</p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1a43749c">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d500a33d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>

@@ -7771,7 +7771,7 @@ a.anchor-link {
 </head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=bb7feed1">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d3559314">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7787,12 +7787,12 @@ a.anchor-link {
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=db8ff12a">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=9a840022">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [19]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-maxima"><pre><span></span><span class="nf">load</span><span class="p">(</span><span class="s">"numerics"</span><span class="p">)$</span>
@@ -7803,25 +7803,25 @@ a.anchor-link {
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9b6991c2">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=eaabc356">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="Open-Mapping-Theorem-%E2%80%94-corollaries">Open Mapping Theorem — corollaries<a class="anchor-link" href="#Open-Mapping-Theorem-%E2%80%94-corollaries">¶</a></h2><p><strong>Corollary 1 (bounded inverse theorem).</strong> If $T : X \to Y$ is bounded, linear, and bijective between Banach spaces, then $T^{-1}$ is bounded.</p>
-<p>This is shocking: pointwise inverse exists ⇒ uniform inverse exists. Without OMT, you'd need to verify boundedness of $T^{-1}$ separately.</p>
+<p>So an inverse that exists as a set map is automatically bounded. Without OMT, you'd need to verify boundedness of $T^{-1}$ separately.</p>
 <p><strong>Corollary 2.</strong> If two complete norms $\|\cdot\|_a, \|\cdot\|_b$ on the same vector space $X$ make the identity continuous from $a$ to $b$, then they're <strong>equivalent</strong> norms. (Otherwise the identity would be an unbounded inverse of a bounded bijection — contradiction.)</p>
 <p>So you can't have two different complete norm topologies stacked on each other in a comparable way. Either they're equivalent, or they're incomparable.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=97090986">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=3858a041">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [17]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [20]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-maxima"><pre><span></span><span class="cm">/* Demonstrate the bounded inverse theorem with a simple finite-dim example.</span>
@@ -7858,7 +7858,7 @@ matrix([0.5,0.5],[0.5,-0.5])
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cca81183">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=129f23c1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7866,24 +7866,24 @@ matrix([0.5,0.5],[0.5,-0.5])
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="Closed-Graph-Theorem">Closed Graph Theorem<a class="anchor-link" href="#Closed-Graph-Theorem">¶</a></h2><p>A linear map $T : X \to Y$ has <strong>closed graph</strong> if whenever $x_n \to x$ in $X$ and $T x_n \to y$ in $Y$, then $y = T x$.</p>
 <p><strong>Theorem.</strong> For Banach $X, Y$: $T$ is bounded ⇔ $T$ has closed graph.</p>
-<p>This is wildly useful: to prove $T$ is bounded, you don't need to bound $\|Tx\|$ in terms of $\|x\|$ uniformly — just verify that "limit of inputs converges + limit of outputs converges ⇒ output is the limit". The latter is a much weaker condition.</p>
+<p>This saves work: to prove $T$ is bounded, you don't need to bound $\|Tx\|$ in terms of $\|x\|$ uniformly — just verify that "limit of inputs converges + limit of outputs converges ⇒ output is the limit". The latter is a much weaker condition.</p>
 <p><strong>Application — and a warning about the hypotheses.</strong> Differentiation $D : (C^1([0,1]), \|\cdot\|_\infty) \to (C([0,1]), \|\cdot\|_\infty)$ <em>does</em> have a closed graph: if $f_n \to f$ uniformly and $f_n' \to g$ uniformly then $f' = g$ (Stage 1, notebook 6). Yet $D$ is <strong>unbounded</strong> — take $f_n(x) = \sin(nx)/n$, so $\|f_n\|_\infty = 1/n \to 0$ while $\|f_n'\|_\infty = \|\cos(nx)\|_\infty = 1$.</p>
-<p>No contradiction, because $(C^1([0,1]), \|\cdot\|_\infty)$ is <strong>not complete</strong> — the closed graph theorem simply doesn't apply. Completeness of <em>both</em> spaces is load-bearing, not decoration. Give $C^1$ its own norm $\|f\|_{C^1} = \|f\|_\infty + \|f'\|_\infty$ and it becomes a Banach space; then $D$ is bounded, with $\|D\| \le 1$, and the theorem has nothing to object to.</p>
+<p>No contradiction, because $(C^1([0,1]), \|\cdot\|_\infty)$ is <strong>not complete</strong> — the closed graph theorem simply doesn't apply. The theorem needs both spaces complete. Give $C^1$ its own norm $\|f\|_{C^1} = \|f\|_\infty + \|f'\|_\infty$ and it becomes a Banach space; then $D$ is bounded, with $\|D\| \le 1$, and the theorem has nothing to object to.</p>
 <h2 id="Uniform-Boundedness-Principle">Uniform Boundedness Principle<a class="anchor-link" href="#Uniform-Boundedness-Principle">¶</a></h2><p><strong>Statement</strong>. Let $\{T_\alpha\}_{\alpha \in A}$ be a family of bounded linear operators $X \to Y$ between Banach spaces. If for every $x \in X$ the orbit $\{T_\alpha x\}$ is bounded in $Y$, then $\sup_\alpha \|T_\alpha\| &lt; \infty$.</p>
 <p><strong>Pointwise bounded ⇒ uniformly bounded.</strong> Same flavour as compactness: a local condition forces a global one.</p>
-<h3 id="Application:-Fourier-series-partial-sums">Application: Fourier series partial sums<a class="anchor-link" href="#Application:-Fourier-series-partial-sums">¶</a></h3><p>The partial sum operators $S_N : C([0, 1]) \to C([0, 1])$ for Fourier series have uniformly unbounded norms: $\|S_N\|_\infty \sim \log N \to \infty$. By UBP (in contrapositive), there must be some $f \in C([0, 1])$ for which $\{S_N f(x_0)\}$ is unbounded — i.e., the Fourier series <strong>diverges at $x_0$</strong>.</p>
+<h3 id="Application:-Fourier-series-partial-sums">Application: Fourier series partial sums<a class="anchor-link" href="#Application:-Fourier-series-partial-sums">¶</a></h3><p>The partial sum operators $S_N : C([0, 1]) \to C([0, 1])$ for Fourier series have unbounded norms: $\|S_N\|_\infty \sim \log N \to \infty$. By UBP (in contrapositive), there must be some $f \in C([0, 1])$ for which $\{S_N f(x_0)\}$ is unbounded — i.e., the Fourier series <strong>diverges at $x_0$</strong>.</p>
 <p>du Bois-Reymond (1873) had explicit examples; UBP gives existence without construction.</p>
-<p><strong>This is why uniform convergence of Fourier series for arbitrary continuous $f$ fails.</strong> What does hold, under stronger hypotheses: convergence almost everywhere for $f \in L^2$ (Carleson, 1966 — hard); uniform convergence for Hölder-continuous $f$ (Dini–Lipschitz); pointwise everywhere for $C^1$. Mere continuity buys none of the three.</p>
+<p><strong>This is why uniform convergence of Fourier series for arbitrary continuous $f$ fails.</strong> What does hold, under stronger hypotheses: convergence almost everywhere for $f \in L^2$ (Carleson, 1966 — hard); uniform convergence for Hölder-continuous $f$ (Dini–Lipschitz); pointwise everywhere for $C^1$. Continuity alone gives the first (a continuous $f$ lies in $L^2$) but neither of the others.</p>
 <h2 id="Numerical-illustration:-$%5C%7CS_N%5C%7C$-growth-%5BS+N%5D">Numerical illustration: $\|S_N\|$ growth [S+N]<a class="anchor-link" href="#Numerical-illustration:-$%5C%7CS_N%5C%7C$-growth-%5BS+N%5D">¶</a></h2><p>The Lebesgue constant $L_N = \|S_N\|$ on $C([-\pi, \pi])$ grows like $(4/\pi^2) \log N + O(1)$.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=eca328e3">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=76361e92">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [18]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [21]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-maxima"><pre><span></span><span class="cm">/* Numerically estimate L_N = ∫_{-π}^π |D_N(x)| dx where D_N is the Dirichlet kernel</span>
@@ -7900,8 +7900,10 @@ matrix([0.5,0.5],[0.5,-0.5])
 <span class="w">  </span><span class="k">to</span><span class="nv">tal</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nf">float</span><span class="p">(</span><span class="no">%pi</span><span class="p">))$</span><span class="w">  </span><span class="cm">/* normalising constant */</span>
 
 <span class="k">for</span><span class="w"> </span><span class="nv">N</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">500</span><span class="p">]</span><span class="w"> </span><span class="k">do</span>
-<span class="w">  </span><span class="nf">print</span><span class="p">(</span><span class="s">"N ="</span><span class="p">,</span><span class="w"> </span><span class="nv">N</span><span class="p">,</span><span class="w"> </span><span class="s">"   L_N ≈"</span><span class="p">,</span><span class="w"> </span><span class="nf">estimate_LN</span><span class="p">(</span><span class="nv">N</span><span class="p">),</span><span class="w"> </span><span class="s">"    (4/π² log N) ≈"</span><span class="p">,</span>
-<span class="w">        </span><span class="nf">float</span><span class="p">((</span><span class="mi">4</span><span class="o">/</span><span class="p">(</span><span class="nf">float</span><span class="p">(</span><span class="no">%pi</span><span class="p">))</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nf">log</span><span class="p">(</span><span class="nv">N</span><span class="p">)))$</span>
+<span class="w">  </span><span class="nf">block</span><span class="p">([</span><span class="nv">LN</span><span class="p">],</span>
+<span class="w">    </span><span class="nv">LN</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nf">estimate_LN</span><span class="p">(</span><span class="nv">N</span><span class="p">),</span>
+<span class="w">    </span><span class="nf">print</span><span class="p">(</span><span class="s">"N ="</span><span class="p">,</span><span class="w"> </span><span class="nv">N</span><span class="p">,</span><span class="w"> </span><span class="s">"   L_N ≈"</span><span class="p">,</span><span class="w"> </span><span class="nv">LN</span><span class="p">,</span><span class="w"> </span><span class="s">"    L_N - (4/π²) log N ≈"</span><span class="p">,</span>
+<span class="w">          </span><span class="nv">LN</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nf">float</span><span class="p">((</span><span class="mi">4</span><span class="o">/</span><span class="p">(</span><span class="nf">float</span><span class="p">(</span><span class="no">%pi</span><span class="p">))</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nf">log</span><span class="p">(</span><span class="nv">N</span><span class="p">))))$</span>
 </pre></div>
 </div>
 </div>
@@ -7914,35 +7916,35 @@ matrix([0.5,0.5],[0.5,-0.5])
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>N = 5    L_N ≈ 1.961359766611393     (4/π² log N) ≈ 0.6522806171467048
-N = 20    L_N ≈ 2.4945069986430135     (4/π² log N) ≈ 1.214124559328168
-N = 100    L_N ≈ 3.138861830933143     (4/π² log N) ≈ 1.866405176474873
-N = 500    L_N ≈ 3.813529330520008     (4/π² log N) ≈ 2.518685793621578</pre>
+<pre>N = 5    L_N ≈ 1.961359766611393     L_N - (4/π²) log N ≈ 1.3090791494646883
+N = 20    L_N ≈ 2.4945069986430135     L_N - (4/π²) log N ≈ 1.2803824393148455
+N = 100    L_N ≈ 3.138861830933143     L_N - (4/π²) log N ≈ 1.27245665445827
+N = 500    L_N ≈ 3.813529330520008     L_N - (4/π²) log N ≈ 1.2948435368984303</pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5198d1a4">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2b4adc7f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>$L_N$ grows logarithmically — slow, but unbounded. So $\|S_N\| \to \infty$: the family $\{S_N\}$ is not uniformly bounded. Read UBP in contrapositive and it follows that $\{S_N\}$ cannot be pointwise bounded either — there must exist a continuous $f$ and a point $x_0$ with $\sup_N |S_N f(x_0)| = \infty$, whose Fourier series therefore diverges at $x_0$.</p>
+<p>$L_N$ grows logarithmically — slow, but unbounded. The difference column stays near the known constant $\approx 1.27$; the drift at $N = 500$ comes from the quadrature, since 5000 sample points barely resolve 500 oscillations. So $\|S_N\| \to \infty$: the family $\{S_N\}$ is not uniformly bounded. Read UBP in contrapositive and it follows that $\{S_N\}$ cannot be pointwise bounded either — there must exist a continuous $f$ and a point $x_0$ with $\sup_N |S_N f(x_0)| = \infty$, whose Fourier series therefore diverges at $x_0$.</p>
 <h2 id="Why-these-three-theorems-are-%22big%22">Why these three theorems are "big"<a class="anchor-link" href="#Why-these-three-theorems-are-%22big%22">¶</a></h2><p>Each turns a <em>local</em> property into a <em>global</em> one — surjectivity ⇒ openness, pointwise bound ⇒ uniform bound, closed graph ⇒ continuity. Each is a structural rigidity that has no finite-dimensional analogue (in finite dim, every linear map is automatically bounded, every bijection is automatically open, etc.).</p>
 <p>They power:</p>
 <ul>
-<li><strong>PDE existence</strong>: Banach fixed-point + open mapping show solutions to elliptic equations depend continuously on data.</li>
-<li><strong>Numerical stability</strong>: discretisations of differential operators inherit boundedness uniformly via UBP.</li>
-<li><strong>Operator splitting</strong>: closed-graph theorem is what lets us write unbounded operators (like Laplacian) without sacrificing too much.</li>
+<li><strong>Well-posedness</strong>: if a PDE's solution map comes from a bounded bijection between Banach spaces, the bounded inverse theorem makes the solution depend continuously on the data.</li>
+<li><strong>Numerical analysis</strong>: the Lax equivalence theorem (for a consistent linear scheme, convergence ⇔ stability) uses UBP for convergence ⇒ stability.</li>
+<li><strong>Unbounded operators</strong>: by the closed graph theorem, a closed operator defined on all of a Banach space is bounded. So the Laplacian, closed but unbounded on $L^2$, can only live on a dense proper domain.</li>
 </ul>
 <h2 id="What's-coming">What's coming<a class="anchor-link" href="#What's-coming">¶</a></h2><p>Compact operators (next notebook) are the infinite-dimensional answer to "matrices with discrete spectrum". They behave almost as nicely as matrices, and they're where most concrete spectral theory happens.</p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2d4d7e08">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b565d079">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>

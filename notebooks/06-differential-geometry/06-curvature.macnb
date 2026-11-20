@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 21,
+      "execution_count": 25,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "/* Use Brioschi's simpler formula for orthogonal coordinates (F = 0):\n   K = -1/(2 sqrt(EG)) * [ ∂/∂u (G_u/sqrt(EG)) + ∂/∂v (E_v/sqrt(EG)) ]\n   For E = 1, G = sin²θ (with u = θ, v = φ): */\nE_metric : 1$\nG_metric : sin(theta)^2$\nsqrt_EG : sqrt(E_metric * G_metric)$  /* sin(θ), positive for θ ∈ (0, π) */\nG_u : diff(G_metric, theta)$         /* ∂G/∂θ */\nE_v : diff(E_metric, phi)$           /* ∂E/∂φ */\nK_brioschi : -1/(2 * sqrt_EG) * (\n                diff(G_u / sqrt_EG, theta)\n              + diff(E_v / sqrt_EG, phi))$\nprint(\"K (Gaussian curvature) of S² =\", trigsimp(K_brioschi))$",
       "metadata": {},
-      "execution_count": 22,
+      "execution_count": 26,
       "outputs": [
         {
           "name": "stdout",
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "E_h : 1/v^2$\nG_h : 1/v^2$\nsqrt_EG_h : sqrt(E_h * G_h)$  /* = 1/v² */\nG_u_h : diff(G_h, u)$\nE_v_h : diff(E_h, v)$\nK_h : -1/(2 * sqrt_EG_h) * (\n        diff(G_u_h / sqrt_EG_h, u)\n      + diff(E_v_h / sqrt_EG_h, v))$\nprint(\"K of hyperbolic plane =\", ratsimp(K_h))$",
       "metadata": {},
-      "execution_count": 23,
+      "execution_count": 27,
       "outputs": [
         {
           "name": "stdout",
@@ -64,20 +64,20 @@
     },
     {
       "cell_type": "markdown",
-      "source": "$K = -1$. Constant negative — the hyperbolic plane is everywhere \"saddle-shaped\" intrinsically (though it can't be embedded isometrically in $\\mathbb{R}^3$ globally; Hilbert's theorem).\n\n## Theorema egregium\n\nGauss showed in 1827 that Gaussian curvature is **intrinsic**: it depends only on $g$, not on any embedding. Concretely, two surfaces with the same metric have the same $K$ at corresponding points, even if they look different in $\\mathbb{R}^3$.\n\nConcrete instance: a flat piece of paper has $K = 0$ everywhere. You can roll it into a cylinder; the cylinder also has $K = 0$ at every point (it's locally flat, no metric distortion). You **can't** roll a flat sheet into a sphere ($K = 1$) without tearing or stretching — that's why orange peels can't be flattened.\n\n## Geodesic deviation\n\nTwo geodesics that start parallel will diverge or converge depending on curvature:\n\n- $K > 0$: they *converge* (think of two longitudes meeting at the pole).\n- $K = 0$: they stay parallel (Euclidean).\n- $K < 0$: they *diverge exponentially* (hyperbolic).\n\nThis is the **Jacobi equation**, the linearisation of the geodesic equation around a reference geodesic. Curvature appears as the source term — it's the \"tidal force\" of the geometry.\n\n## Gauss-Bonnet theorem\n\nFor a closed (compact, no boundary) oriented 2-manifold $M$,\n\n$$\\int_M K\\,dA = 2\\pi\\,\\chi(M),$$\n\nwhere $\\chi(M)$ is the **Euler characteristic** — a purely topological invariant. For a closed surface of genus $g$ (number of holes), $\\chi = 2 - 2g$.\n\n| Surface | $\\chi$ | $\\int K\\,dA$ |\n|---------|--------|--------------|\n| $S^2$ (sphere) | 2 | $4\\pi$ |\n| $T^2$ (torus) | 0 | 0 |\n| genus-2 | $-2$ | $-4\\pi$ |\n\nFor the unit sphere, $K = 1$, $\\mathrm{Area}(S^2) = 4\\pi$, so $\\int K = 4\\pi = 2\\pi \\cdot 2$ — confirmed.\n",
+      "source": "$K = -1$. Constant negative — the hyperbolic plane is everywhere \"saddle-shaped\" intrinsically (though it can't be embedded isometrically in $\\mathbb{R}^3$ globally; Hilbert's theorem).\n\n## Theorema egregium\n\nGauss showed in 1827 that Gaussian curvature is **intrinsic**: it depends only on $g$, not on any embedding. Concretely, two surfaces with the same metric have the same $K$ at corresponding points, even if they look different in $\\mathbb{R}^3$.\n\nConcrete instance: a flat piece of paper has $K = 0$ everywhere. You can roll it into a cylinder; the cylinder also has $K = 0$ at every point (it's locally flat, no metric distortion). You **can't** roll a flat sheet into a sphere ($K = 1$) without tearing or stretching — that's why orange peels can't be flattened.\n\n## Geodesic deviation\n\nTwo geodesics that start parallel will diverge or converge depending on curvature:\n\n- $K > 0$: they *converge* (think of two longitudes meeting at the pole).\n- $K = 0$: they stay parallel (Euclidean).\n- $K < 0$: they *diverge exponentially* (hyperbolic).\n\nThis is the **Jacobi equation**, the linearisation of the geodesic equation around a reference geodesic. Curvature appears as the source term — it's the \"tidal force\" of the geometry.\n\n## Gauss-Bonnet theorem\n\nFor a closed (compact, no boundary) oriented 2-manifold $M$,\n\n$$\\int_M K\\,dA = 2\\pi\\,\\chi(M),$$\n\nwhere $\\chi(M)$ is the **Euler characteristic** — a purely topological invariant. For a closed surface of genus $g$ (number of holes), $\\chi = 2 - 2g$.\n\n| Surface | $\\chi$ | $\\int K\\,dA$ |\n|---------|--------|--------------|\n| $S^2$ (sphere) | 2 | $4\\pi$ |\n| $T^2$ (torus) | 0 | 0 |\n| genus-2 | $-2$ | $-4\\pi$ |\n\nFor the unit sphere, $K = 1$ and $\\mathrm{Area}(S^2) = 4\\pi$, so $\\int K = 4\\pi = 2\\pi \\cdot 2$. The torus is a better test: its curvature varies from point to point, positive on the outer half and negative on the inner half, yet Gauss-Bonnet says the total must be $0$. Both by direct integration of $K\\sqrt{EG}$:\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
-      "source": "/* Verify Gauss-Bonnet for unit sphere */\nprint(\"Unit sphere: K = 1 everywhere, area = 4π\")$\nprint(\"∫_S² K dA = 4π\")$\nprint(\"2π χ(S²) = 2π · 2 =\", float(4*%pi))$\nprint(\"Gauss-Bonnet ✓\")$",
+      "source": "/* K for orthogonal coordinates (F = 0); sqrtEG passed in so its sign is under our control */\nK_orth(E, G, sqrtEG, u, v) := -1/(2*sqrtEG) * (diff(diff(G, u)/sqrtEG, u)\n                                             + diff(diff(E, v)/sqrtEG, v))$\n\n/* Unit sphere: E = 1, G = sin²θ, √(EG) = sin θ on 0 < θ < π */\nK_s : trigsimp(K_orth(1, sin(theta)^2, sin(theta), theta, phi))$\nGB_s : integrate(integrate(K_s * sin(theta), theta, 0, %pi), phi, 0, 2*%pi)$\nprint(\"Sphere: K =\", K_s, \"   ∫ K dA =\", GB_s, \"   2π χ(S²) = 2π·2\")$\n\n/* Torus with R = 2, r = 1/2, embedded as in notebook 1 (u around the axis, v around the tube):\n   E = (R + r cos v)², F = 0, G = r², √(EG) = r (R + r cos v) > 0 */\nRt : 2$  rt : 1/2$\nsqrtEG_t : rt * (Rt + rt*cos(v))$\nK_t : ratsimp(K_orth((Rt + rt*cos(v))^2, rt^2, sqrtEG_t, u, v))$\nGB_t : integrate(integrate(ratsimp(K_t * sqrtEG_t), v, 0, 2*%pi), u, 0, 2*%pi)$\nprint(\"Torus: K =\", K_t, \"   (> 0 outside, where cos v > 0; < 0 inside)\")$\nprint(\"       ∫ K dA =\", GB_t, \"   2π χ(T²) = 0\")$",
       "metadata": {},
-      "execution_count": 24,
+      "execution_count": 28,
       "outputs": [
         {
           "name": "stdout",
           "output_type": "stream",
           "text": [
-            "Unit sphere: K = 1 everywhere, area = 4π\n∫_S² K dA = 4π\n2π χ(S²) = 2π · 2 = 12.566370614359172\nGauss-Bonnet ✓"
+            "Sphere: K = 1    ∫ K dA = 4*%pi    2π χ(S²) = 2π·2\nTorus: K = (4*cos(v))/(cos(v)+4)    (> 0 outside, where cos v > 0; < 0 inside)\n       ∫ K dA = 0    2π χ(T²) = 0"
           ]
         }
       ]

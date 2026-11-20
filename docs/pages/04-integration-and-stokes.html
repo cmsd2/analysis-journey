@@ -7771,7 +7771,7 @@ a.anchor-link {
 </head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6fd7127e">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=fd64ea15">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7786,7 +7786,7 @@ a.anchor-link {
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=1644ccda">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=293742c6">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7802,7 +7802,7 @@ a.anchor-link {
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=97f1abd2">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9a7dca91">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7823,11 +7823,11 @@ a.anchor-link {
 <h2 id="Stokes-for-the-punctured-plane-%5BS+N%5D">Stokes for the punctured plane [S+N]<a class="anchor-link" href="#Stokes-for-the-punctured-plane-%5BS+N%5D">¶</a></h2><p>Compute $\oint_{|z| = 1} \frac{-y\,dx + x\,dy}{x^2 + y^2}$ — the angular 1-form integrated around the unit circle.</p>
 <p>Parametrise: $\gamma(t) = (\cos t, \sin t)$, $t \in [0, 2\pi]$. Then $dx = -\sin t\,dt$, $dy = \cos t\,dt$, $x^2 + y^2 = 1$. So the integrand becomes $\sin^2 t + \cos^2 t = 1$ and $\oint = 2\pi$.</p>
 <p>Stokes' theorem says $\oint_{\partial D} \omega = \int_D d\omega$. We computed $d\omega = 0$ (the form is closed) on $\mathbb{R}^2 \setminus \{0\}$. So the integral <em>should</em> be $0$ — but it's $2\pi$ around the unit circle.</p>
-<p>The resolution: $\omega$ isn't defined at the origin, and the disk $D = \{x^2 + y^2 \le 1\}$ contains 0. Stokes requires $\omega$ to be defined on <em>all</em> of $D$, including the boundary. This breaks here, and the discrepancy of $2\pi$ is exactly the <strong>topological obstruction</strong> — the de Rham cohomology class of $\omega$ in $H^1(\mathbb{R}^2 \setminus \{0\})$.</p>
+<p>The resolution: $\omega$ isn't defined at the origin, and the disk $D = \{x^2 + y^2 \le 1\}$ contains 0. Stokes requires $\omega$ to be smooth on <em>all</em> of $D$, and here it blows up at the interior point $0$. That breaks the hypothesis, and the discrepancy of $2\pi$ is exactly the <strong>topological obstruction</strong> — the de Rham cohomology class of $\omega$ in $H^1(\mathbb{R}^2 \setminus \{0\})$. (This is the imaginary part of $\oint dz/z = 2\pi i$ from notebook 3.04: $dz/z = d(\log r) + i\,\omega$.)</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=f7183201">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=b78f3b85">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7865,7 +7865,7 @@ topology is non-trivial (S¹ ⊂ ℝ² \ {0} doesn't bound).</pre>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c5dc40e0">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=06b37f11">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7918,7 +7918,7 @@ topology is non-trivial (S¹ ⊂ ℝ² \ {0} doesn't bound).</pre>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=a8095b37">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=f995bebe">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7968,7 +7968,7 @@ LHS volume of unit ball = 4π/3 = 4.1887902047863905</pre>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ea2bd847">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a92584f1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7980,15 +7980,15 @@ LHS volume of unit ball = 4π/3 = 4.1887902047863905</pre>
 <li><strong>Coordinate-free</strong>: $d$ commutes with pullbacks, so $\int_M d\omega = \int_{\partial M} \omega$ is true <em>intrinsically</em>.</li>
 <li><strong>Generalises</strong> to manifolds and other dimensions seamlessly. Stokes in any dimension is just a special case.</li>
 <li><strong>Topological</strong>: closed-not-exact forms detect the topology of $M$.</li>
-<li><strong>Computational</strong>: cohomology gives finite invariants of infinite-dimensional spaces.</li>
+<li><strong>Computational</strong>: for a compact manifold, de Rham cohomology is finite-dimensional, though it is built from the infinite-dimensional space of forms.</li>
 </ul>
-<p>This is why differential forms have replaced classical vector calculus as the language of high-level mathematics and physics.</p>
+<p>That is why forms are the standard language of modern geometry and much of theoretical physics.</p>
 <h2 id="What's-next">What's next<a class="anchor-link" href="#What's-next">¶</a></h2><p>Forms gave us integration. Next we add <strong>metric structure</strong> — Riemannian geometry — which lets us measure lengths, angles, and curvature on manifolds. Then we'll see how curvature interacts with topology (Gauss-Bonnet) and with motion (geodesics).</p>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ff8cf0c7">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=595d3315">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>

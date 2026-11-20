@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 28,
+      "execution_count": 32,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "/* A 4x4 Hermitian matrix */\nA_herm : ndarray(matrix(\n  [3.0, 1.0, 0.0, 0.0],\n  [1.0, 3.0, 1.0, 0.0],\n  [0.0, 1.0, 3.0, 1.0],\n  [0.0, 0.0, 1.0, 3.0]))$\n[evals, evecs] : np_eig(A_herm)$\nprint(\"Eigenvalues (all real, since A is Hermitian):\")$\nprint(np_to_list(evals))$\nprint()$\nprint(\"(Gershgorin: each eigenvalue lies within the off-diagonal row sum\")$\nprint(\" of a diagonal entry — here within 2 of 3, so σ(A) ⊂ [1, 5])\")$",
       "metadata": {},
-      "execution_count": 29,
+      "execution_count": 33,
       "outputs": [
         {
           "name": "stdout",
@@ -44,20 +44,20 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## Compact self-adjoint operators on Hilbert space\n\nFor compact self-adjoint $T$ on infinite-dimensional Hilbert space:\n\n$$T = \\sum_n \\lambda_n P_n, \\qquad \\lambda_n \\to 0,$$\n\nwhere $P_n$ is the orthogonal projection onto the eigenspace of $\\lambda_n$.\n\nSame structure as matrices, but only **countably many** non-zero eigenvalues, accumulating at 0 (which is always in the spectrum).\n\nA canonical example: the **integral operator on $L^2([0, 1])$** with symmetric kernel $K(x, y) = \\min(x, y) - x y$. The eigenfunctions are $\\sqrt{2} \\sin(n \\pi x)$ with eigenvalues $1/(n^2 \\pi^2)$.\n",
+      "source": "## Compact self-adjoint operators on Hilbert space\n\nFor compact self-adjoint $T$ on infinite-dimensional Hilbert space:\n\n$$T = \\sum_n \\lambda_n P_n, \\qquad \\lambda_n \\to 0,$$\n\nwhere $P_n$ is the orthogonal projection onto the eigenspace of $\\lambda_n$.\n\nSame structure as matrices, but only **countably many** non-zero eigenvalues, accumulating at 0 (which is always in the spectrum).\n\nA canonical example: the **integral operator on $L^2([0, 1])$** with symmetric kernel $K(x, y) = \\min(x, y) - x y$. The eigenfunctions are $\\sqrt{2} \\sin(n \\pi x)$ with eigenvalues $1/(n^2 \\pi^2)$. The kernel is the Green's function of $-u''$ with $u(0) = u(1) = 0$, so $T_K$ inverts that unbounded operator, and its compactness is the \"compact inverse\" of notebook 6 at work.\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
-      "source": "/* Verify this kernel-eigenvalue claim by direct integration */\nn_test : 3$\nphi_n(x_, n) := sqrt(2) * sin(n * %pi * x_)$\nK_kernel(xv, yv) := min(xv, yv) - xv * yv$\n\n/* T φ_n = λ_n φ_n means ∫₀¹ K(x, y) φ_n(y) dy = λ_n φ_n(x).\n   Maxima won't integrate min(x, y) symbolically, so split the range at y = x:\n     y ≤ x :  K(x, y) = y - x y = y (1 - x)\n     y ≥ x :  K(x, y) = x - x y = x (1 - y)                           */\nx0 : 0.3$\nlo : integrate(y * (1 - x0) * phi_n(y, n_test), y, 0, x0)$\nhi : integrate(x0 * (1 - y) * phi_n(y, n_test), y, x0, 1)$\nresult_at : float(lo + hi)$\nexpected_lhs : (1.0 / (n_test^2 * float(%pi)^2)) * phi_n(x0, n_test)$\nprint(\"Tφ_3(0.3) =\", result_at)$\nprint(\"λ_3 · φ_3(0.3) =\", float(expected_lhs))$",
+      "source": "/* Verify this kernel-eigenvalue claim by direct integration */\nn_test : 3$\nphi_n(x_, n) := sqrt(2) * sin(n * %pi * x_)$\nK_kernel(xv, yv) := min(xv, yv) - xv * yv$\n\n/* T φ_n = λ_n φ_n means ∫₀¹ K(x, y) φ_n(y) dy = λ_n φ_n(x).\n   Maxima won't integrate min(x, y) symbolically, so split the range at y = x:\n     y ≤ x :  K(x, y) = y - x y = y (1 - x)\n     y ≥ x :  K(x, y) = x - x y = x (1 - y)                           */\nx0 : 3/10$\nlo : integrate(y * (1 - x0) * phi_n(y, n_test), y, 0, x0)$\nhi : integrate(x0 * (1 - y) * phi_n(y, n_test), y, x0, 1)$\nresult_at : float(lo + hi)$\nexpected_lhs : (1.0 / (n_test^2 * float(%pi)^2)) * phi_n(x0, n_test)$\nprint(\"Tφ_3(0.3) =\", result_at)$\nprint(\"λ_3 · φ_3(0.3) =\", float(expected_lhs))$",
       "metadata": {},
-      "execution_count": 30,
+      "execution_count": 34,
       "outputs": [
         {
           "name": "stdout",
           "output_type": "stream",
           "text": [
-            "rat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.8999999999999999 by 9/10 = 0.9\nrat: replaced 0.8999999999999999 by 9/10 = 0.9\nrat: replaced -0.8999999999999999 by -9/10 = -0.9\nrat: replaced 0.7 by 7/10 = 0.7\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.7 by 7/10 = 0.7\nrat: replaced 0.7 by 7/10 = 0.7\nrat: replaced 0.3 by 3/10 = 0.3\nrat: replaced 0.7 by 7/10 = 0.7\nrat: replaced 0.8999999999999999 by 9/10 = 0.9\nrat: replaced 0.8999999999999999 by 9/10 = 0.9\nrat: replaced -0.8999999999999999 by -9/10 = -0.9\nTφ_3(0.3) = 0.004919886763091484\nλ_3 · φ_3(0.3) = 0.0049198867630914946"
+            "Tφ_3(0.3) = 0.004919886763091491\nλ_3 · φ_3(0.3) = 0.004919886763091488"
           ]
         }
       ]
@@ -69,15 +69,15 @@
     },
     {
       "cell_type": "code",
-      "source": "/* Compute exp(A) for our 4x4 Hermitian via diagonalisation */\n[evals, U_evecs] : np_eig(A_herm)$\n/* Build diagonal exp(Λ) */\nexp_Lambda : np_zeros([4, 4])$\nfor i : 0 thru 3 do np_set(exp_Lambda, i, i, exp(np_ref(evals, i)))$\nexp_A_via_spectral : np_matmul(np_matmul(U_evecs, exp_Lambda),\n                               np_transpose(U_evecs))$\nexp_A_direct : np_expm(A_herm)$\nprint(\"exp(A) via spectral theorem (top-left 2x2):\")$\nprint(\"  [0,0] =\", np_ref(exp_A_via_spectral, 0, 0),\n      \"  vs np_expm =\", np_ref(exp_A_direct, 0, 0))$",
+      "source": "/* Compute exp(A) for our 4x4 Hermitian via diagonalisation */\n[evals, U_evecs] : np_eig(A_herm)$\n/* Build diagonal exp(Λ) */\nexp_Lambda : np_zeros([4, 4])$\nfor i : 0 thru 3 do np_set(exp_Lambda, i, i, exp(np_ref(evals, i)))$\nexp_A_via_spectral : np_matmul(np_matmul(U_evecs, exp_Lambda),\n                               np_transpose(U_evecs))$\nexp_A_direct : np_expm(A_herm)$\nprint(\"exp(A) via spectral theorem (entry [0,0]):\")$\nprint(\"  [0,0] =\", np_ref(exp_A_via_spectral, 0, 0),\n      \"  vs np_expm =\", np_ref(exp_A_direct, 0, 0))$",
       "metadata": {},
-      "execution_count": 31,
+      "execution_count": 35,
       "outputs": [
         {
           "name": "stdout",
           "output_type": "stream",
           "text": [
-            "exp(A) via spectral theorem (top-left 2x2):\n  [0,0] = 31.94825099268455   vs np_expm = 31.948250992684542"
+            "exp(A) via spectral theorem (entry [0,0]):\n  [0,0] = 31.94825099268455   vs np_expm = 31.948250992684542"
           ]
         }
       ]

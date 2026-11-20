@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 17,
+      "execution_count": 20,
       "outputs": []
     },
     {
@@ -29,9 +29,9 @@
     },
     {
       "cell_type": "code",
-      "source": "/* Compute Fourier coefficients of a triangle wave on [0, 1] symbolically */\nf_tri : if x < 1/2 then x else 1 - x$  /* triangle peak at 1/2 */\n/* Real Fourier series — symmetric around x = 1/2, so cosine coefficients only */\na_n_expr : 2 * integrate(2*x * cos(2*%pi*n*x), x, 0, 1/2)$\nprint(\"Fourier cosine coefficient a_n for triangle wave:\")$\nratsimp(a_n_expr);",
+      "source": "/* Compute Fourier coefficients of a triangle wave on [0, 1] symbolically */\ndeclare(n, integer)$   /* lets Maxima use sin(πn) = 0, cos(πn) = (-1)^n */\nf_tri : if x < 1/2 then x else 1 - x$  /* triangle peak at 1/2 */\n/* Real Fourier series — symmetric around x = 1/2, so cosine coefficients only */\na_n_expr : 2 * integrate(2*x * cos(2*%pi*n*x), x, 0, 1/2)$\nprint(\"Fourier cosine coefficient a_n for triangle wave:\")$\nratsimp(a_n_expr);",
       "metadata": {},
-      "execution_count": 18,
+      "execution_count": 21,
       "outputs": [
         {
           "name": "stdout",
@@ -43,10 +43,10 @@
         {
           "data": {
             "text/latex": [
-              "{{\\pi\\,n\\,\\sin \\left(\\pi\\,n\\right)+\\cos \\left(\\pi\\,n\\right)-1}\\over{\\pi^2\\,n^2}}"
+              "{{\\left(-1\\right)^{n}-1}\\over{\\pi^2\\,n^2}}"
             ]
           },
-          "execution_count": 18,
+          "execution_count": 21,
           "metadata": {},
           "output_type": "execute_result"
         }
@@ -54,14 +54,14 @@
     },
     {
       "cell_type": "markdown",
-      "source": "Plot the partial Fourier sums of a triangle wave — illustrating $L^2$ convergence.\n",
+      "source": "Plot the partial Fourier sums of the triangle wave. Its coefficients decay like $1/n^2$, so here the convergence is in fact uniform; a square wave would show the Gibbs overshoot that $L^2$ convergence tolerates.\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
       "source": "/* Build partial sum of cosine Fourier series for the triangle wave */\nfourier_partial(N) := block([series, n],\n  series : 1.0/4.0,  /* a_0/2 = average value */\n  for n : 1 thru N do block([a],\n    /* Triangle wave: a_n = 4∫₀^{1/2} x cos(2πnx) dx = ((-1)^n - 1)/(π² n²),\n       i.e. -2/(π²n²) for odd n and 0 for even n.  Check at x = 0:\n       1/4 + Σ_odd -2/(π²n²) = 1/4 - (2/π²)(π²/8) = 0 = f(0). ✓ */\n    a : (cos(float(%pi)*n) - 1) / (float(%pi)^2 * n^2),\n    series : series + a * cos(2 * float(%pi) * n * x)),\n  series)$\n\nxs : np_to_list(np_linspace(0, 1, 500))$\ntrue_tri : map(lambda([xv], if xv < 0.5 then float(xv) else float(1 - xv)), xs)$\nP3 : map(lambda([xv], float(subst(x = xv, fourier_partial(3)))), xs)$\nP10 : map(lambda([xv], float(subst(x = xv, fourier_partial(10)))), xs)$\n\nax_draw2d(\n  color=\"black\", line_width=2, name=\"triangle f(x)\",\n  lines(xs, true_tri),\n  color=\"red\", line_width=1, name=\"N = 3 partial sum\",\n  lines(xs, P3),\n  color=\"blue\", line_width=1, name=\"N = 10 partial sum\",\n  lines(xs, P10),\n  title=\"L² Fourier convergence of triangle wave\",\n  xlabel=\"x\", ylabel=\"value\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 19,
+      "execution_count": 22,
       "outputs": [
         {
           "data": {
@@ -71,6 +71,26 @@
           },
           "metadata": {},
           "output_type": "display_data"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": "**Parseval check.** For the real cosine series on $[0, 1]$ the basis functions $\\cos(2\\pi n x)$ have squared norm $1/2$, so Parseval reads $\\|f\\|_2^2 = (a_0/2)^2 + \\tfrac12 \\sum_n a_n^2$. For the triangle wave both sides equal $1/12$:\n",
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": "norm_sq : 2 * integrate(x^2, x, 0, 1/2)$\nparseval_sum : (1/4)^2 + (1/2) * sum(float(((-1)^k - 1) / (%pi^2 * k^2))^2, k, 1, 2001)$\nprint(\"‖f‖₂² =\", norm_sq, \"≈\", float(norm_sq))$\nprint(\"(1/4)² + ½ Σ_{n ≤ 2001} a_n² ≈\", parseval_sum)$",
+      "metadata": {},
+      "execution_count": 23,
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "‖f‖₂² = 1/12 ≈ 0.08333333333333333\n(1/4)² + ½ Σ_{n ≤ 2001} a_n² ≈ 0.08333333333290688"
+          ]
         }
       ]
     },

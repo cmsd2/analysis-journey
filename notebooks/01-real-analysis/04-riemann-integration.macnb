@@ -12,14 +12,14 @@
   "cells": [
     {
       "cell_type": "markdown",
-      "source": "# Riemann Integration [S+N]\n\nGiven $f : [a, b] \\to \\mathbb{R}$ and a partition $a = x_0 < x_1 < \\ldots < x_n = b$, the **upper sum** and **lower sum** are\n\n$$U(f, P) = \\sum_{i=1}^{n} \\left(\\sup_{x \\in [x_{i-1}, x_i]} f\\right)(x_i - x_{i-1}), \\qquad L(f, P) = \\sum_{i=1}^{n} \\left(\\inf_{x \\in [x_{i-1}, x_i]} f\\right)(x_i - x_{i-1}).$$\n\n$f$ is **Riemann integrable** on $[a, b]$ if $\\inf_P U = \\sup_P L$, the infimum and supremum taken over *all* partitions $P$. No limit on the mesh is needed: refining a partition can only decrease $U$ and increase $L$, so the two quantities are already squeezing towards each other. The common value is $\\int_a^b f$.\n\nTheorem: every continuous function on $[a, b]$ is Riemann integrable. (The proof relies on Heine-Cantor uniform continuity from the previous notebook.)\n\nThis notebook visualises the upper/lower sums squeezing the integral, ties symbolic and numerical integration through Maxima, and shows the fundamental theorem of calculus.\n",
+      "source": "# Riemann Integration [S+N]\n\nGiven $f : [a, b] \\to \\mathbb{R}$ and a partition $a = x_0 < x_1 < \\ldots < x_n = b$, the **upper sum** and **lower sum** are\n\n$$U(f, P) = \\sum_{i=1}^{n} \\left(\\sup_{x \\in [x_{i-1}, x_i]} f\\right)(x_i - x_{i-1}), \\qquad L(f, P) = \\sum_{i=1}^{n} \\left(\\inf_{x \\in [x_{i-1}, x_i]} f\\right)(x_i - x_{i-1}).$$\n\n$f$ is **Riemann integrable** on $[a, b]$ if $\\inf_P U = \\sup_P L$, the infimum and supremum taken over *all* partitions $P$. No limit on the mesh is needed: refining a partition can only decrease $U$ and increase $L$, so the two quantities are already squeezing towards each other. The common value is $\\int_a^b f$.\n\nTheorem: every continuous function on $[a, b]$ is Riemann integrable. (The proof relies on Heine-Cantor uniform continuity from notebook 1.02.)\n\nThis notebook visualises the upper/lower sums squeezing the integral, ties symbolic and numerical integration through Maxima, and shows the fundamental theorem of calculus.\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 43,
+      "execution_count": 49,
       "outputs": []
     },
     {
@@ -29,15 +29,15 @@
     },
     {
       "cell_type": "code",
-      "source": "f_riem(x) := x * sin(x)$\na_int : 0$ b_int : float(%pi)$\nn_subdiv : 12$\nh : (b_int - a_int) / n_subdiv$\n\n/* On each subinterval, sup and inf require some care.  For x sin(x) on [0,π]\n   the function is positive and unimodal-ish; we'll sample many points within\n   each subinterval to find sup/inf empirically (good enough for visualisation). */\nsample_per_sub : 50$\n\nupper_sum : 0.0$ lower_sum : 0.0$ mid_sum : 0.0$\nupper_xs : []$  upper_ys : []$\nlower_xs : []$  lower_ys : []$\nfor i : 1 thru n_subdiv do block([xL, xR, sub_pts, sub_vals, sup_v, inf_v, x_mid],\n  xL : a_int + (i - 1) * h,\n  xR : xL + h,\n  sub_pts : np_to_list(np_linspace(xL, xR, sample_per_sub)),\n  sub_vals : map(lambda([x], float(f_riem(x))), sub_pts),\n  sup_v : lmax(sub_vals),\n  inf_v : lmin(sub_vals),\n  x_mid : 0.5 * (xL + xR),\n  upper_sum : upper_sum + sup_v * h,\n  lower_sum : lower_sum + inf_v * h,\n  mid_sum : mid_sum + float(f_riem(x_mid)) * h,\n  upper_xs : append(upper_xs, [xL, xR]),\n  upper_ys : append(upper_ys, [sup_v, sup_v]),\n  lower_xs : append(lower_xs, [xL, xR]),\n  lower_ys : append(lower_ys, [inf_v, inf_v]))$\n\nprint(\"U(f, P) =\", upper_sum)$\nprint(\"L(f, P) =\", lower_sum)$\nprint(\"mid sum =\", mid_sum)$\ntrue_val : float(integrate(f_riem(x), x, a_int, b_int))$\nprint(\"∫₀^π x sin(x) dx (true) =\", true_val)$",
+      "source": "f_riem(x) := x * sin(x)$\na_int : 0$ b_int : float(%pi)$\nn_subdiv : 12$\nh : (b_int - a_int) / n_subdiv$\n\n/* On each subinterval, sup and inf require some care.  For x sin(x) on [0,π]\n   the function is positive and unimodal-ish; we'll sample many points within\n   each subinterval to find sup/inf empirically (good enough for visualisation). */\nsample_per_sub : 50$\n\nupper_sum : 0.0$ lower_sum : 0.0$ mid_sum : 0.0$\nupper_xs : []$  upper_ys : []$\nlower_xs : []$  lower_ys : []$\nfor i : 1 thru n_subdiv do block([xL, xR, sub_pts, sub_vals, sup_v, inf_v, x_mid],\n  xL : a_int + (i - 1) * h,\n  xR : xL + h,\n  sub_pts : np_to_list(np_linspace(xL, xR, sample_per_sub)),\n  sub_vals : map(lambda([x], float(f_riem(x))), sub_pts),\n  sup_v : lmax(sub_vals),\n  inf_v : lmin(sub_vals),\n  x_mid : 0.5 * (xL + xR),\n  upper_sum : upper_sum + sup_v * h,\n  lower_sum : lower_sum + inf_v * h,\n  mid_sum : mid_sum + float(f_riem(x_mid)) * h,\n  upper_xs : append(upper_xs, [xL, xR]),\n  upper_ys : append(upper_ys, [sup_v, sup_v]),\n  lower_xs : append(lower_xs, [xL, xR]),\n  lower_ys : append(lower_ys, [inf_v, inf_v]))$\n\nprint(\"U(f, P) =\", upper_sum)$\nprint(\"L(f, P) =\", lower_sum)$\nprint(\"mid sum =\", mid_sum)$\ntrue_val : float(integrate(f_riem(x), x, 0, %pi))$  /* exact limits: a float π makes integrate() rationalise */\nprint(\"∫₀^π x sin(x) dx (true) =\", true_val)$",
       "metadata": {},
-      "execution_count": 44,
+      "execution_count": 50,
       "outputs": [
         {
           "name": "stdout",
           "output_type": "stream",
           "text": [
-            "U(f, P) = 3.6000257034637064\nL(f, P) = 2.6487771127090256\nmid sum = 3.1505823445670273\nrat: replaced 3.141592653589793 by 80143857/25510582 = 3.1415926535897927\nrat: replaced 3.141592653589793 by 80143857/25510582 = 3.1415926535897927\nrat: replaced 3.141592653589793 by 80143857/25510582 = 3.1415926535897927\nrat: replaced 3.141592653589793 by 80143857/25510582 = 3.1415926535897927\nrat: replaced 3.141592653589793 by 80143857/25510582 = 3.1415926535897927\nrat: replaced 3.141592653589793 by 80143857/25510582 = 3.1415926535897927\nrat: replaced 3.141592653589793 by 80143857/25510582 = 3.1415926535897927\nrat: replaced 3.141592653589793 by 80143857/25510582 = 3.1415926535897927\n∫₀^π x sin(x) dx (true) = 3.1415926535897927"
+            "U(f, P) = 3.6000257034637064\nL(f, P) = 2.6487771127090256\nmid sum = 3.1505823445670273\n∫₀^π x sin(x) dx (true) = 3.141592653589793"
           ]
         }
       ]
@@ -51,7 +51,7 @@
       "cell_type": "code",
       "source": "x_curve : np_to_list(np_linspace(a_int, b_int, 300))$\ny_curve : map(lambda([x], float(f_riem(x))), x_curve)$\n\nax_draw2d(\n  color=\"lightblue\", line_width=2, name=\"upper sum (sup·h)\",\n  lines(upper_xs, upper_ys),\n  color=\"lightcoral\", line_width=2, name=\"lower sum (inf·h)\",\n  lines(lower_xs, lower_ys),\n  color=\"black\", line_width=2, name=\"f(x) = x sin(x)\",\n  lines(x_curve, y_curve),\n  title=\"Upper/lower Riemann sums sandwich the integral\",\n  xlabel=\"x\", ylabel=\"f(x)\",\n  grid=true, showlegend=true\n)$",
       "metadata": {},
-      "execution_count": 45,
+      "execution_count": 51,
       "outputs": [
         {
           "data": {
@@ -66,14 +66,14 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## Convergence rate of the gap\n\nFor a continuous (in fact $C^1$) function on $[a, b]$, the gap $U - L$ shrinks like $O(1/n)$ for the partition with mesh $h = (b-a)/n$.\n",
+      "source": "## Convergence rate of the gap\n\nFor a $C^1$ function on $[a, b]$ (more generally, any function of bounded variation), the gap $U - L$ shrinks like $O(1/n)$ for the partition with mesh $h = (b-a)/n$. Mere continuity gives $U - L \\to 0$ but no rate.\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
       "source": "compute_gap(n) := block([h, U, L, i, sub_pts, vals],\n  h : (b_int - a_int) / n,\n  U : 0.0, L : 0.0,\n  for i : 1 thru n do block([xL, xR, sub_pts, vals],\n    xL : a_int + (i - 1) * h,\n    xR : xL + h,\n    sub_pts : np_to_list(np_linspace(xL, xR, 50)),\n    vals : map(lambda([x], float(f_riem(x))), sub_pts),\n    U : U + lmax(vals) * h,\n    L : L + lmin(vals) * h),\n  U - L)$\n\nn_list : [4, 8, 16, 32, 64, 128]$\ngaps : map(compute_gap, n_list)$\nprint(\"n:           \", n_list)$\nprint(\"U - L:       \", gaps)$\nprint(\"ratios n·gap:\", map(lambda([i], n_list[i] * gaps[i]), makelist(i, i, 1, length(n_list))))$",
       "metadata": {},
-      "execution_count": 46,
+      "execution_count": 52,
       "outputs": [
         {
           "name": "stdout",
@@ -86,14 +86,14 @@
     },
     {
       "cell_type": "markdown",
-      "source": "The product $n(U - L)$ stays roughly constant — the gap is $O(1/n)$, as expected.\n\n## Fundamental theorem of calculus [S+N]\n\nTwo halves:\n\n- **FTC I**: if $F(x) = \\int_a^x f(t)\\,dt$ and $f$ is continuous, then $F'(x) = f(x)$.\n- **FTC II**: if $F$ is any antiderivative of $f$, then $\\int_a^b f = F(b) - F(a)$.\n\nMaxima can verify symbolically.\n",
+      "source": "The product $n(U - L)$ settles near $11.43$, so the gap is $O(1/n)$. The constant has a meaning. On a sub-interval where $f$ is monotone, $\\sup - \\inf$ is the rise (or fall) of $f$ across it, so $n(U - L) \\to (b - a)\\,V(f)$, where $V(f)$ is the total variation. Here $f$ climbs from $0$ to its maximum $\\approx 1.8197$ (at $x \\approx 2.029$) and falls back to $0$, so $V(f) \\approx 3.639$ and $\\pi V(f) \\approx 11.43$.\n\n## Fundamental theorem of calculus [S+N]\n\nTwo halves:\n\n- **FTC I**: if $F(x) = \\int_a^x f(t)\\,dt$ and $f$ is continuous, then $F'(x) = f(x)$.\n- **FTC II**: if $F$ is any antiderivative of $f$, then $\\int_a^b f = F(b) - F(a)$.\n\nMaxima can verify symbolically.\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
       "source": "f_ftc(x) := x^3 + 2*x$\nF_anti : integrate(f_ftc(x), x)$\nprint(\"F(x) = ∫ f(x) dx =\", F_anti)$\nprint(\"F'(x) =\", diff(F_anti, x))$\nprint(\"Should equal f(x) = x³ + 2x — yes.\")$\n\na_ftc : 0$ b_ftc : 2$\ndef_int_via_anti : subst(x = b_ftc, F_anti) - subst(x = a_ftc, F_anti)$\ndef_int_direct : integrate(f_ftc(x), x, a_ftc, b_ftc)$\nprint(\"∫₀² f via antiderivative:\", def_int_via_anti)$\nprint(\"∫₀² f directly:          \", def_int_direct)$",
       "metadata": {},
-      "execution_count": 47,
+      "execution_count": 53,
       "outputs": [
         {
           "name": "stdout",
@@ -113,7 +113,7 @@
       "cell_type": "code",
       "source": "n_pts : 100$\nxs : np_linspace(0, 2, n_pts)$\nys : ndarray(map(lambda([x], float(f_ftc(x))), np_to_list(xs)))$\ntrapz_val : np_trapz(ys, xs)$\nsym_val : float(integrate(f_ftc(x), x, 0, 2))$\nprint(\"trapz(np_trapz):    \", trapz_val)$\nprint(\"symbolic (Maxima):  \", sym_val)$\nprint(\"difference:         \", sym_val - trapz_val)$",
       "metadata": {},
-      "execution_count": 48,
+      "execution_count": 54,
       "outputs": [
         {
           "name": "stdout",
@@ -126,7 +126,7 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## Not Riemann integrable: Dirichlet's function\n\n$D(x) = 1$ if $x \\in \\mathbb{Q}$, else $0$. On any sub-interval $[c, d]$ both rationals and irrationals are dense, so $\\sup D = 1$ and $\\inf D = 0$. Upper sum = $b - a$, lower sum = $0$ — the gap never closes. So $D$ is **not** Riemann integrable.\n\nLebesgue's theory rescues this — $D = 0$ almost everywhere with respect to Lebesgue measure, so $\\int D\\,d\\mu = 0$. That's a different course.\n\n## What we got\n\n- The integral is squeezed between upper and lower sums; the squeeze closes for continuous functions.\n- The fundamental theorem turns integration into the inverse of differentiation.\n- For functions Maxima can integrate symbolically, the symbolic answer is exact; for those it can't, numerical methods (trapz, Simpson, Gauss) deliver $O(h^p)$ approximations.\n",
+      "source": "## Not Riemann integrable: Dirichlet's function\n\n$D(x) = 1$ if $x \\in \\mathbb{Q}$, else $0$. On any sub-interval $[c, d]$ both rationals and irrationals are dense, so $\\sup D = 1$ and $\\inf D = 0$. Upper sum = $b - a$, lower sum = $0$ — the gap never closes. So $D$ is **not** Riemann integrable.\n\nLebesgue's theory handles it: $D = 0$ almost everywhere with respect to Lebesgue measure, so $\\int D\\,d\\mu = 0$. Stage 4 builds that theory.\n\n## What we got\n\n- The integral is squeezed between upper and lower sums; the squeeze closes for continuous functions.\n- The fundamental theorem turns integration into the inverse of differentiation.\n- For functions Maxima can integrate symbolically, the symbolic answer is exact; for those it can't, numerical methods (trapz, Simpson, Gauss) deliver $O(h^p)$ approximations.\n",
       "metadata": {}
     },
     {

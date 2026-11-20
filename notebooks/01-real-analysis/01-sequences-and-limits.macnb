@@ -108,7 +108,7 @@
     },
     {
       "cell_type": "markdown",
-      "source": "## Bounded + monotone ⇒ convergent\n\nA profound result: every bounded monotone sequence in $\\mathbb{R}$ converges (to its supremum if increasing, infimum if decreasing). This is a consequence of $\\mathbb{R}$ being **complete** — there are no holes in the real line.\n\nExample: $c_n = \\sum_{k=1}^n 1/k^2$. The terms are positive (so $c_n$ is increasing) and bounded above by $\\pi^2/6$. So it converges — and to that limit (Basel problem).\n",
+      "source": "## Bounded + monotone ⇒ convergent\n\nEvery bounded monotone sequence in $\\mathbb{R}$ converges (to its supremum if increasing, infimum if decreasing). This is a consequence of $\\mathbb{R}$ being **complete** — there are no holes in the real line.\n\nExample: $c_n = \\sum_{k=1}^n 1/k^2$. The terms are positive, so $c_n$ is increasing. It is bounded above by $2$: for $k \\ge 2$, $1/k^2 < 1/(k(k-1)) = 1/(k-1) - 1/k$, and those terms telescope to less than $1$. So $c_n$ converges. Identifying the limit as $\\pi^2/6$ (the Basel problem, Euler 1734) takes more work; the plot compares against it.\n",
       "metadata": {}
     },
     {

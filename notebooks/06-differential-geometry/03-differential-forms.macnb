@@ -19,7 +19,7 @@
       "cell_type": "code",
       "source": "load(\"numerics\")$\nload(\"ax-plots\")$",
       "metadata": {},
-      "execution_count": 21,
+      "execution_count": 25,
       "outputs": []
     },
     {
@@ -31,7 +31,7 @@
       "cell_type": "code",
       "source": "/* 1-form: ω = P dx + Q dy. dω = (Q_x - P_y) dx ∧ dy */\nP : x$\nQ : y$\ndQ_dx : diff(Q, x)$\ndP_dy : diff(P, y)$\nprint(\"ω = x dx + y dy\")$\nprint(\"dω = (∂Q/∂x - ∂P/∂y) dx ∧ dy = (\", dQ_dx, \"-\", dP_dy, \") dx ∧ dy =\", dQ_dx - dP_dy, \"(exact form, dω = 0 ✓)\")$\nprint()$\n/* Now ω = x dy - y dx — area element */\nP2 : -y$\nQ2 : x$\nprint(\"ω = -y dx + x dy\")$\nprint(\"dω = (∂Q/∂x - ∂P/∂y) dx ∧ dy = (\", diff(Q2, x), \"-\", diff(P2, y), \") dx ∧ dy =\",\n      diff(Q2, x) - diff(P2, y), \"  ⇒ dω = 2 dx ∧ dy (twice the area element)\")$",
       "metadata": {},
-      "execution_count": 22,
+      "execution_count": 26,
       "outputs": [
         {
           "name": "stdout",
@@ -49,29 +49,29 @@
     },
     {
       "cell_type": "code",
-      "source": "/* Verify: d(r cos θ) ∧ d(r sin θ) coefficient */\nx_polar : r * cos(theta)$\ny_polar : r * sin(theta)$\n/* dx = ∂x/∂r dr + ∂x/∂θ dθ;  dy = similarly */\nax_dr : diff(x_polar, r)$\nax_dt : diff(x_polar, theta)$\nay_dr : diff(y_polar, r)$\nay_dt : diff(y_polar, theta)$\n/* Wedge: dx ∧ dy = (ax_dr ay_dt - ax_dt ay_dr) dr ∧ dθ */\njacobian : ratsimp(ax_dr * ay_dt - ax_dt * ay_dr)$\nprint(\"Φ*(dx ∧ dy) =\", jacobian, \"dr ∧ dθ\")$\nprint(\"(Polar Jacobian = r — same answer as Stage 2/05)\")$",
+      "source": "/* Verify: d(r cos θ) ∧ d(r sin θ) coefficient */\nx_polar : r * cos(theta)$\ny_polar : r * sin(theta)$\n/* dx = ∂x/∂r dr + ∂x/∂θ dθ;  dy = similarly */\nax_dr : diff(x_polar, r)$\nax_dt : diff(x_polar, theta)$\nay_dr : diff(y_polar, r)$\nay_dt : diff(y_polar, theta)$\n/* Wedge: dx ∧ dy = (ax_dr ay_dt - ax_dt ay_dr) dr ∧ dθ */\njacobian : trigsimp(ax_dr * ay_dt - ax_dt * ay_dr)$\nprint(\"Φ*(dx ∧ dy) =\", jacobian, \"dr ∧ dθ\")$\nprint(\"(Polar Jacobian = r — same answer as Stage 2/05)\")$",
       "metadata": {},
-      "execution_count": 23,
+      "execution_count": 27,
       "outputs": [
         {
           "name": "stdout",
           "output_type": "stream",
           "text": [
-            "Φ*(dx ∧ dy) = r*sin(theta)^2+r*cos(theta)^2 dr ∧ dθ\n(Polar Jacobian = r — same answer as Stage 2/05)"
+            "Φ*(dx ∧ dy) = r dr ∧ dθ\n(Polar Jacobian = r — same answer as Stage 2/05)"
           ]
         }
       ]
     },
     {
       "cell_type": "markdown",
-      "source": "## Closed and exact forms\n\nA form $\\omega$ is **closed** if $d\\omega = 0$. It's **exact** if $\\omega = d\\eta$ for some $\\eta$.\n\nBy $d^2 = 0$, **every exact form is closed**. The converse holds *locally* (Poincaré lemma), but not globally — there exist closed forms that are not exact, and they detect the **topology** of $M$.\n\nThe **de Rham cohomology** of $M$:\n\n$$H^k_{dR}(M) = \\{\\text{closed }k\\text{-forms}\\} / \\{\\text{exact }k\\text{-forms}\\}.$$\n\nThese groups are **topological invariants** — they tell you about holes, loops, voids in $M$. For example, $H^1(S^1) = \\mathbb{R}$ (one non-trivial closed-but-not-exact 1-form, the angular form $d\\theta$).\n\nThe **angular 1-form** on $\\mathbb{R}^2 \\setminus \\{0\\}$ is\n\n$$\\omega = \\frac{-y\\,dx + x\\,dy}{x^2 + y^2}.$$\n\nIt's closed everywhere it's defined, but **not exact** — there's no global function $\\theta : \\mathbb{R}^2 \\setminus \\{0\\} \\to \\mathbb{R}$ whose differential is $\\omega$. (You'd want $\\theta$ = angle, but that jumps by $2\\pi$ on a closed loop.) Integrating $\\omega$ around a closed loop encircling 0 gives $2\\pi$ — that's the topology talking.\n",
+      "source": "## Closed and exact forms\n\nA form $\\omega$ is **closed** if $d\\omega = 0$. It's **exact** if $\\omega = d\\eta$ for some $\\eta$.\n\nBy $d^2 = 0$, **every exact form is closed**. The converse holds *locally* (Poincaré lemma), but not globally — there exist closed forms that are not exact, and they detect the **topology** of $M$.\n\nThe **de Rham cohomology** of $M$:\n\n$$H^k_{dR}(M) = \\{\\text{closed }k\\text{-forms}\\} / \\{\\text{exact }k\\text{-forms}\\}.$$\n\nThese groups are **topological invariants** — they tell you about holes, loops, voids in $M$. For example, $H^1(S^1) = \\mathbb{R}$, spanned by the class of the angular form $d\\theta$ (closed, but not exact: the angle $\\theta$ is not a global function).\n\nThe **angular 1-form** on $\\mathbb{R}^2 \\setminus \\{0\\}$ is\n\n$$\\omega = \\frac{-y\\,dx + x\\,dy}{x^2 + y^2}.$$\n\nIt's closed everywhere it's defined, but **not exact** — there's no global function $\\theta : \\mathbb{R}^2 \\setminus \\{0\\} \\to \\mathbb{R}$ whose differential is $\\omega$. (You'd want $\\theta$ = angle, but that jumps by $2\\pi$ on a closed loop.) Integrating $\\omega$ around a closed loop encircling 0 gives $2\\pi$ — that's the topology talking.\n",
       "metadata": {}
     },
     {
       "cell_type": "code",
       "source": "/* Verify closedness of the angular form */\nP_ang : -y / (x^2 + y^2)$\nQ_ang : x / (x^2 + y^2)$\ndP_dy : diff(P_ang, y)$\ndQ_dx : diff(Q_ang, x)$\nprint(\"dP/dy =\", ratsimp(dP_dy))$\nprint(\"dQ/dx =\", ratsimp(dQ_dx))$\nprint(\"dω = (dQ/dx - dP/dy) dx ∧ dy = \", ratsimp(dQ_dx - dP_dy), \"  → ω is closed ✓\")$",
       "metadata": {},
-      "execution_count": 24,
+      "execution_count": 28,
       "outputs": [
         {
           "name": "stdout",
